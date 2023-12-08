@@ -1,6 +1,10 @@
 ---
 - name: Some name
-  hosts: localhost
+  hosts: vms
+
+  roles:
+    - facts
+    - ssh
 
   tasks:
     - name: Say hello
