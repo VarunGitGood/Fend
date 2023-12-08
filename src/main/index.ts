@@ -1,7 +1,9 @@
-import { app, shell, BrowserWindow } from 'electron'
+import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+
+let childWindow: BrowserWindow | null = null
 
 function createWindow(): void {
   // Create the browser window.
@@ -24,6 +26,29 @@ function createWindow(): void {
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
     return { action: 'deny' }
+  })
+
+  ipcMain.on('open-child-window', (_event: any, _arg: any) => {
+    childWindow = new BrowserWindow({
+      width: 800,
+      height: 600,
+      webPreferences: {
+        preload: join(__dirname, '../preload/index.js'),
+        nodeIntegration: true
+      },
+      frame: false,
+      parent: mainWindow,
+      modal: true
+    })
+
+    childWindow.loadURL('http://localhost:5173/ssh-advanced-settings')
+  })
+
+  ipcMain.on('close-child-window', (_event: any, _arg: any) => {
+    if (childWindow) {
+      childWindow.close()
+      childWindow = null
+    }
   })
 
   // HMR for renderer base on electron-vite cli.

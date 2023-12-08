@@ -22,6 +22,9 @@
   "dependencies": {
     "@electron-toolkit/preload": "^2.0.0",
     "@electron-toolkit/utils": "^2.0.0",
+    "@mantine/core": "^7.3.1",
+    "@mantine/form": "^7.3.1",
+    "@mantine/hooks": "^7.3.1",
     "electron-updater": "^6.1.1"
   },
   "devDependencies": {
@@ -37,6 +40,9 @@
     "electron-vite": "^1.0.27",
     "eslint": "^8.47.0",
     "eslint-plugin-react": "^7.33.2",
+    "postcss": "^8.4.32",
+    "postcss-preset-mantine": "^1.11.1",
+    "postcss-simple-vars": "^7.0.1",
     "prettier": "^3.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

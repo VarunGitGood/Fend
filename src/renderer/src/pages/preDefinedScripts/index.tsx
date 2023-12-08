@@ -12,7 +12,7 @@ function PreDefinedScripts(): JSX.Element {
         <button>Script 4</button>
       </div>
       <div>
-        <button>Cancel</button>
+        <button>Back</button>
         <button>Next</button>
       </div>
     </div>

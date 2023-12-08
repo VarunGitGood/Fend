@@ -12,7 +12,6 @@ function Scripts(): JSX.Element {
         </Link>
       </div>
       <div>
-        <button>Cancel</button>
         <button>Next</button>
       </div>
     </div>

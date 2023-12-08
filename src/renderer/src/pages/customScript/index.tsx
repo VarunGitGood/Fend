@@ -1,4 +1,10 @@
 function CustomScript(): JSX.Element {
+  const ipcRenderer = (window as any).ipcRenderer
+
+  const openChildWindow = () => {
+    ipcRenderer.send('open-child-window')
+  }
+
   return (
     <div>
       <div>
@@ -32,8 +38,8 @@ function CustomScript(): JSX.Element {
         <br />
       </div>
       <div>
-        <button>Cancel</button>
-        <button>Next</button>
+        <button>Back</button>
+        <button onClick={openChildWindow}>Next</button>
       </div>
     </div>
   )
