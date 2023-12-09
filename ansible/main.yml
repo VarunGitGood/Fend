@@ -2,11 +2,17 @@
 - name: Some name
   hosts: vms
 
-  roles:
-    - facts
-    - ssh
-
   tasks:
+    - name: Include required roles
+      ansible.builtin.include_role:
+        name: "{{item}}"
+      loop: "{{required_roles}}"
+
+    - name: Include active roles
+      ansible.builtin.include_role:
+        name: "{{item}}"
+      loop: "{{active_roles}}"
+
     - name: Say hello
       ansible.builtin.debug:
-        msg: "Hello, World!"
+        msg: "{{active_roles}}"
