@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 function Dashboard(): JSX.Element {
   return (
-    <MainAppShell>
+    <>
       <Box p="md">
         <Text fz="2.25rem" fw="400">
           Dashboard
@@ -67,7 +67,7 @@ function Dashboard(): JSX.Element {
           </Box>
         </Box>
       </Box>
-    </MainAppShell>
+    </>
   )
 }
 

@@ -1,3 +1,6 @@
+import CustomCheckBox from '@renderer/components/CustomCheckBox'
+import { Link } from 'react-router-dom'
+
 function CustomScript(): JSX.Element {
   const ipcRenderer = (window as any).ipcRenderer
 
@@ -11,34 +14,11 @@ function CustomScript(): JSX.Element {
         <h3>Name</h3>
         <input type="text" />
       </div>
+      <CustomCheckBox />
       <div>
-        <label>
-          <input type="checkbox" value="ssh" /> SSH
-        </label>
-        <br />
-        <label>
-          <input type="checkbox" value="firewalls" /> Firewalls (Ufw)
-        </label>
-        <br />
-        <label>
-          <input type="checkbox" value="services(systemctl)" /> Services (systemctl)
-        </label>
-        <br />
-        <label>
-          <input type="checkbox" value="physical-ports" /> Physical Ports
-        </label>
-        <br />
-        <label>
-          <input type="checkbox" value="bluetooth" /> Bluetooth
-        </label>
-        <br />
-        <label>
-          <input type="checkbox" value="app-armor" /> AppArmor
-        </label>
-        <br />
-      </div>
-      <div>
-        <button>Back</button>
+        <Link to="/">
+          <button>Back</button>
+        </Link>
         <button onClick={openChildWindow}>Next</button>
       </div>
     </div>
