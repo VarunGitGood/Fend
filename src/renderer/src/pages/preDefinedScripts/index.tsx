@@ -1,6 +1,8 @@
+import MainAppShell from '@renderer/components/MainAppShell'
+
 function PreDefinedScripts(): JSX.Element {
   return (
-    <div>
+    <MainAppShell>
       <div>
         <h3>Recommended for WebServer</h3>
         <button>Script 1</button>
@@ -15,7 +17,7 @@ function PreDefinedScripts(): JSX.Element {
         <button>Back</button>
         <button>Next</button>
       </div>
-    </div>
+    </MainAppShell>
   )
 }
 
