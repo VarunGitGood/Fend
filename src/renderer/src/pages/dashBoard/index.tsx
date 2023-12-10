@@ -1,6 +1,6 @@
-import MainAppShell from '@renderer/components/MainAppShell'
 import { Box, Flex, Text, Skeleton } from '@mantine/core'
 import { Link } from 'react-router-dom'
+import classes from './styles.module.css'
 
 function Dashboard(): JSX.Element {
   return (
@@ -20,7 +20,7 @@ function Dashboard(): JSX.Element {
             }}
           >
             <Flex
-              bg="#D9D9D9"
+              className={classes.card}
               justify="center"
               align="center"
               h="7rem"
@@ -40,7 +40,7 @@ function Dashboard(): JSX.Element {
             }}
           >
             <Flex
-              bg="#D9D9D9"
+              className={classes.card}
               justify="center"
               align="center"
               h="7rem"
