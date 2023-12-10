@@ -1,0 +1,12 @@
+---
+- name: Restart sysctl
+  become: true
+  ansible.builtin.service:
+    name: systemd-sysctl
+    state: restarted
+
+- name: Update GRUB
+  become: true
+  ansible.builtin.command: update-grub
+  register: update_grub
+  changed_when: update_grub.rc == 0
