@@ -15,4 +15,4 @@
 
     - name: Say hello
       ansible.builtin.debug:
-        msg: "{{active_roles}}"
+        msg: "{{ compilers }}"
