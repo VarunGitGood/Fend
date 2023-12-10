@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import { useDisclosure } from '@mantine/hooks'
 import { Box, Accordion, Modal, TextInput, Flex, Grid, Center, Text, Button } from '@mantine/core'
+import { useForm } from '@mantine/form'
 import { IconX } from '@tabler/icons-react'
 
 interface GroupDetail {
@@ -12,49 +14,77 @@ interface GroupDetail {
 
 interface AccordionLabelProps {
   name: string
+  onAddHost: (groupName: string, details: { ipaddress: string; alias?: string }) => void
 }
 
-const group_details: GroupDetail[] = [
-  {
-    name: 'Web Server',
-    details: [
-      {
-        ipaddress: '192.168.1.100',
-        alias: 'Server 1'
-      },
-      {
-        ipaddress: '192.168.1.101',
-        alias: 'Server 2'
-      },
-      {
-        ipaddress: '192.168.1.102',
-        alias: 'Server 3'
-      }
-    ]
-  },
-  {
-    name: 'Work Station',
-    details: []
-  }
-]
-
-function AccordionLabel({ name }: AccordionLabelProps): JSX.Element {
+function AccordionLabel({ name, onAddHost }: AccordionLabelProps): JSX.Element {
   const [opened, { open, close }] = useDisclosure(false)
+
+  const form = useForm({
+    initialValues: {
+      ipaddress: '',
+      alias: ''
+    },
+
+    validate: {
+      ipaddress: (value) => {
+        return /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(
+          value
+        )
+          ? null
+          : 'Invalid IP Address'
+      }
+    },
+
+    transformValues: (values) => {
+      return {
+        ipaddress: values.ipaddress.trim(),
+        alias: values.alias.trim()
+      }
+    }
+  })
+
+  const handleAddHost = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const validationErrors = form.validate()
+
+    if (!validationErrors.hasErrors) {
+      onAddHost(name, {
+        ipaddress: form.values.ipaddress,
+        alias: form.values.alias
+      })
+      form.reset()
+      close()
+    }
+  }
 
   return (
     <>
       <Modal opened={opened} onClose={close} title="Add New Host" centered>
-        <TextInput type="text" label="IP Address" radius={0} />
-        <TextInput mt="md" label="Alias Name(Optional)" radius={0} />
+        <form onSubmit={handleAddHost}>
+          <TextInput
+            data-autofocus
+            type="text"
+            label="IP Address"
+            radius={0}
+            {...form.getInputProps('ipaddress')}
+          />
+          <TextInput
+            mt="md"
+            label="Alias Name(Optional)"
+            radius={0}
+            {...form.getInputProps('alias')}
+          />
 
-        <Flex mt="2rem" w="100%" gap="1rem">
-          <Button w="50%" variant="filled">
-            Add
-          </Button>
-          <Button w="50%" variant="outline" onClick={close}>
-            Cancel
-          </Button>
-        </Flex>
+          <Flex mt="2rem" w="100%" gap="1rem">
+            <Button type="submit" variant="filled" w="50%">
+              Add
+            </Button>
+            <Button variant="outline" onClick={close} w="50%">
+              Cancel
+            </Button>
+          </Flex>
+        </form>
       </Modal>
       <Flex justify="space-between" align="center">
         <Text fz="1.25rem" fw="400">
@@ -81,11 +111,45 @@ function AccordionLabel({ name }: AccordionLabelProps): JSX.Element {
 
 function Groups(): JSX.Element {
   const [opened, { open, close }] = useDisclosure(false)
+  const [groupDetails, setGroupDetails] = useState<GroupDetail[]>([
+    {
+      name: 'Web Server',
+      details: []
+    },
+    {
+      name: 'Work Station',
+      details: []
+    }
+  ])
 
-  const items = group_details.map((item) => (
+  const handleAddHost = (groupName: string, details: { ipaddress: string; alias?: string }) => {
+    setGroupDetails((prevGroupDetails) => {
+      const groupIndex = prevGroupDetails.findIndex((group) => group.name === groupName)
+      if (groupIndex !== -1) {
+        const updatedDetails = [...prevGroupDetails]
+        updatedDetails[groupIndex].details.push(details)
+        return updatedDetails
+      }
+      return prevGroupDetails
+    })
+  }
+
+  const handleRemoveHost = (groupName: string, ipaddress: string) => {
+    setGroupDetails((prevGroupDetails) => {
+      return prevGroupDetails.map((group) => {
+        if (group.name === groupName) {
+          const updatedDetails = group.details.filter((detail) => detail.ipaddress !== ipaddress)
+          return { ...group, details: updatedDetails }
+        }
+        return group
+      })
+    })
+  }
+
+  const items = groupDetails.map((item) => (
     <Accordion.Item key={item.name} value={item.name} mb="4rem">
       <Accordion.Control bg="#D9D9D9">
-        <AccordionLabel name={item.name} />
+        <AccordionLabel name={item.name} onAddHost={handleAddHost} />
       </Accordion.Control>
       <Accordion.Panel>
         {item.details.length > 0 ? (
@@ -104,6 +168,10 @@ function Groups(): JSX.Element {
                   <Center
                     p="2px"
                     style={{ borderRadius: '50%', border: '1px solid #000000', cursor: 'pointer' }}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleRemoveHost(item.name, detail.ipaddress)
+                    }}
                   >
                     <IconX size={16} strokeWidth={2} color={'black'} />
                   </Center>
