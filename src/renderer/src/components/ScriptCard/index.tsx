@@ -1,16 +1,75 @@
-import { Checkbox, UnstyledButton, Text, Box, Modal } from '@mantine/core'
+import {
+  Checkbox,
+  UnstyledButton,
+  Text,
+  Box,
+  Modal,
+  TagsInput,
+  Button,
+  Flex,
+  Stack
+} from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 
 import classes from './checkbox.module.css'
 import { useState } from 'react'
+type ScriptCardProps = {
+  label: string
+  module: string
+  description: string
+  advancedConfig?: Array<any>
+}
 
-function ScriptCard({ module, label, description }): JSX.Element {
+function ScriptCard({ label, description, advancedConfig, module }: ScriptCardProps): JSX.Element {
   const [checked, setChecked] = useState(false)
   const [opened, { open, close }] = useDisclosure(false)
+  console.log(advancedConfig)
 
   return (
     <>
-      <Modal opened={opened} onClose={close} centered></Modal>
+      <Modal
+        opened={opened}
+        onClose={close}
+        title={`${module.toUpperCase()} Advance Configurations`}
+        centered
+      >
+        <Stack gap={20} py={10}>
+          {advancedConfig?.map((config) => {
+            if (config.tag === 'checkbox') {
+              return (
+                <>
+                  <Checkbox
+                    defaultChecked={config.default}
+                    onChange={(e) => console.log(e.currentTarget.checked)}
+                    label={config.label}
+                    description={config.description}
+                  />
+                </>
+              )
+            }
+            if (config.tag === 'list') {
+              return (
+                <Box key={config.label}>
+                  <Text>{config.label}</Text>
+                  <TagsInput
+                    defaultValue={config.default}
+                    onChange={(e) => console.log(e)}
+                    description={config.description}
+                  />
+                </Box>
+              )
+            }
+          })}
+          <Flex justify="stretch" gap={15}>
+            <Button onClick={close} variant="subtle" fullWidth>
+              Close
+            </Button>
+            <Button onClick={close} variant="filled" fullWidth>
+              Save
+            </Button>
+          </Flex>
+        </Stack>
+      </Modal>
       <div className={classes.root}>
         <Box
           style={{
