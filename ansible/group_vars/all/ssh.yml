@@ -5,6 +5,7 @@ sshd_accept_env: LANG LC_*
 sshd_admin_net:
   - 192.168.0.0/24
   - 192.168.1.0/24
+  - 192.168.94.1
 sshd_allow_agent_forwarding: false
 sshd_allow_groups:
   - sudo
