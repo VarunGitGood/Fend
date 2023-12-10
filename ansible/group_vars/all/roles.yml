@@ -4,3 +4,4 @@ required_roles:
 active_roles:
   - ssh
   - compilers
+  - disablemod
