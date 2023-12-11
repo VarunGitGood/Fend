@@ -1,18 +1,20 @@
 ---
-- name: Some name
-  hosts: all
+dependency:
+  name: galaxy
+  options:
+    requirements-file: requirements.yml
+  platforms:
+    - name: molecule-ubuntu
+      image: ubuntu:18.04
+  driver:
+    options:
+      managed: false
+      login_cmd_template: "podman exec -ti {instance} bash"
+      ansible_connection_options:
+        ansible_connection: podman
+
 
   tasks:
-    - name: log user
-      block:
-        - name: run whoami
-          ansible.builtin.command: whoami
-          register: whoami
-
-        - name: log result
-          ansible.builtin.debug:
-            msg: "{{ whoami }}"
-
     - name: Include required roles
       ansible.builtin.include_role:
         name: "{{item}}"
