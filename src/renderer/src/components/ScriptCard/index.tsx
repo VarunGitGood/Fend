@@ -1,30 +1,44 @@
+import { useState } from 'react'
 import {
+  Box,
+  Flex,
+  Stack,
   Checkbox,
   UnstyledButton,
   Text,
-  Box,
   Modal,
   TagsInput,
-  Button,
-  Flex,
-  Stack
+  Button
 } from '@mantine/core'
+import { AdvancedConfigItem } from '@renderer/store/useScriptStore'
+import { useForm } from '@mantine/form'
 import { useDisclosure } from '@mantine/hooks'
-
-import classes from './checkbox.module.css'
-import { useState } from 'react'
 import { useScriptStore } from '@renderer/store/useScriptStore'
+import classes from './checkbox.module.css'
+
 type ScriptCardProps = {
-  label: string
   module: string
+  label: string
   description: string
-  advancedConfig?: Array<any>
 }
 
-function ScriptCard({ label, description, advancedConfig, module }: ScriptCardProps): JSX.Element {
+function ScriptCard({ label, description, module }: ScriptCardProps): JSX.Element {
   const [checked, setChecked] = useState(false)
   const [opened, { open, close }] = useDisclosure(false)
-  const { setScript, script } = useScriptStore()
+  const { advancedConfig, setAdvancedConfig } = useScriptStore()
+
+  const moduleAdvancedConfig: AdvancedConfigItem[] | undefined = advancedConfig.filter(
+    (config) => config.module === module
+  )
+
+  const initialValues = moduleAdvancedConfig?.map((config) => ({
+    [config.var]: config.current
+  }))
+
+  const form = useForm({
+    initialValues: initialValues
+  })
+
   return (
     <>
       <Modal
@@ -33,71 +47,53 @@ function ScriptCard({ label, description, advancedConfig, module }: ScriptCardPr
         title={`${module.toUpperCase()} Advance Configurations`}
         centered
       >
-        <Stack gap={20} py={10}>
-          {advancedConfig?.map((config) => {
-            if (config.tag === 'checkbox') {
-              return (
-                <>
+        <form onSubmit={form.onSubmit(() => console.log(form.values))}>
+          <Stack gap={20} py={10}>
+            {advancedConfig?.map((config) => {
+              if (config.module !== module) return null
+
+              if (config.tag === 'checkbox') {
+                return (
                   <Checkbox
                     defaultChecked={config.current}
-                    onChange={(e) => {
-                      console.log(script)
-                      const newScript = script.map((sc) => {
-                        if (sc.module === module) {
-                          return {
-                            ...sc,
-                            advancedConfig: sc.advancedConfig.map((ac) => {
-                              if (ac.label === config.label) {
-                                return {
-                                  ...ac,
-                                  current: e.currentTarget.checked
-                                }
-                              }
-                              return ac
-                            })
-                          }
-                        }
-                        return sc
-                      })
-                      setScript(newScript)
-                    }}
                     label={config.label}
                     description={config.description}
+                    {...form.getInputProps(config.var)}
                   />
-                </>
-              )
-            }
-            if (config.tag === 'list') {
-              return (
-                <Box key={config.label}>
-                  <Text>{config.label}</Text>
-                  <TagsInput
-                    defaultValue={config.default}
-                    onChange={(e) => console.log(e)}
-                    description={config.description}
-                  />
-                </Box>
-              )
-            }
-          })}
-          <Flex justify="stretch" gap={15}>
-            <Button onClick={close} variant="subtle" fullWidth>
-              Close
-            </Button>
-            <Button onClick={close} variant="filled" fullWidth>
-              Save
-            </Button>
-          </Flex>
-        </Stack>
+                )
+              }
+              if (config.tag === 'list') {
+                return (
+                  <Box key={config.label}>
+                    <Text>{config.label}</Text>
+                    <TagsInput
+                      defaultValue={config.current}
+                      description={config.description}
+                      {...form.getInputProps(config.var)}
+                    />
+                  </Box>
+                )
+              }
+
+              return null
+            })}
+            <Flex justify="stretch" gap={15}>
+              <Button onClick={close} variant="subtle" fullWidth>
+                Close
+              </Button>
+              <Button type="submit" onClick={close} variant="filled" fullWidth>
+                Save
+              </Button>
+            </Flex>
+          </Stack>
+        </form>
       </Modal>
+
       <div className={classes.root}>
-        <Box
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: '0 1.5rem'
-          }}
+        <Flex
+          justify="space-between"
+          align="center"
+          px="1.5rem"
           onClick={() => setChecked((c) => !c)}
         >
           <Checkbox
@@ -108,16 +104,13 @@ function ScriptCard({ label, description, advancedConfig, module }: ScriptCardPr
             size="md"
             aria-label="Checkbox example"
           />
-
           <UnstyledButton className={classes.control} data-checked={checked || undefined}>
             <Text className={classes.label}>{label}</Text>
             <Text className={classes.description}>{description}</Text>
           </UnstyledButton>
           <Text
             c="blue"
-            style={{
-              cursor: 'pointer'
-            }}
+            style={{ cursor: 'pointer' }}
             onClick={(e) => {
               e.stopPropagation()
               open()
@@ -125,7 +118,7 @@ function ScriptCard({ label, description, advancedConfig, module }: ScriptCardPr
           >
             Show Advance Options
           </Text>
-        </Box>
+        </Flex>
       </div>
     </>
   )

@@ -204,7 +204,7 @@ function Groups(): JSX.Element {
           </Button>
         </Flex>
       </Modal>
-      <Box px="3rem" py="md">
+      <Box p="md">
         <Flex justify="space-between" align="center">
           <Text fz="2.25rem" fw={400}>
             Groups
