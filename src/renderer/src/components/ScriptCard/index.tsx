@@ -31,14 +31,26 @@ function ScriptCard({ label, description, module }: ScriptCardProps): JSX.Elemen
     (config) => config.module === module
   )
 
-  const initialValues = moduleAdvancedConfig?.map((config) => ({
-    [config.var]: config.current
-  }))
+  const initialValues: Record<string, string | number | boolean> = {}
+
+  moduleAdvancedConfig?.map((config) => {
+    initialValues[config.var] = config.current
+  })
 
   const form = useForm({
     initialValues: initialValues
   })
-
+  const handleSubmit = (e): void => {
+    e.preventDefault()
+    const newAdvancedConfig = advancedConfig.map((config) => {
+      if (config.module !== module) return config
+      config.current = form.values[config.var]
+      return config
+    })
+    console.log(newAdvancedConfig)
+    setAdvancedConfig(newAdvancedConfig)
+    close()
+  }
   return (
     <>
       <Modal
@@ -47,7 +59,7 @@ function ScriptCard({ label, description, module }: ScriptCardProps): JSX.Elemen
         title={`${module.toUpperCase()} Advance Configurations`}
         centered
       >
-        <form onSubmit={form.onSubmit(() => console.log(form.values))}>
+        <form onSubmit={(e) => handleSubmit(e)}>
           <Stack gap={20} py={10}>
             {advancedConfig?.map((config) => {
               if (config.module !== module) return null
@@ -55,6 +67,7 @@ function ScriptCard({ label, description, module }: ScriptCardProps): JSX.Elemen
               if (config.tag === 'checkbox') {
                 return (
                   <Checkbox
+                    key={config.label}
                     defaultChecked={config.current}
                     label={config.label}
                     description={config.description}

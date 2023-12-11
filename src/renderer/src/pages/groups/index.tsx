@@ -3,15 +3,7 @@ import { useDisclosure } from '@mantine/hooks'
 import { Box, Accordion, Modal, TextInput, Flex, Grid, Center, Text, Button } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { IconX } from '@tabler/icons-react'
-
-interface GroupDetail {
-  name: string
-  details: {
-    ipaddress: string
-    alias?: string
-  }[]
-}
-
+import { GroupDetail, useGroupStore } from '@renderer/store/useGroupStore'
 interface AccordionLabelProps {
   name: string
   onAddHost: (groupName: string, details: { ipaddress: string; alias?: string }) => void
@@ -44,7 +36,7 @@ function AccordionLabel({ name, onAddHost }: AccordionLabelProps): JSX.Element {
     }
   })
 
-  const handleAddHost = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleAddHost = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault()
     const validationErrors = form.validate()
 
@@ -111,18 +103,13 @@ function AccordionLabel({ name, onAddHost }: AccordionLabelProps): JSX.Element {
 
 function Groups(): JSX.Element {
   const [opened, { open, close }] = useDisclosure(false)
-  const [groupDetails, setGroupDetails] = useState<GroupDetail[]>([
-    {
-      name: 'Web Server',
-      details: []
-    },
-    {
-      name: 'Work Station',
-      details: []
-    }
-  ])
 
-  const handleAddHost = (groupName: string, details: { ipaddress: string; alias?: string }) => {
+  const { groupDetails, setGroupDetails } = useGroupStore()
+
+  const handleAddHost = (
+    groupName: string,
+    details: { ipaddress: string; alias?: string }
+  ): void => {
     setGroupDetails((prevGroupDetails) => {
       const groupIndex = prevGroupDetails.findIndex((group) => group.name === groupName)
       if (groupIndex !== -1) {
@@ -134,7 +121,7 @@ function Groups(): JSX.Element {
     })
   }
 
-  const handleRemoveHost = (groupName: string, ipaddress: string) => {
+  const handleRemoveHost = (groupName: string, ipaddress: string): void => {
     setGroupDetails((prevGroupDetails) => {
       return prevGroupDetails.map((group) => {
         if (group.name === groupName) {
