@@ -1,27 +1,19 @@
 import { create } from 'zustand'
 
-export interface GroupDetail {
+export interface HostDetails {
+  ipaddress: string
+  alias?: string
+}
+export interface Group {
   name: string
-  details: {
-    ipaddress: string
-    alias?: string
-  }[]
+  details: HostDetails[]
 }
 
 interface GroupStore {
-  groupDetails: GroupDetail[]
-  setGroupDetails: (gd: GroupDetail[]) => void
+  groupDetails: Group[]
+  setGroupDetails: (gd: Group[]) => void
 }
 export const useGroupStore = create<GroupStore>((set) => ({
-  groupDetails: [
-    {
-      name: 'Web Server',
-      details: []
-    },
-    {
-      name: 'Work Station',
-      details: []
-    }
-  ],
-  setGroupDetails: (gd: GroupDetail[]): void => set({ groupDetails: gd })
+  groupDetails: [],
+  setGroupDetails: (gd: Group[]) => set({ groupDetails: gd })
 }))
