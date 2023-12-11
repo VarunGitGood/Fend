@@ -13,6 +13,7 @@ import { useDisclosure } from '@mantine/hooks'
 
 import classes from './checkbox.module.css'
 import { useState } from 'react'
+import { useScriptStore } from '@renderer/store/useScriptStore'
 type ScriptCardProps = {
   label: string
   module: string
@@ -23,8 +24,7 @@ type ScriptCardProps = {
 function ScriptCard({ label, description, advancedConfig, module }: ScriptCardProps): JSX.Element {
   const [checked, setChecked] = useState(false)
   const [opened, { open, close }] = useDisclosure(false)
-  console.log(advancedConfig)
-
+  const { setScript, script } = useScriptStore()
   return (
     <>
       <Modal
@@ -39,8 +39,28 @@ function ScriptCard({ label, description, advancedConfig, module }: ScriptCardPr
               return (
                 <>
                   <Checkbox
-                    defaultChecked={config.default}
-                    onChange={(e) => console.log(e.currentTarget.checked)}
+                    defaultChecked={config.current}
+                    onChange={(e) => {
+                      console.log(script)
+                      const newScript = script.map((sc) => {
+                        if (sc.module === module) {
+                          return {
+                            ...sc,
+                            advancedConfig: sc.advancedConfig.map((ac) => {
+                              if (ac.label === config.label) {
+                                return {
+                                  ...ac,
+                                  current: e.currentTarget.checked
+                                }
+                              }
+                              return ac
+                            })
+                          }
+                        }
+                        return sc
+                      })
+                      setScript(newScript)
+                    }}
                     label={config.label}
                     description={config.description}
                   />
