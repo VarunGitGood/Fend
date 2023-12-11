@@ -6,12 +6,12 @@ const api = {}
 
 contextBridge.exposeInMainWorld('ipcRenderer', {
   send: (channel: string, data: any) => {
-    ipcRenderer.send(channel, data);
+    ipcRenderer.send(channel, data)
   },
   on: (channel: string, listener: (...args: any[]) => void) => {
-    ipcRenderer.on(channel, listener);
-  },
-});
+    ipcRenderer.on(channel, listener)
+  }
+})
 
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise

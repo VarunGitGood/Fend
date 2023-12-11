@@ -1,0 +1,35 @@
+---
+- name: Converge
+  hosts: all
+
+  tasks:
+    - name: Update apt cache (on Debian).
+      apt:
+        upgrade: true
+        update_cache: true
+        cache_valid_time: 3600
+      when: ansible_os_family == 'Debian'
+
+    - name: Install ssh
+      apt:
+        name: ssh
+        state: present
+
+    - name: Handle previlage bug
+      block:
+        - name: change conf file
+          ansible.builtin.lineinfile:
+            path: /usr/lib/tmpfiles.d/sshd.conf
+            line: "d /run/sshd 0755 root root"
+            state: present
+            create: true
+            owner: root
+            group: root
+            mode: "0600"
+
+        - name: restart ssh
+          ansible.builtin.service:
+            name: ssh
+            state: restarted
+
+- import_playbook: ../../main.yml

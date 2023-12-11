@@ -1,0 +1,7 @@
+---
+block_blacklisted: false
+misc_modules_blocklist:
+  - bluetooth
+  - usb-midi
+  - thunderbolt
+  - usb-storage
