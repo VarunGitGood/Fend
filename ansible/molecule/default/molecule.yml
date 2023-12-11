@@ -10,11 +10,12 @@ lint: |
   yamllint .
   ansible-lint
 platforms:
-  - name: instance
+  - name: ubuntu2204
     image: geerlingguy/docker-ubuntu2204-ansible:latest
+    cgroupns_mode: host
     command: ""
     volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw # won't work with ro
     privileged: true
     pre_build_image: true
 provisioner:
