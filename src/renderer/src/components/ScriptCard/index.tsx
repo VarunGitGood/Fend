@@ -26,6 +26,7 @@ function ScriptCard({ label, description, module }: ScriptCardProps): JSX.Elemen
   const [checked, setChecked] = useState(false)
   const [opened, { open, close }] = useDisclosure(false)
   const { advancedConfig, setAdvancedConfig } = useScriptStore()
+  const { script, setScript } = useScriptStore()
 
   const moduleAdvancedConfig: AdvancedConfigItem[] | undefined = advancedConfig.filter(
     (config) => config.module === module
@@ -37,6 +38,15 @@ function ScriptCard({ label, description, module }: ScriptCardProps): JSX.Elemen
     initialValues[config.var] = config.current
   })
 
+  const editModule = (isChecked, module): void => {
+    const newScript = script.map((s) => {
+      if (s.module !== module) return s
+      s.current = isChecked
+      return s
+    })
+    setScript(newScript)
+  }
+
   const form = useForm({
     initialValues: initialValues
   })
@@ -47,7 +57,6 @@ function ScriptCard({ label, description, module }: ScriptCardProps): JSX.Elemen
       config.current = form.values[config.var]
       return config
     })
-    console.log(newAdvancedConfig)
     setAdvancedConfig(newAdvancedConfig)
     close()
   }
@@ -107,15 +116,18 @@ function ScriptCard({ label, description, module }: ScriptCardProps): JSX.Elemen
           justify="space-between"
           align="center"
           px="1.5rem"
-          onClick={() => setChecked((c) => !c)}
+          onClick={() => {
+            setChecked(!checked)
+            editModule(!checked, module)
+          }}
         >
           <Checkbox
             classNames={{ root: classes.checkboxWrapper, input: classes.checkbox }}
             checked={checked}
-            onChange={(event) => setChecked(event.currentTarget.checked)}
             tabIndex={-1}
             size="md"
             aria-label="Checkbox example"
+            readOnly
           />
           <UnstyledButton className={classes.control} data-checked={checked || undefined}>
             <Text className={classes.label}>{label}</Text>

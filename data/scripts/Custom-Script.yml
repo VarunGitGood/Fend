@@ -1,0 +1,16 @@
+active_roles:
+  - ufw
+  - ssh
+ufw_enabled: true
+ufw_outgoing_traffic:
+  - '80'
+sshd_admin_net:
+  - 192.168.0.0/24
+  - 192.168.1.0/24
+sshd_allow_groups:
+  - sudo
+sshd_allow_users:
+  - root
+  - ansible_user
+sshd_ports:
+  - '22'

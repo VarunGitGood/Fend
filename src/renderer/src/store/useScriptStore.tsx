@@ -15,6 +15,7 @@ export interface ModuleItem {
   module: string
   label: string
   description: string
+  current: boolean
 }
 interface ScriptStore {
   script: ModuleItem[]
@@ -28,13 +29,14 @@ export const useScriptStore = create<ScriptStore>((set) => ({
     {
       module: 'ufw',
       label: 'UFW Firewall Configuration',
-      description: 'UFW Firewall Configuration. Default allowed ports: 22, 80, 443.'
+      description: 'UFW Firewall Configuration. Default allowed ports: 22, 80, 443.',
+      current: false
     },
     {
       module: 'ssh',
       label: 'OpenSSH Configuration',
       description: 'OpenSSH Configuration',
-      advancedConfig: []
+      current: false
     }
   ],
   advancedConfig: [
