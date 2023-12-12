@@ -2,6 +2,8 @@
 required_roles:
   - facts
 active_roles:
+  - ufw
+  - compilers
   - disablemod
   - ssh
   - ipv6
