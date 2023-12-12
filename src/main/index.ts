@@ -1,10 +1,9 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, IpcMainEvent } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import * as fs from 'fs-extra'
-import * as yaml from 'js-yaml'
 let childWindow: BrowserWindow | null = null
+import { generateScript, ScriptData } from './generateScript'
 
 function createWindow(): void {
   // Create the browser window.
@@ -22,17 +21,8 @@ function createWindow(): void {
     }
   })
 
-  ipcMain.on('generate-script', (_event: any, data: any) => {
-    try {
-      const yamlData = yaml.dump(data.script)
-      const scriptFolderPath = join(__dirname, '../../data/scripts')
-      const filePath = join(scriptFolderPath, `${data.scriptName}.yml`)
-      fs.writeFileSync(filePath, yamlData)
-      mainWindow.webContents.send('yamlDataWritten', 'Data written to file successfully.')
-    } catch (error) {
-      // Notify the renderer process of the error
-      mainWindow.webContents.send('yamlDataWriteError', error.message)
-    }
+  ipcMain.on('generate-script', (_event: IpcMainEvent, data: ScriptData) => {
+    generateScript(data, mainWindow)
   })
 
   mainWindow.on('ready-to-show', () => {
@@ -44,7 +34,7 @@ function createWindow(): void {
     return { action: 'deny' }
   })
 
-  ipcMain.on('open-child-window', (_event: any, _arg: any) => {
+  ipcMain.on('open-child-window', (_event: IpcMainEvent, _arg: string) => {
     childWindow = new BrowserWindow({
       width: 800,
       height: 600,
@@ -60,7 +50,7 @@ function createWindow(): void {
     childWindow.loadURL('http://localhost:5173/ssh-advanced-settings')
   })
 
-  ipcMain.on('close-child-window', (_event: any, _arg: any) => {
+  ipcMain.on('close-child-window', (_event: IpcMainEvent, _arg: any) => {
     if (childWindow) {
       childWindow.close()
       childWindow = null

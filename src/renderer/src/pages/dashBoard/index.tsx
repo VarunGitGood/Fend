@@ -3,19 +3,6 @@ import { Link } from 'react-router-dom'
 import classes from './styles.module.css'
 
 function Dashboard(): JSX.Element {
-  // const handleGenerateScriptClick = (): void => {
-  //   // Sample data to write
-  //   const script = {
-  //     name: 'test',
-  //     description: 'test description'
-  //   }
-  //   const scriptName = 'test'
-
-  //   const data = {
-  //     script,
-  //     scriptName
-  //   }
-
   //   ipcRenderer.send('generate-script', data)
 
   //   ipcRenderer.on('yamlDataWritten', (_event, message) => {

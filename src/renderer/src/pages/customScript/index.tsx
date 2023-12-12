@@ -4,6 +4,7 @@ import { useScriptStore } from '@renderer/store/useScriptStore'
 
 function CustomScript(): JSX.Element {
   const { script } = useScriptStore()
+  console.log(script)
   return (
     <Box p="md">
       <Text fz="2.25rem" fw={400}>
