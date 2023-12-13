@@ -5,6 +5,7 @@ const ipcRenderer = (window as any).ipcRenderer
 
 function CustomScript(): JSX.Element {
   const { script, advancedConfig } = useScriptStore()
+
   const confirmScript = (): void => {
     const customScript: { [key: string]: any } = {
       active_roles: []
@@ -24,10 +25,10 @@ function CustomScript(): JSX.Element {
       script: customScript
     }
     ipcRenderer.send('generate-script', data)
-    ipcRenderer.on('generate-script-success', (event, arg) => {
+    ipcRenderer.on('generate-script-success', (_event, arg) => {
       console.log(arg)
     })
-    ipcRenderer.on('generate-script-error', (event, arg) => {
+    ipcRenderer.on('generate-script-error', (_event, arg) => {
       console.error(arg)
     })
   }
@@ -46,7 +47,7 @@ function CustomScript(): JSX.Element {
       <Flex justify="flex-end" gap={15} style={{ marginTop: '2rem' }}>
         <Button variant="subtle">Back</Button>
         <Button variant="filled" onClick={confirmScript}>
-          Next
+          Save & Next
         </Button>
       </Flex>
     </Box>
