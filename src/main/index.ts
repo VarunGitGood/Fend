@@ -1,8 +1,9 @@
-import { app, shell, BrowserWindow, ipcMain, IpcMainEvent } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, IpcMainEvent, Notification } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { generateScript, ScriptData, addGroup, Inventory } from './generateScript'
+import { getSystemInfo } from './getSystemInfo'
 import { runScript } from './runScript'
 
 function createWindow(): void {
@@ -25,6 +26,11 @@ function createWindow(): void {
     generateScript(data, mainWindow)
   })
 
+  ipcMain.on('get-system-info', () => {
+    const info = getSystemInfo()
+    mainWindow.webContents.send('get-system-info-success', info)
+  })
+
   ipcMain.on('add-group', (_event: IpcMainEvent, data: Inventory) => {
     addGroup(data, mainWindow)
   })
@@ -33,14 +39,25 @@ function createWindow(): void {
     await runScript(data.scriptName, data.groupName)
       .then((result) => {
         mainWindow.webContents.send('run-script-success', result)
+        // success notification
+        new Notification({
+          title: 'Success',
+          body: 'Script run successfully.'
+        }).show()
       })
       .catch((error) => {
+        // error notification
+        new Notification({
+          title: 'Error',
+          body: 'Script run failed.'
+        }).show()
         mainWindow.webContents.send('run-script-error', error)
       })
   })
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
+    getSystemInfo()
   })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {

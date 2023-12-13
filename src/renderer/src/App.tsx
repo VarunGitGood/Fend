@@ -6,6 +6,7 @@ import Dashboard from './pages/dashBoard'
 import CustomScript from './pages/customScript'
 import Groups from './pages/groups'
 import { Logs } from './pages/logs'
+import { SystemInfo } from './pages/systemInfo'
 
 function App(): JSX.Element {
   return (
@@ -16,6 +17,7 @@ function App(): JSX.Element {
           <Route path="/groups" element={<Groups />} />
           <Route path="/custom-script" element={<CustomScript />} />
           <Route path="/logs" element={<Logs />} />
+          <Route path="/sysInfo" element={<SystemInfo />} />
         </Routes>
       </MainAppShell>
     </MantineProvider>

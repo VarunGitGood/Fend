@@ -29,7 +29,7 @@ export const generateScript = (data: ScriptData, mainWindow: BrowserWindow): voi
     const filePath = join(scriptFolderPath, `${data.scriptName}.yml`)
     fs.writeFileSync(filePath, yamlData)
     mainWindow.webContents.send('generate-script-success', 'Data written to file successfully.')
-  } catch (error) {
+  } catch (error: any) {
     // Notify the renderer process of the error
     mainWindow.webContents.send('generate-script-error', error.message)
   }
@@ -43,7 +43,7 @@ export const addGroup = (data: Inventory, mainWindow: BrowserWindow): void => {
     const filePath = join(scriptFolderPath, `${data.groupName}.yml`)
     fs.writeFileSync(filePath, yamlData)
     mainWindow.webContents.send('add-group-success', 'Data written to file successfully.')
-  } catch (error) {
+  } catch (error: any) {
     // Notify the renderer process of the error
     mainWindow.webContents.send('add-group-error', error.message)
   }
