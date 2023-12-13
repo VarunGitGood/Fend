@@ -135,7 +135,13 @@ function Dashboard(): JSX.Element {
       </Box>
 
       <Box mt="4rem">
-        <Table.ScrollContainer minWidth={800}>
+        <Flex justify="space-between" align="center">
+          <Text c="#101828" fz="1.125rem" fw={600} lh="1.75rem">
+            Last Execution Scripts
+          </Text>
+          <Button bg="#005FB8">See all Logs</Button>
+        </Flex>
+        <Table.ScrollContainer minWidth={800} mt="2rem">
           <Table verticalSpacing="xs">
             <Table.Thead>
               <Table.Tr>
