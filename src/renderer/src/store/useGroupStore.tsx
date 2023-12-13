@@ -2,7 +2,8 @@ import { create } from 'zustand'
 
 export interface HostDetails {
   ipaddress: string
-  alias?: string
+  alias: string
+  lastModified: string
 }
 export interface Group {
   name: string
@@ -15,7 +16,12 @@ interface GroupStore {
 }
 export const useGroupStore = create<GroupStore>(
   (set): GroupStore => ({
-    groupDetails: [],
+    groupDetails: [
+      {
+        name: 'Web Server',
+        details: []
+      }
+    ],
     setGroupDetails: (gd: Group[]) => set({ groupDetails: gd })
   })
 )

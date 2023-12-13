@@ -1,14 +1,28 @@
 import { useDisclosure } from '@mantine/hooks'
-import { Box, Accordion, Modal, TextInput, Flex, Grid, Center, Text, Button } from '@mantine/core'
+import { Box, Table, Modal, TextInput, Flex, Text, Button } from '@mantine/core'
 import { useForm } from '@mantine/form'
-import { IconX } from '@tabler/icons-react'
 import { useGroupStore } from '@renderer/store/useGroupStore'
-interface AccordionLabelProps {
+import classes from './index.module.css'
+interface GroupBarProps {
   name: string
-  onAddHost: (groupName: string, details: { ipaddress: string; alias?: string }) => void
+  onAddHost: (
+    groupName: string,
+    details: { ipaddress: string; alias: string; lastModified: string }
+  ) => void
 }
 
-function AccordionLabel({ name, onAddHost }: AccordionLabelProps): JSX.Element {
+function formatLastModified(dateString: string): string {
+  const date = new Date(dateString)
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  }
+
+  return new Intl.DateTimeFormat('en-US', options).format(date)
+}
+
+function GroupBar({ name, onAddHost }: GroupBarProps): JSX.Element {
   const [opened, { open, close }] = useDisclosure(false)
 
   const form = useForm({
@@ -24,6 +38,9 @@ function AccordionLabel({ name, onAddHost }: AccordionLabelProps): JSX.Element {
         )
           ? null
           : 'Invalid IP Address'
+      },
+      alias: (value) => {
+        return value.trim() === '' ? 'Alias Name is required' : null
       }
     },
 
@@ -42,7 +59,8 @@ function AccordionLabel({ name, onAddHost }: AccordionLabelProps): JSX.Element {
     if (!validationErrors.hasErrors) {
       onAddHost(name, {
         ipaddress: form.values.ipaddress,
-        alias: form.values.alias
+        alias: form.values.alias,
+        lastModified: formatLastModified(new Date().toISOString())
       })
       form.reset()
       close()
@@ -60,12 +78,7 @@ function AccordionLabel({ name, onAddHost }: AccordionLabelProps): JSX.Element {
             radius={0}
             {...form.getInputProps('ipaddress')}
           />
-          <TextInput
-            mt="md"
-            label="Alias Name(Optional)"
-            radius={0}
-            {...form.getInputProps('alias')}
-          />
+          <TextInput mt="md" label="Alias Name" radius={0} {...form.getInputProps('alias')} />
 
           <Flex mt="2rem" w="100%" gap="1rem">
             <Button type="submit" variant="filled" w="50%">
@@ -77,24 +90,19 @@ function AccordionLabel({ name, onAddHost }: AccordionLabelProps): JSX.Element {
           </Flex>
         </form>
       </Modal>
-      <Flex justify="space-between" align="center">
-        <Text fz="1.25rem" fw="400">
+      <Flex justify="space-between" align="center" className={classes.groupBar}>
+        <Text fz="1.125rem" fw={600} lh="1.75rem">
           {name}
         </Text>
-        <span
-          style={{
-            cursor: 'pointer',
-            fontSize: '1rem',
-            color: '#666666',
-            marginLeft: '1rem'
-          }}
+        <Button
+          variant="outline"
           onClick={(e) => {
             e.stopPropagation()
             open()
           }}
         >
           + Add New Host
-        </span>
+        </Button>
       </Flex>
     </>
   )
@@ -141,7 +149,7 @@ function Groups(): JSX.Element {
 
   const handleAddHost = (
     groupName: string,
-    details: { ipaddress: string; alias?: string }
+    details: { ipaddress: string; alias: string; lastModified: string }
   ): void => {
     const newGroupDetails = groupDetails.map((item) => {
       if (item.name === groupName) {
@@ -172,48 +180,55 @@ function Groups(): JSX.Element {
     setGroupDetails(newGroupDetails)
   }
 
+  const rows = groupDetails.map((item) => {
+    const row =
+      item.details.length > 0 ? (
+        item.details.map((detail) => (
+          <Table.Tr key={detail.ipaddress}>
+            <Table.Td>{detail.alias}</Table.Td>
+            <Table.Td>{detail.ipaddress}</Table.Td>
+            <Table.Td>{detail.lastModified}</Table.Td>
+            <Table.Td>
+              <span
+                style={{ color: '#005FB8', cursor: 'pointer' }}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleRemoveHost(item.name, detail.ipaddress)
+                }}
+              >
+                Remove
+              </span>
+            </Table.Td>
+          </Table.Tr>
+        ))
+      ) : (
+        <Table.Tr key={`no-details-${item.name}`}>
+          <Table.Td colSpan={4} py="2rem" style={{ textAlign: 'center' }}>
+            No details available
+          </Table.Td>
+        </Table.Tr>
+      )
+
+    return row
+  })
+
   const items = groupDetails.map((item) => (
-    <Accordion.Item key={item.name} value={item.name} mb="4rem">
-      <Accordion.Control bg="#D9D9D9">
-        <AccordionLabel name={item.name} onAddHost={handleAddHost} />
-      </Accordion.Control>
-      <Accordion.Panel>
-        {item.details.length > 0 ? (
-          <Grid py="1rem">
-            {item.details.map((detail) => (
-              <Grid.Col span={4} key={detail.ipaddress}>
-                <Flex
-                  justify="space-around"
-                  align="center"
-                  p="0.75rem"
-                  style={{ border: '1px solid #000000', borderRadius: '1rem' }}
-                >
-                  <Text fz="1rem" fw={400}>
-                    {detail.alias ? detail.ipaddress + ' (' + detail.alias + ')' : detail.ipaddress}
-                  </Text>
-                  <Center
-                    p="2px"
-                    style={{ borderRadius: '50%', border: '1px solid #000000', cursor: 'pointer' }}
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      handleRemoveHost(item.name, detail.ipaddress)
-                    }}
-                  >
-                    <IconX size={16} strokeWidth={2} color={'black'} />
-                  </Center>
-                </Flex>
-              </Grid.Col>
-            ))}
-          </Grid>
-        ) : (
-          <Flex justify="center" align="center" h="5rem">
-            <Text fz="1rem" ta="center">
-              No details available for this group
-            </Text>
-          </Flex>
-        )}
-      </Accordion.Panel>
-    </Accordion.Item>
+    <Box key={item.name} mt="2rem">
+      <GroupBar name={item.name} onAddHost={handleAddHost} />
+      <Table.ScrollContainer minWidth={800}>
+        <Table verticalSpacing="0.75rem" horizontalSpacing="1.5rem" className={classes.table}>
+          <Table.Thead>
+            <Table.Tr>
+              <Table.Th>Host Name</Table.Th>
+              <Table.Th>IP address</Table.Th>
+              <Table.Th>Last Modified</Table.Th>
+              <Table.Th></Table.Th>
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>{rows}</Table.Tbody>
+        </Table>
+      </Table.ScrollContainer>
+    </Box>
   ))
 
   return (
@@ -239,19 +254,15 @@ function Groups(): JSX.Element {
       </Modal>
       <Box p="md">
         <Flex justify="space-between" align="center">
-          <Text fz="2.25rem" fw={400}>
+          <Text fz="2.25rem" fw="600" lh="2.75rem">
             Groups
           </Text>
-          <Button variant="outline" radius="1rem" onClick={open}>
+          <Button bg="#005FB8" size="md" onClick={open}>
             + Add New Group
           </Button>
         </Flex>
 
-        <Box mt="5rem">
-          <Accordion chevron multiple defaultValue={['Web Server']}>
-            {items}
-          </Accordion>
-        </Box>
+        <Box mt="3rem">{items}</Box>
       </Box>
     </>
   )

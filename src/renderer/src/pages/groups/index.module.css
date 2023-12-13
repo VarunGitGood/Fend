@@ -1,0 +1,17 @@
+.groupBar {
+  border-radius: 0.5rem 0.5rem 0 0;
+  border: 1px solid var(--gray-200, #eaecf0);
+  background-color: var(--base-white, #fff);
+  padding: 1.25rem 1.5rem 1.25rem 1.5rem;
+  box-shadow:
+    0px 1px 2px 0px rgba(16, 24, 40, 0.06),
+    0px 1px 3px 0px rgba(16, 24, 40, 0.1);
+}
+
+.table {
+  border: 1px solid var(--gray-200, #eaecf0);
+  background-color: var(--base-white, #fff);
+  box-shadow:
+    0px 1px 2px 0px rgba(16, 24, 40, 0.06),
+    0px 1px 3px 0px rgba(16, 24, 40, 0.1);
+}
