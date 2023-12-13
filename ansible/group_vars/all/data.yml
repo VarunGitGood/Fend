@@ -1,6 +1,7 @@
 ---
 required_roles:
   - facts
+  - packagemgmt
 active_roles:
   - ufw
   - compilers
@@ -8,3 +9,6 @@ active_roles:
   - ssh
   - ipv6
   - compilers
+
+active_groups:
+  - all
