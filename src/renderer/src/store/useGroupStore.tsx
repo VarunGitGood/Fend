@@ -16,12 +16,7 @@ interface GroupStore {
 }
 export const useGroupStore = create<GroupStore>(
   (set): GroupStore => ({
-    groupDetails: [
-      {
-        name: 'Web Server',
-        details: []
-      }
-    ],
+    groupDetails: [],
     setGroupDetails: (gd: Group[]) => set({ groupDetails: gd })
   })
 )

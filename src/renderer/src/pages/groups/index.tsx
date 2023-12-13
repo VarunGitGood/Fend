@@ -1,6 +1,7 @@
 import { useDisclosure } from '@mantine/hooks'
-import { Box, Table, Modal, TextInput, Flex, Text, Button } from '@mantine/core'
+import { Box, Table, Modal, TextInput, Flex, Group, Image, Text, Button } from '@mantine/core'
 import { useForm } from '@mantine/form'
+import notFoundImg from '../../assets/notFound.jpg'
 import { useGroupStore } from '@renderer/store/useGroupStore'
 import classes from './index.module.css'
 interface GroupBarProps {
@@ -180,10 +181,12 @@ function Groups(): JSX.Element {
     setGroupDetails(newGroupDetails)
   }
 
-  const rows = groupDetails.map((item) => {
-    const row =
-      item.details.length > 0 ? (
-        item.details.map((detail) => (
+  const items = groupDetails.map((group) => {
+    const { name, details } = group
+
+    const rows =
+      details.length > 0 ? (
+        details.map((detail) => (
           <Table.Tr key={detail.ipaddress}>
             <Table.Td>{detail.alias}</Table.Td>
             <Table.Td>{detail.ipaddress}</Table.Td>
@@ -193,7 +196,7 @@ function Groups(): JSX.Element {
                 style={{ color: '#005FB8', cursor: 'pointer' }}
                 onClick={(e) => {
                   e.stopPropagation()
-                  handleRemoveHost(item.name, detail.ipaddress)
+                  handleRemoveHost(name, detail.ipaddress)
                 }}
               >
                 Remove
@@ -202,34 +205,32 @@ function Groups(): JSX.Element {
           </Table.Tr>
         ))
       ) : (
-        <Table.Tr key={`no-details-${item.name}`}>
+        <Table.Tr key={`no-details-${name}`}>
           <Table.Td colSpan={4} py="2rem" style={{ textAlign: 'center' }}>
             No details available
           </Table.Td>
         </Table.Tr>
       )
 
-    return row
+    return (
+      <Box key={name} mt="2rem">
+        <GroupBar name={name} onAddHost={handleAddHost} />
+        <Table.ScrollContainer minWidth={800}>
+          <Table verticalSpacing="0.75rem" horizontalSpacing="1.5rem" className={classes.table}>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>Host Name</Table.Th>
+                <Table.Th>IP address</Table.Th>
+                <Table.Th>Last Modified</Table.Th>
+                <Table.Th></Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>{rows}</Table.Tbody>
+          </Table>
+        </Table.ScrollContainer>
+      </Box>
+    )
   })
-
-  const items = groupDetails.map((item) => (
-    <Box key={item.name} mt="2rem">
-      <GroupBar name={item.name} onAddHost={handleAddHost} />
-      <Table.ScrollContainer minWidth={800}>
-        <Table verticalSpacing="0.75rem" horizontalSpacing="1.5rem" className={classes.table}>
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th>Host Name</Table.Th>
-              <Table.Th>IP address</Table.Th>
-              <Table.Th>Last Modified</Table.Th>
-              <Table.Th></Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>{rows}</Table.Tbody>
-        </Table>
-      </Table.ScrollContainer>
-    </Box>
-  ))
 
   return (
     <>
@@ -262,7 +263,13 @@ function Groups(): JSX.Element {
           </Button>
         </Flex>
 
-        <Box mt="3rem">{items}</Box>
+        {groupDetails.length === 0 ? (
+          <Group justify="center" align="center" mt="3rem">
+            <Image src={notFoundImg} alt="No Groups Found" width={600} height={600} />
+          </Group>
+        ) : (
+          <Box mt="3rem">{items}</Box>
+        )}
       </Box>
     </>
   )
