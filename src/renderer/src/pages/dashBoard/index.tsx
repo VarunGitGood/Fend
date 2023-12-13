@@ -2,7 +2,7 @@ import { Box, Flex, Stack, Group, Grid, Paper, Text, Button } from '@mantine/cor
 import { useNavigate } from 'react-router-dom'
 import classes from './index.module.css'
 import LogsTable from '@renderer/components/LogsTable'
-const ipcRenderer = (window as any).ipcRenderer
+// const ipcRenderer = (window as any).ipcRenderer
 
 function Chip({ children }: { children: string }): JSX.Element {
   return (
@@ -53,19 +53,19 @@ function CustomScriptCard({
 function Dashboard(): JSX.Element {
   const navigate = useNavigate()
 
-  const runsScript = (): void => {
-    const data = {
-      scriptName: 'Custom-Script',
-      groupName: 'test'
-    }
-    ipcRenderer.send('run-script', data)
-    ipcRenderer.on('run-script-success', (_event, arg) => {
-      console.log(arg)
-    })
-    ipcRenderer.on('run-script-error', (_event, arg) => {
-      console.error(arg)
-    })
-  }
+  // const runsScript = (): void => {
+  //   const data = {
+  //     scriptName: 'Custom-Script',
+  //     groupName: 'test'
+  //   }
+  //   ipcRenderer.send('run-script', data)
+  //   ipcRenderer.on('run-script-success', (_event, arg) => {
+  //     console.log(arg)
+  //   })
+  //   ipcRenderer.on('run-script-error', (_event, arg) => {
+  //     console.error(arg)
+  //   })
+  // }
 
   return (
     <Box p="md">
@@ -77,7 +77,7 @@ function Dashboard(): JSX.Element {
           Build Custom Script
         </Button>
       </Flex>
-      <button onClick={runsScript}>testing</button>
+      {/* <button onClick={runsScript}>testing</button> */}
       <Box mt="3rem">
         <Grid gutter={{ base: 5, xs: 'md', md: 'xl', xl: 50 }}>
           <Grid.Col span={6}>

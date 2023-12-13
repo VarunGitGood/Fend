@@ -1,10 +1,12 @@
 import { Box, Flex, Stack, Button, Text, Input } from '@mantine/core'
 import ScriptCard from '@renderer/components/ScriptCard'
 import { useScriptStore, AdvancedConfigItem, ModuleItem } from '@renderer/store/useScriptStore'
+import { useNavigate } from 'react-router-dom'
 const ipcRenderer = (window as any).ipcRenderer
 
 function CustomScript(): JSX.Element {
   const { script, advancedConfig } = useScriptStore()
+  const navigate = useNavigate()
 
   const confirmScript = (): void => {
     const customScript: { [key: string]: any } = {
@@ -18,7 +20,6 @@ function CustomScript(): JSX.Element {
     advancedConfig.map((config: AdvancedConfigItem) => {
       customScript[config.var] = config.current
     })
-    console.log(customScript)
 
     const data = {
       scriptName: 'Custom-Script',
@@ -31,6 +32,8 @@ function CustomScript(): JSX.Element {
     ipcRenderer.on('generate-script-error', (_event, arg) => {
       console.error(arg)
     })
+
+    navigate('/groups?custom=true')
   }
 
   return (

@@ -1,6 +1,19 @@
+import { useState } from 'react'
 import { useDisclosure } from '@mantine/hooks'
-import { Box, Table, Modal, TextInput, Flex, Group, Image, Text, Button } from '@mantine/core'
+import {
+  Box,
+  Table,
+  Modal,
+  Flex,
+  Group,
+  TextInput,
+  Checkbox,
+  Image,
+  Text,
+  Button
+} from '@mantine/core'
 import { useForm } from '@mantine/form'
+import { useLocation } from 'react-router-dom'
 import notFoundImg from '../../assets/notFound.jpg'
 import { useGroupStore } from '@renderer/store/useGroupStore'
 import classes from './index.module.css'
@@ -25,6 +38,10 @@ function formatLastModified(dateString: string): string {
 
 function GroupBar({ name, onAddHost }: GroupBarProps): JSX.Element {
   const [opened, { open, close }] = useDisclosure(false)
+  const [checked, setChecked] = useState(false)
+  const location = useLocation()
+  const queryParams = new URLSearchParams(location.search)
+  const isCustom = queryParams.get('custom') === 'true'
 
   const form = useForm({
     initialValues: {
@@ -92,9 +109,17 @@ function GroupBar({ name, onAddHost }: GroupBarProps): JSX.Element {
         </form>
       </Modal>
       <Flex justify="space-between" align="center" className={classes.groupBar}>
-        <Text fz="1.125rem" fw={600} lh="1.75rem">
-          {name}
-        </Text>
+        <Flex align="center" gap={isCustom ? '1rem' : '0'}>
+          {isCustom && (
+            <Checkbox
+              checked={checked}
+              onChange={(event) => setChecked(event.currentTarget.checked)}
+            />
+          )}
+          <Text fz="1.125rem" fw={600} lh="1.75rem">
+            {name}
+          </Text>
+        </Flex>
         <Button
           variant="outline"
           onClick={(e) => {

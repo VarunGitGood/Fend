@@ -1,7 +1,7 @@
 import { Badge, Box, Button, Chip, Flex, Group, Modal, Table, Text } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { CopyBlock } from 'react-code-blocks'
-
+import { useLocation, useNavigate } from 'react-router-dom'
 interface Log {
   limit?: number
   title: string
@@ -83,6 +83,9 @@ let data = [
 
 export default function LogsTable({ limit, title }: Log): JSX.Element {
   const [opened, { open, close }] = useDisclosure(false)
+  const navigate = useNavigate()
+  const location = useLocation()
+  const isLogsPage = location.pathname === '/logs'
   data = limit ? data.slice(0, limit) : data
 
   const rows = data.map((row, index) => (
@@ -166,11 +169,19 @@ You should set the 'loop_var' value in the 'loop_control' option for the task to
         />
       </Modal>
       <Box p="md">
-        <Flex justify="space-between" align="center">
-          <Text fz="1.25rem" fw="600" lh="2.75rem">
+        <Flex justify="space-between" align="center" mt={isLogsPage ? '0' : '2rem'}>
+          <Text
+            fz={isLogsPage ? '2.25rem' : '1.25rem'}
+            fw="600"
+            lh={isLogsPage ? '2.75rem' : '1.75rem'}
+          >
             {title}
           </Text>
-          <Button bg="#005FB8">See all Logs</Button>
+          {!isLogsPage && (
+            <Button bg="#005FB8" onClick={() => navigate('/logs')}>
+              See all Logs
+            </Button>
+          )}
         </Flex>
         <Table.ScrollContainer minWidth={800} mt="2rem">
           <Table verticalSpacing="xs">
