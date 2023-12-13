@@ -4,7 +4,7 @@ required_roles:
   - packagemgmt
   - logindefs
 active_roles:
-  - ufw
+  - adduser
   - compilers
   - disablemod
   - ssh
