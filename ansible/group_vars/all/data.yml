@@ -5,6 +5,7 @@ required_roles:
   - logindefs
 active_roles:
   - adduser
+  - rootaccess
   - compilers
   - disablemod
   - ssh
