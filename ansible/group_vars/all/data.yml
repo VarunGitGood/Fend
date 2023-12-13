@@ -2,6 +2,7 @@
 required_roles:
   - facts
   - packagemgmt
+  - logindefs
 active_roles:
   - ufw
   - compilers
