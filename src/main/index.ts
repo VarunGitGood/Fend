@@ -2,7 +2,8 @@ import { app, shell, BrowserWindow, ipcMain, IpcMainEvent } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { generateScript, ScriptData } from './generateScript'
+import { generateScript, ScriptData, addGroup, Inventory } from './generateScript'
+import { runScript } from './runScript'
 
 function createWindow(): void {
   // Create the browser window.
@@ -22,6 +23,20 @@ function createWindow(): void {
 
   ipcMain.on('generate-script', (_event: IpcMainEvent, data: ScriptData) => {
     generateScript(data, mainWindow)
+  })
+
+  ipcMain.on('add-group', (_event: IpcMainEvent, data: Inventory) => {
+    addGroup(data, mainWindow)
+  })
+
+  ipcMain.on('run-script', async (_event: IpcMainEvent, data: any) => {
+    await runScript(data.scriptName, data.groupName)
+      .then((result) => {
+        mainWindow.webContents.send('run-script-success', result)
+      })
+      .catch((error) => {
+        mainWindow.webContents.send('run-script-error', error)
+      })
   })
 
   mainWindow.on('ready-to-show', () => {
