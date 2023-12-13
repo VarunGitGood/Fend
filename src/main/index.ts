@@ -2,7 +2,6 @@ import { app, shell, BrowserWindow, ipcMain, IpcMainEvent } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-const childWindow: BrowserWindow | null = null
 import { generateScript, ScriptData, addGroup, Inventory } from './generateScript'
 import { runScript } from './runScript'
 
@@ -31,9 +30,13 @@ function createWindow(): void {
   })
 
   ipcMain.on('run-script', async (_event: IpcMainEvent, data: any) => {
-    // TODO add feedback that script is running
-    await runScript(data.scriptName, 'test', mainWindow)
-    // TODO add feedback that script is done
+    await runScript(data.scriptName, data.groupName)
+      .then((result) => {
+        mainWindow.webContents.send('run-script-success', result)
+      })
+      .catch((error) => {
+        mainWindow.webContents.send('run-script-error', error)
+      })
   })
 
   mainWindow.on('ready-to-show', () => {

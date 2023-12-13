@@ -1,7 +1,7 @@
 import * as fs from 'fs-extra'
 import * as yaml from 'js-yaml'
 import { join } from 'path'
-import { BrowserWindow, Notification } from 'electron'
+import { BrowserWindow } from 'electron'
 
 export interface ScriptData {
   script: { [key: string]: string | number | boolean }
