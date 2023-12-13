@@ -3,7 +3,7 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 let childWindow: BrowserWindow | null = null
-import { generateScript, ScriptData } from './generateScript'
+import { generateScript, ScriptData, addGroup, Inventory } from './generateScript'
 
 function createWindow(): void {
   // Create the browser window.
@@ -23,6 +23,10 @@ function createWindow(): void {
 
   ipcMain.on('generate-script', (_event: IpcMainEvent, data: ScriptData) => {
     generateScript(data, mainWindow)
+  })
+
+  ipcMain.on('add-group', (_event: IpcMainEvent, data: Inventory) => {
+    addGroup(data, mainWindow)
   })
 
   mainWindow.on('ready-to-show', () => {

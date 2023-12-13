@@ -1,9 +1,9 @@
-active_roles:
-  - ufw
-  - ssh
+active_roles: []
 ufw_enabled: true
 ufw_outgoing_traffic:
+  - '22'
   - '80'
+  - '443'
 sshd_admin_net:
   - 192.168.0.0/24
   - 192.168.1.0/24
