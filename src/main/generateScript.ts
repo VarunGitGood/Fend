@@ -8,18 +8,18 @@ export interface ScriptData {
   scriptName: string
 }
 
-interface Host {
+export interface Host {
   ansible_host: string
   ansible_user: string
 }
 
-interface HostsGroup {
+export interface HostsGroup {
   hosts: { [hostName: string]: Host }
 }
 
-interface Inventory {
+export interface Inventory {
   groupName: string
-  [groupAlias: string]: HostsGroup
+  group: HostsGroup
 }
 
 export const generateScript = (data: ScriptData, mainWindow: BrowserWindow): void => {

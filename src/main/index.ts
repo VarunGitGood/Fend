@@ -2,8 +2,8 @@ import { app, shell, BrowserWindow, ipcMain, IpcMainEvent } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-let childWindow: BrowserWindow | null = null
-import { generateScript, ScriptData, addGroup } from './generateScript'
+const childWindow: BrowserWindow | null = null
+import { generateScript, ScriptData, addGroup, Inventory } from './generateScript'
 import { runScript } from './runScript'
 
 function createWindow(): void {
