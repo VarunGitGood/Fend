@@ -18,7 +18,8 @@ interface HostsGroup {
 }
 
 interface Inventory {
-  [groupName: string]: HostsGroup
+  groupName: string
+  [groupAlias: string]: HostsGroup
 }
 
 export const generateScript = (data: ScriptData, mainWindow: BrowserWindow): void => {

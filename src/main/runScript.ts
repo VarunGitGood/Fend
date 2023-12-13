@@ -1,5 +1,9 @@
 import { ExecException, exec } from 'child_process'
 import { BrowserWindow } from 'electron'
+import { join } from 'path'
+
+// const ansibleCommand1 = 'cd /home/varun/Code/Projects/safeguard/ansible && molecule test'
+// const ansibleCommand2 = 'molecule test'
 
 export const runScript = (
   scriptName: string,
@@ -7,10 +11,16 @@ export const runScript = (
   mainWindow: BrowserWindow
 ): Promise<string> => {
   return new Promise((resolve, reject) => {
-    const ansibleCommand = `ansible-playbook -i ../../data/groups/${groupName}.yml ./data/scripts/${scriptName}.yml`
+    const ansibleCommand = `ansible-playbook /home/varun/Code/Projects/safeguard/ansible/main.yml -i /home/varun/Code/Projects/safeguard/data/groups/${groupName}.yml --extra-vars "@/home/varun/Code/Projects/safeguard//data/scripts/${scriptName}.yml"`
+    mainWindow.webContents.send('run-harden-start', `Running script in fn ${scriptName}...`)
+    const ansiblePath = join(__dirname, '../../ansible')
     const child = exec(
       ansibleCommand,
+      {
+        cwd: ansiblePath
+      },
       (error: ExecException | null, stdout: string, stderr: string) => {
+        mainWindow.webContents.send('run-harden-exec', `executing ${ansibleCommand}...`)
         if (error) {
           mainWindow.webContents.send(
             'run-harden-error',

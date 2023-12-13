@@ -1,25 +1,31 @@
 import { Box, Flex, Text, Skeleton } from '@mantine/core'
 import { Link } from 'react-router-dom'
 import classes from './styles.module.css'
+const ipcRenderer = (window as any).ipcRenderer
 
 function Dashboard(): JSX.Element {
-  //   ipcRenderer.send('generate-script', data)
-
-  //   ipcRenderer.on('yamlDataWritten', (_event, message) => {
-  //     console.log(message)
-  //   })
-
-  //   ipcRenderer.on('yamlDataWriteError', (_event, errorMessage) => {
-  //     console.error(errorMessage)
-  //   })
-  // }
+  const testFn = (): void => {
+    ipcRenderer.send('run-script', 'test')
+    ipcRenderer.on('run-harden-start', (event, arg) => {
+      console.log(arg)
+    })
+    ipcRenderer.on('run-harden-exec', (event, arg) => {
+      console.log(arg)
+    })
+    ipcRenderer.on('run-harden-error', (event, arg) => {
+      console.log(arg)
+    })
+    ipcRenderer.on('run-harden-success', (event, arg) => {
+      console.log(arg)
+    })
+  }
 
   return (
     <Box p="md">
       <Text fz="2.25rem" fw="400">
         Dashboard
       </Text>
-
+      <button onClick={testFn}>tesing</button>
       <Flex justify="center" align="center" pt="4rem" gap="1rem">
         <Link
           to="/pre-defined-scripts"

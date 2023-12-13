@@ -3,7 +3,8 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 let childWindow: BrowserWindow | null = null
-import { generateScript, ScriptData, addGroup, Inventory } from './generateScript'
+import { generateScript, ScriptData, addGroup } from './generateScript'
+import { runScript } from './runScript'
 
 function createWindow(): void {
   // Create the browser window.
@@ -27,6 +28,12 @@ function createWindow(): void {
 
   ipcMain.on('add-group', (_event: IpcMainEvent, data: Inventory) => {
     addGroup(data, mainWindow)
+  })
+
+  ipcMain.on('run-script', async (_event: IpcMainEvent, data: any) => {
+    // TODO add feedback that script is running
+    await runScript(data.scriptName, 'test', mainWindow)
+    // TODO add feedback that script is done
   })
 
   mainWindow.on('ready-to-show', () => {
