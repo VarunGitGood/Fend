@@ -6,6 +6,7 @@ required_roles:
 active_roles:
   - adduser
   - rootaccess
+  - packages
   - compilers
   - disablemod
   - ssh

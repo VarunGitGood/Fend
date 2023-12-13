@@ -1,4 +1,42 @@
 ---
+- name: Create custom facts directory
+  become: true
+  ansible.builtin.file:
+    path: /etc/ansible/facts.d
+    recurse: true
+    state: directory
+    mode: "0755"
+    owner: root
+    group: root
+  tags:
+    - fact
+
+- name: Add systemd version fact
+  become: true
+  ansible.builtin.template:
+    src: systemd.fact
+    dest: /etc/ansible/facts.d/systemd.fact
+    mode: "0755"
+    owner: root
+    group: root
+  tags:
+    - fact
+    - systemd
+
+- name: Add cpuinfo rdrand fact
+  become: true
+  ansible.builtin.template:
+    src: cpuinfo.fact
+    dest: /etc/ansible/facts.d/cpuinfo.fact
+    mode: "0755"
+    owner: root
+    group: root
+  tags:
+    - cpuinfo
+    - fact
+    - rdrand
+
+
 - name: Set crypto-policies config as fact
   tags:
     - fact
@@ -67,3 +105,21 @@
   tags:
     - fact
     - pam
+
+- name: Add cpuinfo rdrand fact
+  become: true
+  ansible.builtin.template:
+    src: cpuinfo.fact
+    dest: /etc/ansible/facts.d/cpuinfo.fact
+    mode: "0755"
+    owner: root
+    group: root
+  tags:
+    - cpuinfo
+    - fact
+    - rdrand
+
+- name: Update current facts
+  ansible.builtin.setup:
+  tags:
+    - fact
