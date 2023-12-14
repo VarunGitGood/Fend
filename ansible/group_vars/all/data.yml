@@ -11,6 +11,8 @@ active_roles:
   - disablemod
   - ssh
   - password
+  - rkhunter
+  - lockroot
   - ipv6
 
 active_groups:

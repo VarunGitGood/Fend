@@ -27,18 +27,29 @@ packages_debian:
   - acct
   - apparmor-profiles
   - apparmor-utils
+  - apt-show-versions
+  - audispd-plugins
   - auditd
   - cracklib-runtime
+  - debsums
+  - gnupg2
+  - haveged
   - libpam-apparmor
   - libpam-cap
   - libpam-modules
   - libpam-pwquality
+  - libpam-tmpdir
   - lsb-release
   - needrestart
   - openssh-server
   - postfix
+  - rkhunter
   - rsyslog
   - sysstat
+  - systemd-journal-remote
+  - tcpd
+  - vlock
+  - wamerican
 
 packages_ubuntu:
   - fwupd
