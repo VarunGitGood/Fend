@@ -10,8 +10,8 @@ active_roles:
   - compilers
   - disablemod
   - ssh
+  - password
   - ipv6
-  - compilers
 
 active_groups:
   - all
