@@ -7,6 +7,7 @@ export interface HostDetails {
 }
 export interface Group {
   name: string
+  isSelected?: boolean
   details: HostDetails[]
 }
 

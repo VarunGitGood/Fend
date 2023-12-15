@@ -2,10 +2,13 @@ import { Box, Flex, Stack, Button, Text, Input } from '@mantine/core'
 import ScriptCard from '@renderer/components/ScriptCard'
 import { useScriptStore, AdvancedConfigItem, ModuleItem } from '@renderer/store/useScriptStore'
 import { useNavigate } from 'react-router-dom'
+import toast, { Toaster } from 'react-hot-toast'
+
 const ipcRenderer = (window as any).ipcRenderer
 
 function CustomScript(): JSX.Element {
   const { script, advancedConfig } = useScriptStore()
+  console.log(script)
   const navigate = useNavigate()
 
   const confirmScript = (): void => {
@@ -13,7 +16,7 @@ function CustomScript(): JSX.Element {
       active_roles: []
     }
     script.map((module: ModuleItem) => {
-      if (module.current) {
+      if (module.isSelected) {
         customScript.active_roles.push(module.module)
       }
     })
@@ -37,23 +40,42 @@ function CustomScript(): JSX.Element {
   }
 
   return (
-    <Box p="md">
-      <Text fz="2.25rem" fw={400}>
-        Custom Script
-      </Text>
-      <Input placeholder="Name" />
-      <Stack gap="1rem" mt="3rem">
-        {script.map((s) => (
-          <ScriptCard key={s.module} {...s} />
-        ))}
-      </Stack>
-      <Flex justify="flex-end" gap={15} style={{ marginTop: '2rem' }}>
-        <Button variant="subtle">Back</Button>
-        <Button variant="filled" onClick={confirmScript}>
-          Save & Next
-        </Button>
-      </Flex>
-    </Box>
+    <>
+      <Box p="md">
+        <Text fz="2.25rem" fw={400}>
+          Custom Script
+        </Text>
+        <Input placeholder="Name" />
+        <Stack gap="1rem" mt="3rem">
+          {script.map((s) => (
+            <ScriptCard key={s.module} {...s} />
+          ))}
+        </Stack>
+        <Flex justify="flex-end" gap={15} style={{ marginTop: '2rem' }}>
+          <Button variant="subtle">Back</Button>
+          <Button
+            variant="filled"
+            onClick={(): void => {
+              let flag = false
+              script.map((s) => {
+                if (s.isSelected) {
+                  flag = true
+                  return
+                }
+              })
+              if (!flag) {
+                toast.error('Please select at least one module')
+                return
+              }
+              confirmScript()
+            }}
+          >
+            Save & Next
+          </Button>
+        </Flex>
+      </Box>
+      <Toaster />
+    </>
   )
 }
 

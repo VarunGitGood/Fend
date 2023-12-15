@@ -138,6 +138,9 @@ function Groups(): JSX.Element {
   const [opened, { open, close }] = useDisclosure(false)
   const { groupDetails, setGroupDetails } = useGroupStore()
 
+  const location = useLocation()
+  const queryParams = new URLSearchParams(location.search)
+  const isCustom = queryParams.get('custom') === 'true'
   const form = useForm({
     initialValues: {
       groupName: ''
@@ -208,7 +211,6 @@ function Groups(): JSX.Element {
 
   const items = groupDetails.map((group) => {
     const { name, details } = group
-
     const rows =
       details.length > 0 ? (
         details.map((detail) => (
@@ -283,7 +285,7 @@ function Groups(): JSX.Element {
           <Text fz="2.25rem" fw="600" lh="2.75rem">
             Groups
           </Text>
-          <Button bg="#005FB8" size="md" onClick={open}>
+          <Button size="md" onClick={open}>
             + Add New Group
           </Button>
         </Flex>
@@ -294,6 +296,12 @@ function Groups(): JSX.Element {
           </Group>
         ) : (
           <Box mt="3rem">{items}</Box>
+        )}
+        {isCustom && (
+          <Flex justify="flex-end" gap={8} mt={24}>
+            <Button size="md">Back</Button>
+            <Button size="md">Next</Button>
+          </Flex>
         )}
       </Box>
     </>

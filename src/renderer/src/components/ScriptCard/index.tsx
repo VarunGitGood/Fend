@@ -20,10 +20,11 @@ type ScriptCardProps = {
   module: string
   label: string
   description: string
+  isSelected: boolean
 }
 
-function ScriptCard({ label, description, module }: ScriptCardProps): JSX.Element {
-  const [checked, setChecked] = useState(false)
+function ScriptCard({ label, description, module, isSelected }: ScriptCardProps): JSX.Element {
+  const [checked, setChecked] = useState(isSelected)
   const [opened, { open, close }] = useDisclosure(false)
   const { advancedConfig, setAdvancedConfig } = useScriptStore()
   const { script, setScript } = useScriptStore()
@@ -41,7 +42,7 @@ function ScriptCard({ label, description, module }: ScriptCardProps): JSX.Elemen
   const editModule = (isChecked, module): void => {
     const newScript = script.map((s) => {
       if (s.module !== module) return s
-      s.current = isChecked
+      s.isSelected = isChecked
       return s
     })
     setScript(newScript)
@@ -123,6 +124,7 @@ function ScriptCard({ label, description, module }: ScriptCardProps): JSX.Elemen
         >
           <Checkbox
             classNames={{ root: classes.checkboxWrapper, input: classes.checkbox }}
+            defaultChecked={checked}
             checked={checked}
             tabIndex={-1}
             size="md"
