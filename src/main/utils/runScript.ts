@@ -3,11 +3,12 @@ import { join } from 'path'
 const cwd = process.cwd()
 
 export const runScript = (scriptName: string, groupName: string): Promise<string> => {
+  console.log('runScript', scriptName, groupName)
   return new Promise((resolve, reject) => {
     const ansibleCommand = `ansible-playbook ${join(cwd, 'ansible/')}main.yml -i ${join(
       cwd,
       'data/groups/'
-    )}${groupName}.yml --extra-vars "@${join(cwd, 'data/scripts/')}${scriptName}.yml"`
+    )}$test.yml --extra-vars "@${join(cwd, 'data/scripts/')}${scriptName}.yml"`
     exec(ansibleCommand, (error: ExecException | null, stdout: string, stderr: string) => {
       if (error) {
         reject(error)

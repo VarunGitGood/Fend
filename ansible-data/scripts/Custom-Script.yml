@@ -1,5 +1,6 @@
 active_roles:
   - ufw
+  - ssh
 ufw_enabled: true
 ufw_outgoing_traffic:
   - '22'

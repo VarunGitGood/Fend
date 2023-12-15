@@ -11,29 +11,25 @@ function CustomScript(): JSX.Element {
   const navigate = useNavigate()
 
   const confirmScript = (): void => {
+    // TODO
     const customScript: { [key: string]: any } = { active_roles: [] }
-
     script.forEach((module: ModuleItem) => {
       if (module.isSelected) {
         customScript.active_roles.push(module.module)
       }
     })
-
     advancedConfig.forEach((config: AdvancedConfigItem) => {
       customScript[config.var] = config.current
     })
-
+    // TODO 
     const data = {
       scriptName: 'Custom-Script',
       script: customScript
     }
-
     ipcRenderer.send('generate-script', data)
-
     ipcRenderer.on('generate-script-success', (_event, arg) => {
       console.log(arg)
     })
-
     ipcRenderer.on('generate-script-error', (_event, arg) => {
       console.error(arg)
     })
@@ -48,12 +44,10 @@ function CustomScript(): JSX.Element {
 
   const handleSaveAndNextClick = (): void => {
     const isModuleSelected = script.some((s) => s.isSelected)
-
     if (!isModuleSelected) {
       toast.error('Please select at least one module')
       return
     }
-
     confirmScript()
   }
 

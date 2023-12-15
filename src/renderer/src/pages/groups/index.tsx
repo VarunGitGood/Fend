@@ -16,6 +16,7 @@ import { useLocation } from 'react-router-dom'
 import notFoundImg from '../../assets/notFound.jpg'
 import { useGroupStore } from '@renderer/store/useGroupStore'
 import classes from './index.module.css'
+const ipcRenderer = (window as any).ipcRenderer
 interface GroupBarProps {
   name: string
   onAddHost: (
@@ -23,7 +24,6 @@ interface GroupBarProps {
     details: { ipaddress: string; alias: string; lastModified: string }
   ) => void
 }
-
 function formatLastModified(dateString: string): string {
   const date = new Date(dateString)
   const options: Intl.DateTimeFormatOptions = {
@@ -186,6 +186,40 @@ function Groups(): JSX.Element {
     }
   }
 
+  const handleCheckedGroups = (): void => {
+    const selectedGroups = new Map<string, any>()
+    groupDetails.forEach((group) => {
+      if (group.isSelected) {
+        selectedGroups.set(group.name, {
+          hosts: Object.fromEntries(
+            group.details.map((detail) => {
+              return [detail.alias, { ansible_host: detail.ipaddress }]
+            })
+          )
+        })
+      }
+    })
+    const obj = {
+      all: {
+        children: Object.fromEntries(
+          [...selectedGroups.entries()].map(([groupName, groupData]) => {
+            return [groupName, groupData]
+          })
+        )
+      }
+    }
+    ipcRenderer.send('add-group', obj)
+    ipcRenderer.on('add-group-log', (_event, arg) => {
+      console.log(arg)
+    })
+    ipcRenderer.on('add-group-success', (_event, arg) => {
+      console.log(arg)
+    })
+    ipcRenderer.on('add-group-error', (_event, arg) => {
+      console.error(arg)
+    })
+  }
+
   const handleAddHost = (
     groupName: string,
     details: { ipaddress: string; alias: string; lastModified: string }
@@ -310,7 +344,9 @@ function Groups(): JSX.Element {
         {isCustom && (
           <Flex justify="flex-end" gap={8} my={24}>
             <Button size="md">Back</Button>
-            <Button size="md">Next</Button>
+            <Button size="md" onClick={handleCheckedGroups}>
+              Next
+            </Button>
           </Flex>
         )}
       </Box>

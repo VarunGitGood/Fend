@@ -2,14 +2,7 @@ import { app, shell, BrowserWindow, ipcMain, IpcMainEvent, Notification } from '
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import {
-  generateScript,
-  ScriptData,
-  addGroup,
-  Inventory,
-  addRun,
-  Run
-} from './utils/generateScript'
+import { generateScript, ScriptData, addGroup, addRun, Run } from './utils/generateScript'
 import { getSystemInfo } from './utils/getSystemInfo'
 import { runScript } from './utils/runScript'
 import { loadAnsibleFile, filePath } from './utils/loadFile'
@@ -39,7 +32,7 @@ function createWindow(): void {
     mainWindow.webContents.send('get-system-info-success', info)
   })
 
-  ipcMain.on('add-group', (_event: IpcMainEvent, data: Inventory) => {
+  ipcMain.on('add-group', (_event: IpcMainEvent, data: any) => {
     addGroup(data, mainWindow)
   })
 
