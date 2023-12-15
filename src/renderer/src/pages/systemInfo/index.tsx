@@ -10,7 +10,6 @@ export const SystemInfo = (): React.ReactElement => {
       seTInfo(arg)
     })
   }, [])
-  console.log(Info)
 
   return (
     <Box p="md">

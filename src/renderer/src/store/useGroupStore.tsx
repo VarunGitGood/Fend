@@ -15,6 +15,7 @@ interface GroupStore {
   groupDetails: Group[]
   setGroupDetails: (gd: Group[]) => void
 }
+
 export const useGroupStore = create<GroupStore>(
   (set): GroupStore => ({
     groupDetails: [],

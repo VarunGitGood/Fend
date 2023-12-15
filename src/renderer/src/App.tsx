@@ -1,4 +1,5 @@
 import { MantineProvider } from '@mantine/core'
+import './App.css'
 import '@mantine/core/styles.css'
 import { Routes, Route } from 'react-router-dom'
 import MainAppShell from './components/MainAppShell'
