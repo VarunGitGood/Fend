@@ -2,9 +2,17 @@ import { app, shell, BrowserWindow, ipcMain, IpcMainEvent, Notification } from '
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { generateScript, ScriptData, addGroup, Inventory } from './generateScript'
-import { getSystemInfo } from './getSystemInfo'
-import { runScript } from './runScript'
+import {
+  generateScript,
+  ScriptData,
+  addGroup,
+  Inventory,
+  addRun,
+  Run
+} from './utils/generateScript'
+import { getSystemInfo } from './utils/getSystemInfo'
+import { runScript } from './utils/runScript'
+import { loadFile, filePath } from './utils/loadFile'
 
 function createWindow(): void {
   // Create the browser window.
@@ -53,6 +61,15 @@ function createWindow(): void {
         }).show()
         mainWindow.webContents.send('run-script-error', error)
       })
+  })
+
+  ipcMain.on('add-run', (_event: IpcMainEvent, data: Run) => {
+    addRun(data, mainWindow)
+  })
+
+  ipcMain.on('load-data', (_event: IpcMainEvent, data: filePath) => {
+    const result = loadFile(data)
+    mainWindow.webContents.send('load-data-success', result)
   })
 
   mainWindow.on('ready-to-show', () => {
