@@ -3,12 +3,11 @@ import * as yaml from 'js-yaml'
 import { join } from 'path'
 
 export enum filePath {
-  script = '../../data/scripts',
-  group = '../../data/groups',
-  runs = '../../data/runs'
+  script = '../../ansible-data/scripts',
+  group = '../../ansible-data/groups'
 }
 
-export const loadFile = (filePath: filePath): any => {
+export const loadAnsibleFile = (filePath: filePath): any => {
   const scriptFolderPath = join(__dirname, filePath)
   const files = fs.readdirSync(scriptFolderPath)
   const data: any = []

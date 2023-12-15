@@ -12,7 +12,7 @@ import {
 } from './utils/generateScript'
 import { getSystemInfo } from './utils/getSystemInfo'
 import { runScript } from './utils/runScript'
-import { loadFile, filePath } from './utils/loadFile'
+import { loadAnsibleFile, filePath } from './utils/loadFile'
 
 function createWindow(): void {
   // Create the browser window.
@@ -68,7 +68,7 @@ function createWindow(): void {
   })
 
   ipcMain.on('load-data', (_event: IpcMainEvent, data: filePath) => {
-    const result = loadFile(data)
+    const result = loadAnsibleFile(data)
     mainWindow.webContents.send('load-data-success', result)
   })
 

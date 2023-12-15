@@ -1,5 +1,5 @@
 export enum filePath {
-  script = '../../data/scripts',
-  group = '../../data/groups',
-  runs = '../../data/runs'
+  script = '../../ansible-data/scripts',
+  group = '../../ansible-data/groups',
+  runs = '../../ansible-data/runs'
 }

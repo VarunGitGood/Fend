@@ -68,7 +68,7 @@ function Dashboard(): JSX.Element {
   // }
 
   const getData = (): void => {
-    ipcRenderer.send('load-data', '../../data/scripts')
+    ipcRenderer.send('load-data', '../../ansible-data/scripts')
     ipcRenderer.on('load-data-success', (_event, arg) => {
       console.log(arg)
     })
