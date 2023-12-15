@@ -1,0 +1,20 @@
+---
+required_roles:
+  - facts
+  - packagemgmt
+  - logindefs
+active_roles:
+  - adduser
+  - rootaccess
+  - packages
+  - compilers
+  - disablemod
+  - ssh
+  - password
+  - rkhunter
+  - lockroot
+  - cron
+  - ipv6
+
+active_groups:
+  - all
