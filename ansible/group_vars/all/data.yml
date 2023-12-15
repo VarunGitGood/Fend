@@ -13,6 +13,7 @@ active_roles:
   - password
   - rkhunter
   - lockroot
+  - cron
   - ipv6
 
 active_groups:
