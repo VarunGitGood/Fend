@@ -1,0 +1,9 @@
+---
+delete_users:
+  - games
+  - gnats
+  - irc
+  - list
+  - news
+  - sync
+  - uucp
