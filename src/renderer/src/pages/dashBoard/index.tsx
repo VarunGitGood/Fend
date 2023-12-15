@@ -2,7 +2,7 @@ import { Box, Flex, Stack, Group, Grid, Paper, Text, Button } from '@mantine/cor
 import { useNavigate } from 'react-router-dom'
 import classes from './index.module.css'
 import LogsTable from '@renderer/components/LogsTable'
-const ipcRenderer = (window as any).ipcRenderer
+// const ipcRenderer = (window as any).ipcRenderer
 
 function Chip({ children }: { children: string }): JSX.Element {
   return (
@@ -67,15 +67,15 @@ function Dashboard(): JSX.Element {
   //   })
   // }
 
-  const getData = (): void => {
-    ipcRenderer.send('load-data', '../../ansible-data/scripts')
-    ipcRenderer.on('load-data-success', (_event, arg) => {
-      console.log(arg)
-    })
-    ipcRenderer.on('load-data-error', (_event, arg) => {
-      console.error(arg)
-    })
-  }
+  // const getData = (): void => {
+  //   ipcRenderer.send('load-data', '../../data/scripts')
+  //   ipcRenderer.on('load-data-success', (_event, arg) => {
+  //     console.log(arg)
+  //   })
+  //   ipcRenderer.on('load-data-error', (_event, arg) => {
+  //     console.error(arg)
+  //   })
+  // }
 
   return (
     <Box p="md">
@@ -88,7 +88,7 @@ function Dashboard(): JSX.Element {
         </Button>
       </Flex>
       {/* <button onClick={runsScript}>testing</button> */}
-      <button onClick={getData}>get data</button>
+      {/* <button onClick={getData}>get data</button> */}
       <Box mt="3rem">
         <Grid gutter={{ base: 5, xs: 'md', md: 'xl', xl: 50 }}>
           <Grid.Col span={6}>

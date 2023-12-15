@@ -124,7 +124,6 @@ function ScriptCard({ label, description, module, isSelected }: ScriptCardProps)
         >
           <Checkbox
             classNames={{ root: classes.checkboxWrapper, input: classes.checkbox }}
-            defaultChecked={checked}
             checked={checked}
             tabIndex={-1}
             size="md"

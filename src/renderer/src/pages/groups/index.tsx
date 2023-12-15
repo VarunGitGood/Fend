@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useDisclosure } from '@mantine/hooks'
 import {
   Box,
@@ -38,10 +37,10 @@ function formatLastModified(dateString: string): string {
 
 function GroupBar({ name, onAddHost }: GroupBarProps): JSX.Element {
   const [opened, { open, close }] = useDisclosure(false)
-  const [checked, setChecked] = useState(false)
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
   const isCustom = queryParams.get('custom') === 'true'
+  const { groupDetails, setGroupDetails } = useGroupStore()
 
   const form = useForm({
     initialValues: {
@@ -112,8 +111,19 @@ function GroupBar({ name, onAddHost }: GroupBarProps): JSX.Element {
         <Flex align="center" gap={isCustom ? '1rem' : '0'}>
           {isCustom && (
             <Checkbox
-              checked={checked}
-              onChange={(event) => setChecked(event.currentTarget.checked)}
+              checked={groupDetails.find((item) => item.name === name)?.isSelected || false}
+              onChange={(event) => {
+                const newGroupDetails = groupDetails.map((item) => {
+                  if (item.name === name) {
+                    return {
+                      ...item,
+                      isSelected: event.currentTarget.checked
+                    }
+                  }
+                  return item
+                })
+                setGroupDetails(newGroupDetails)
+              }}
             />
           )}
           <Text fz="1.125rem" fw={600} lh="1.75rem">
@@ -285,7 +295,7 @@ function Groups(): JSX.Element {
           <Text fz="2.25rem" fw="600" lh="2.75rem">
             Groups
           </Text>
-          <Button size="md" onClick={open}>
+          <Button bg="#005FB8" size="md" onClick={open}>
             + Add New Group
           </Button>
         </Flex>
@@ -298,7 +308,7 @@ function Groups(): JSX.Element {
           <Box mt="3rem">{items}</Box>
         )}
         {isCustom && (
-          <Flex justify="flex-end" gap={8} mt={24}>
+          <Flex justify="flex-end" gap={8} my={24}>
             <Button size="md">Back</Button>
             <Button size="md">Next</Button>
           </Flex>
