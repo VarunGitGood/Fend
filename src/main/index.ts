@@ -56,10 +56,6 @@ function createWindow(): void {
       })
   })
 
-  ipcMain.on('add-run', (_event: IpcMainEvent, data: Run) => {
-    addRun(data, mainWindow)
-  })
-
   ipcMain.on('load-data', (_event: IpcMainEvent, data: filePath) => {
     const result = loadAnsibleFile(data)
     mainWindow.webContents.send('load-data-success', result)

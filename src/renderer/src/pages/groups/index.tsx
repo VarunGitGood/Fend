@@ -238,6 +238,20 @@ function Groups(): JSX.Element {
     setGroupDetails(newGroupDetails)
   }
 
+  const testScript = (): void => {
+    const data = {
+      scriptName: 'Custom-Script',
+      groupName: 'test'
+    }
+    ipcRenderer.send('run-script', data)
+    ipcRenderer.on('run-script-success', (_event, arg) => {
+      console.log(arg)
+    })
+    ipcRenderer.on('run-script-error', (_event, arg) => {
+      console.error(arg)
+    })
+  }
+
   const handleRemoveHost = (groupName: string, ipaddress: string): void => {
     const newGroupDetails = groupDetails.map((item) => {
       if (item.name === groupName) {
@@ -347,6 +361,7 @@ function Groups(): JSX.Element {
             <Button size="md" onClick={handleCheckedGroups}>
               Next
             </Button>
+            <button onClick={testScript}>Test</button>
           </Flex>
         )}
       </Box>
