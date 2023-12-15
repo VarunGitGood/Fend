@@ -1,6 +1,6 @@
 {
   "extends": "@electron-toolkit/tsconfig/tsconfig.node.json",
-  "include": ["electron.vite.config.*", "src/main/*", "src/preload/*", "src/main/util/generateScript.ts", "src/main/utils/generateScript.ts", "src/main/utils/loadFile.ts", "src/main/utils/getSystemInfo.ts", "src/main/utils/runScript.ts"],
+  "include": ["electron.vite.config.*", "src/main/*", "src/preload/*", "src/main/util/generateScript.ts", "src/main/utils/generateScript.ts", "src/main/utils/loadFile.ts", "src/main/utils/getSystemInfo.ts", "src/main/utils/runScript.ts", "src/main/utils/storage.ts"],
   "compilerOptions": {
     "composite": true,
     "types": ["electron-vite/node"]

@@ -3,6 +3,7 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { generateScript, ScriptData, addGroup, Run } from './utils/generateScript'
+import { saveDataToStore, getDataFromStore } from './utils/storage'
 import { getSystemInfo } from './utils/getSystemInfo'
 import { runScript } from './utils/runScript'
 import { loadAnsibleFile, filePath } from './utils/loadFile'
@@ -59,6 +60,14 @@ function createWindow(): void {
   ipcMain.on('load-data', (_event: IpcMainEvent, data: filePath) => {
     const result = loadAnsibleFile(data)
     mainWindow.webContents.send('load-data-success', result)
+  })
+
+  ipcMain.on('save-storage', (_event: IpcMainEvent, data: any) => {
+    saveDataToStore(data, mainWindow)
+  })
+
+  ipcMain.on('load-storage', (_event: IpcMainEvent, data: any) => {
+    getDataFromStore(data, mainWindow)
   })
 
   mainWindow.on('ready-to-show', () => {
