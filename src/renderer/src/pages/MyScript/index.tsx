@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'
 export default function MuScript(): JSX.Element {
   const { myScripts } = useScriptStore()
   const navigate = useNavigate()
-  console.log(myScripts)
+  console.log(myScripts, 'myScripts')
   return (
     <Box p="md">
       <h1>My Script</h1>

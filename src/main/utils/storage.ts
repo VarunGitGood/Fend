@@ -59,8 +59,8 @@ export const getDataFromStore = (key: string, mainWindow: BrowserWindow): void =
     } else {
       const existingData = JSON.parse(fileData || '{}')
       const value = existingData[key]
-      console.log(value)
       if (value) {
+        console.log({ key, value })
         mainWindow.webContents.send('load-storage-success', value)
       } else {
         mainWindow.webContents.send('load-storage-error', 'Key not found')
