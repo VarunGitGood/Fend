@@ -34,12 +34,8 @@ function CustomScript(): JSX.Element {
       console.error(arg)
     })
 
-    const selectedScript = script
-      .filter((s) => s.isSelected)
-      .map((s) => s.module)
-      .join(',')
-
-    navigate(`/groups?custom=true&selectedScript=${selectedScript}`)
+    // navigate(`/groups?custom=true`)
+    navigate(`/myScript`)
   }
 
   const handleSaveAndNextClick = (): void => {

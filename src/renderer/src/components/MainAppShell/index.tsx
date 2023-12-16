@@ -5,7 +5,6 @@ import classes from './index.module.css'
 
 import {
   IconDashboard,
-  IconSettings,
   IconUsersGroup,
   IconFileTypeDoc,
   IconHistory,
@@ -19,6 +18,7 @@ interface MainAppShellProps {
 const data = [
   { link: '/', label: 'Dashboard', icon: IconDashboard },
   { link: '/groups', label: 'Groups', icon: IconUsersGroup },
+  { link: '/myScript', label: 'My Scripts', icon: IconFileTypeDoc },
   { link: '/logs', label: 'Logs', icon: IconHistory },
   { link: '/sysinfo', label: 'System Information', icon: IconDeviceLaptop }
 ]
@@ -49,18 +49,6 @@ function MainAppShell({ children }: MainAppShellProps): JSX.Element {
               <Image src={logo} width={150} height={150} radius="xl" />
             </Group>
             {links}
-          </div>
-
-          <div className={classes.footer}>
-            <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
-              <IconSettings className={classes.linkIcon} stroke={1.5} />
-              <span>Settings</span>
-            </a>
-
-            <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
-              <IconFileTypeDoc className={classes.linkIcon} stroke={1.5} />
-              <span>Documentation</span>
-            </a>
           </div>
         </nav>
       </AppShell.Navbar>

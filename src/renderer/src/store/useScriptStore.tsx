@@ -17,10 +17,19 @@ export interface ModuleItem {
   description: string
   isSelected: boolean
 }
+
+export interface MyScriptItem {
+  scriptName: string
+  myConfig: AdvancedConfigItem[]
+  ansibleConfig: { [key: string]: any }
+}
+
 interface ScriptStore {
   script: ModuleItem[]
+  myScripts: MyScriptItem[]
   advancedConfig: AdvancedConfigItem[]
   setScript: (sc: ModuleItem[]) => void
+  setMyScripts: (ms: MyScriptItem[]) => void
   setAdvancedConfig: (ac: AdvancedConfigItem[]) => void
 }
 
@@ -50,7 +59,7 @@ const modules = {
         type: 'array',
         current: ['22', '80', '443'],
         tag: 'list'
-      },
+      }
     ]
   },
   ssh: {
@@ -103,7 +112,8 @@ const modules = {
     script: {
       module: 'compilers',
       label: 'Compiler Configuration',
-      description: 'Compiler Configuration. Disabled compilers: as, cargo, cc, cc-[0-9]*, clang-[0-9]*, gcc, gcc-[0-9]*, go, make, rustc.',
+      description:
+        'Compiler Configuration. Disabled compilers: as, cargo, cc, cc-[0-9]*, clang-[0-9]*, gcc, gcc-[0-9]*, go, make, rustc.',
       isSelected: false
     },
     advancedConfig: [
@@ -113,7 +123,18 @@ const modules = {
         var: 'compilers',
         description: 'Disabled compilers for the system.',
         type: 'array',
-        current: ['as', 'cargo', 'cc', 'cc-[0-9]*', 'clang-[0-9]*', 'gcc', 'gcc-[0-9]*', 'go', 'make', 'rustc'],
+        current: [
+          'as',
+          'cargo',
+          'cc',
+          'cc-[0-9]*',
+          'clang-[0-9]*',
+          'gcc',
+          'gcc-[0-9]*',
+          'go',
+          'make',
+          'rustc'
+        ],
         tag: 'list'
       }
     ]
@@ -122,7 +143,8 @@ const modules = {
     script: {
       module: 'disablemod',
       label: 'Kernel Module Configuration',
-      description: 'Kernel Module Configuration. Block blacklisted modules: false. Modules to block: bluetooth, usb-midi, thunderbolt, usb-storage.',
+      description:
+        'Kernel Module Configuration. Block blacklisted modules: false. Modules to block: bluetooth, usb-midi, thunderbolt, usb-storage.',
       isSelected: false
     },
     advancedConfig: [
@@ -169,7 +191,8 @@ const modules = {
     script: {
       module: 'packages',
       label: 'System Upgrade and Package Configuration',
-      description: 'System Upgrade and Package Configuration. System upgrade: true. Blocked packages: apport*, autofs, avahi*, avahi-*, beep, git, pastebinit, popularity-contest, prelink, rpcbind, rsh*, rsync, talk*, telnet*, tftp*, tuned, whoopsie, xinetd, yp-tools, ypbind. Debian packages to install: acct, apparmor-profiles, apparmor-utils, apt-show-versions, audispd-plugins, auditd, cracklib-runtime, debsums, gnupg2, haveged, libpam-apparmor, libpam-cap, libpam-modules, libpam-pwquality, libpam-tmpdir, lsb-release, needrestart, openssh-server, postfix, rkhunter, rsyslog, sysstat, systemd-journal-remote, tcpd, vlock, wamerican. Ubuntu packages to install: fwupd, secureboot-db, snapd.',
+      description:
+        'System Upgrade and Package Configuration. System upgrade: true. Blocked packages: apport*, autofs, avahi*, avahi-*, beep, git, pastebinit, popularity-contest, prelink, rpcbind, rsh*, rsync, talk*, telnet*, tftp*, tuned, whoopsie, xinetd, yp-tools, ypbind. Debian packages to install: acct, apparmor-profiles, apparmor-utils, apt-show-versions, audispd-plugins, auditd, cracklib-runtime, debsums, gnupg2, haveged, libpam-apparmor, libpam-cap, libpam-modules, libpam-pwquality, libpam-tmpdir, lsb-release, needrestart, openssh-server, postfix, rkhunter, rsyslog, sysstat, systemd-journal-remote, tcpd, vlock, wamerican. Ubuntu packages to install: fwupd, secureboot-db, snapd.',
       isSelected: false
     },
     advancedConfig: [
@@ -189,9 +212,26 @@ const modules = {
         description: 'List of packages to block during the upgrade.',
         type: 'array',
         current: [
-          'apport*', 'autofs', 'avahi*', 'avahi-*', 'beep', 'git', 'pastebinit',
-          'popularity-contest', 'prelink', 'rpcbind', 'rsh*', 'rsync', 'talk*',
-          'telnet*', 'tftp*', 'tuned', 'whoopsie', 'xinetd', 'yp-tools', 'ypbind'
+          'apport*',
+          'autofs',
+          'avahi*',
+          'avahi-*',
+          'beep',
+          'git',
+          'pastebinit',
+          'popularity-contest',
+          'prelink',
+          'rpcbind',
+          'rsh*',
+          'rsync',
+          'talk*',
+          'telnet*',
+          'tftp*',
+          'tuned',
+          'whoopsie',
+          'xinetd',
+          'yp-tools',
+          'ypbind'
         ],
         tag: 'list'
       },
@@ -202,12 +242,32 @@ const modules = {
         description: 'List of Debian packages to install.',
         type: 'array',
         current: [
-          'acct', 'apparmor-profiles', 'apparmor-utils', 'apt-show-versions',
-          'audispd-plugins', 'auditd', 'cracklib-runtime', 'debsums', 'gnupg2',
-          'haveged', 'libpam-apparmor', 'libpam-cap', 'libpam-modules',
-          'libpam-pwquality', 'libpam-tmpdir', 'lsb-release', 'needrestart',
-          'openssh-server', 'postfix', 'rkhunter', 'rsyslog', 'sysstat',
-          'systemd-journal-remote', 'tcpd', 'vlock', 'wamerican'
+          'acct',
+          'apparmor-profiles',
+          'apparmor-utils',
+          'apt-show-versions',
+          'audispd-plugins',
+          'auditd',
+          'cracklib-runtime',
+          'debsums',
+          'gnupg2',
+          'haveged',
+          'libpam-apparmor',
+          'libpam-cap',
+          'libpam-modules',
+          'libpam-pwquality',
+          'libpam-tmpdir',
+          'lsb-release',
+          'needrestart',
+          'openssh-server',
+          'postfix',
+          'rkhunter',
+          'rsyslog',
+          'sysstat',
+          'systemd-journal-remote',
+          'tcpd',
+          'vlock',
+          'wamerican'
         ],
         tag: 'list'
       },
@@ -226,7 +286,8 @@ const modules = {
     script: {
       module: 'logindefs',
       label: 'Login Definitions Configuration',
-      description: 'Login Definitions Configuration. Login retries: 5, Login timeout: 60, Password max days: 60, Password min days: 1, Password warn age: 7.',
+      description:
+        'Login Definitions Configuration. Login retries: 5, Login timeout: 60, Password max days: 60, Password min days: 1, Password warn age: 7.',
       isSelected: false
     },
     advancedConfig: [
@@ -442,7 +503,8 @@ const modules = {
         module: 'password',
         label: 'pwquality Difok',
         var: 'pwquality_difok',
-        description: 'Number of characters in the new password that must not be present in the old password.',
+        description:
+          'Number of characters in the new password that must not be present in the old password.',
         type: 'number',
         current: 8,
         tag: 'number'
@@ -496,7 +558,8 @@ const modules = {
         module: 'password',
         label: 'pwquality Maxclassrepeat',
         var: 'pwquality_maxclassrepeat',
-        description: 'Reject passwords which contain more than N consecutive characters of the same class. The default is 0 which means that this check is disabled.',
+        description:
+          'Reject passwords which contain more than N consecutive characters of the same class. The default is 0 which means that this check is disabled.',
         type: 'number',
         current: 4,
         tag: 'number'
@@ -505,7 +568,8 @@ const modules = {
         module: 'password',
         label: 'pwquality Maxrepeat',
         var: 'pwquality_maxrepeat',
-        description: 'Reject passwords which contain more than N same consecutive characters. The default is 0 which means that this check is disabled',
+        description:
+          'Reject passwords which contain more than N same consecutive characters. The default is 0 which means that this check is disabled',
         type: 'number',
         current: 3,
         tag: 'number'
@@ -554,7 +618,7 @@ const modules = {
         type: 'number',
         current: -1,
         tag: 'number'
-      },
+      }
     ]
   },
   rkhunter: {
@@ -610,8 +674,8 @@ const modules = {
 
 const getScriptsFromModules = (): any => {
   const result: any = []
-  for(const mod in modules) {
-      result.push(modules[mod]['script'])
+  for (const mod in modules) {
+    result.push(modules[mod]['script'])
   }
   console.log(result)
   return result
@@ -619,8 +683,8 @@ const getScriptsFromModules = (): any => {
 
 const getACFromModules = (): any => {
   const result: any = []
-  for(const mod in modules) {
-    for(const i in modules[mod]['advancedConfig']) {
+  for (const mod in modules) {
+    for (const i in modules[mod]['advancedConfig']) {
       result.push(modules[mod]['advancedConfig'][i])
     }
   }
@@ -629,7 +693,9 @@ const getACFromModules = (): any => {
 }
 export const useScriptStore = create<ScriptStore>((set) => ({
   script: getScriptsFromModules(),
+  myScripts: [],
   advancedConfig: getACFromModules(),
   setScript: (sc): void => set({ script: sc }),
+  setMyScripts: (ms): void => set({ myScripts: ms }),
   setAdvancedConfig: (ac): void => set({ advancedConfig: ac })
 }))

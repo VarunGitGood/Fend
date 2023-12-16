@@ -16,8 +16,9 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import notFoundImg from '../../assets/notFound.jpg'
 import { useGroupStore } from '@renderer/store/useGroupStore'
 import classes from './index.module.css'
-import toast, { Toaster } from 'react-hot-toast'
+// import toast, { Toaster } from 'react-hot-toast'
 
+import { saveDataToStore } from '@renderer/utils/storage'
 const ipcRenderer = (window as any).ipcRenderer
 interface GroupBarProps {
   name: string
@@ -190,62 +191,6 @@ function Groups(): JSX.Element {
     }
   }
 
-  const handleAddHost = (
-    groupName: string,
-    details: { ipaddress: string; alias: string; lastModified: string }
-  ): void => {
-    const newGroupDetails = groupDetails.map((item) => {
-      if (item.name === groupName) {
-        return {
-          ...item,
-          details: [...item.details, details]
-        }
-      }
-
-      return item
-    })
-
-    setGroupDetails(newGroupDetails)
-  }
-
-  // const testScript = (): void => {
-  //   const data = {
-  //     scriptName: 'Custom-Script',
-  //     groupName: 'test'
-  //   }
-  //   ipcRenderer.send('run-script', data)
-  //   ipcRenderer.on('run-script-success', (_event, arg) => {
-  //     console.log(arg)
-  //   })
-  //   ipcRenderer.on('run-script-error', (_event, arg) => {
-  //     console.error(arg)
-  //   })
-  // }
-
-  const handleRemoveHost = (groupName: string, ipaddress: string): void => {
-    const newGroupDetails = groupDetails.map((item) => {
-      if (item.name === groupName) {
-        return {
-          ...item,
-          details: item.details.filter((detail) => detail.ipaddress !== ipaddress)
-        }
-      }
-
-      return item
-    })
-
-    setGroupDetails(newGroupDetails)
-  }
-
-  const handleRunScript = (): void => {
-    if (groupDetails.every((group) => !group.isSelected)) {
-      toast.error('Please select at least one group')
-      return
-    }
-
-    openM()
-  }
-
   const handleCheckedGroups = (): void => {
     const selectedGroups = new Map<string, any>()
     groupDetails.forEach((group) => {
@@ -279,6 +224,98 @@ function Groups(): JSX.Element {
       console.error(arg)
     })
   }
+
+  const handleAddHost = (
+    groupName: string,
+    details: { ipaddress: string; alias: string; lastModified: string }
+  ): void => {
+    const newGroupDetails = groupDetails.map((item) => {
+      if (item.name === groupName) {
+        return {
+          ...item,
+          details: [...item.details, details]
+        }
+      }
+
+      return item
+    })
+
+    setGroupDetails(newGroupDetails)
+    saveDataToStore('groupDetails', newGroupDetails)
+  }
+
+  // const testScript = (): void => {
+  //   const data = {
+  //     scriptName: 'Custom-Script',
+  //     groupName: 'test'
+  //   }
+  //   ipcRenderer.send('run-script', data)
+  //   ipcRenderer.on('run-script-success', (_event, arg) => {
+  //     console.log(arg)
+  //   })
+  //   ipcRenderer.on('run-script-error', (_event, arg) => {
+  //     console.error(arg)
+  //   })
+  // }
+
+  const handleRemoveHost = (groupName: string, ipaddress: string): void => {
+    const newGroupDetails = groupDetails.map((item) => {
+      if (item.name === groupName) {
+        return {
+          ...item,
+          details: item.details.filter((detail) => detail.ipaddress !== ipaddress)
+        }
+      }
+
+      return item
+    })
+
+    setGroupDetails(newGroupDetails)
+    saveDataToStore('groupDetails', newGroupDetails)
+  }
+
+  // const handleRunScript = (): void => {
+  //   if (groupDetails.every((group) => !group.isSelected)) {
+  //     toast.error('Please select at least one group')
+  //     return
+  //   }
+
+  //   openM()
+  // }
+
+  // const handleCheckedGroups = (): void => {
+  //   const selectedGroups = new Map<string, any>()
+  //   groupDetails.forEach((group) => {
+  //     if (group.isSelected) {
+  //       selectedGroups.set(group.name, {
+  //         hosts: Object.fromEntries(
+  //           group.details.map((detail) => {
+  //             return [detail.alias, { ansible_host: detail.ipaddress }]
+  //           })
+  //         )
+  //       })
+  //     }
+  //   })
+  //   const obj = {
+  //     all: {
+  //       children: Object.fromEntries(
+  //         [...selectedGroups.entries()].map(([groupName, groupData]) => {
+  //           return [groupName, groupData]
+  //         })
+  //       )
+  //     }
+  //   }
+  //   ipcRenderer.send('add-group', obj)
+  //   ipcRenderer.on('add-group-log', (_event, arg) => {
+  //     console.log(arg)
+  //   })
+  //   ipcRenderer.on('add-group-success', (_event, arg) => {
+  //     console.log(arg)
+  //   })
+  //   ipcRenderer.on('add-group-error', (_event, arg) => {
+  //     console.error(arg)
+  //   })
+  // }
 
   const items = groupDetails.map((group) => {
     const { name, details } = group
@@ -381,19 +418,18 @@ function Groups(): JSX.Element {
         ) : (
           <Box mt="3rem">{items}</Box>
         )}
-        {isCustom && groupDetails.length > 0 && (
+        {isCustom && (
           <Flex justify="flex-end" gap={15} my={24}>
             <Button size="md" variant="subtle" onClick={() => navigate('/custom-script')}>
               Back
             </Button>
-            <Button size="md" onClick={handleRunScript}>
+            <Button size="md" onClick={openM}>
               Run Script
             </Button>
             {/* <button onClick={testScript}>Test</button> */}
           </Flex>
         )}
       </Box>
-      <Toaster />
     </>
   )
 }

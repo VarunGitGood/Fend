@@ -1,5 +1,7 @@
 active_roles:
-  - rkhunter
+  - ufw
+  - ssh
+  - compilers
 ufw_enabled: true
 ufw_outgoing_traffic:
   - '22'
