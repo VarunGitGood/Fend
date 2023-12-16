@@ -41,6 +41,7 @@
       color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
     }
   }
+  
 
   &[data-active] {
     &,
@@ -53,6 +54,11 @@
       }
     }
   }
+}
+
+.highlight{
+  background-color: var(--mantine-color-blue-light);
+  color: var(--mantine-color-blue-light-color);
 }
 
 .link:hover {
