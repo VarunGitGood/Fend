@@ -1,10 +1,10 @@
 import { useDisclosure } from '@mantine/hooks'
 import {
   Box,
-  Table,
   Modal,
   Flex,
   Group,
+  Table,
   TextInput,
   Checkbox,
   Image,
@@ -147,6 +147,7 @@ function GroupBar({ name, onAddHost }: GroupBarProps): JSX.Element {
 function Groups(): JSX.Element {
   const navigate = useNavigate()
   const [opened, { open, close }] = useDisclosure(false)
+  const [openedModal, { open: openM, close: closeM }] = useDisclosure(false)
   const { groupDetails, setGroupDetails } = useGroupStore()
 
   const location = useLocation()
@@ -278,15 +279,15 @@ function Groups(): JSX.Element {
             <Table.Td>{detail.ipaddress}</Table.Td>
             <Table.Td>{detail.lastModified}</Table.Td>
             <Table.Td>
-              <span
-                style={{ color: '#005FB8', cursor: 'pointer' }}
+              <Button
+                variant="subtle"
                 onClick={(e) => {
                   e.stopPropagation()
                   handleRemoveHost(name, detail.ipaddress)
                 }}
               >
                 Remove
-              </span>
+              </Button>
             </Table.Td>
           </Table.Tr>
         ))
@@ -339,6 +340,19 @@ function Groups(): JSX.Element {
           </Flex>
         </form>
       </Modal>
+      <Modal opened={openedModal} onClose={closeM} title="Run Script" centered>
+        <Text fz="1rem" fw={600} mb="1rem">
+          Are you sure you want to run the script?
+        </Text>
+        <Flex justify="flex-end" gap={15}>
+          <Button size="md" variant="outline" onClick={closeM}>
+            Cancel
+          </Button>
+          <Button size="md" onClick={handleCheckedGroups}>
+            Confirm
+          </Button>
+        </Flex>
+      </Modal>
       <Box p="md">
         <Flex justify="space-between" align="center">
           <Text fz="2.25rem" fw="600" lh="2.75rem">
@@ -361,8 +375,8 @@ function Groups(): JSX.Element {
             <Button size="md" variant="subtle" onClick={() => navigate('/custom-script')}>
               Back
             </Button>
-            <Button size="md" onClick={handleCheckedGroups}>
-              Next
+            <Button size="md" onClick={openM}>
+              Run Script
             </Button>
             {/* <button onClick={testScript}>Test</button> */}
           </Flex>

@@ -170,12 +170,7 @@ You should set the 'loop_var' value in the 'loop_control' option for the task to
         />
       </Modal>
       <Box p="md">
-        <Flex
-          justify="space-between"
-          align="center"
-          mt={isLogsPage ? '0' : '2rem'}
-          className={!isLogsPage ? classes.last_edited : ''}
-        >
+        <Flex justify="space-between" align="center" mt={isLogsPage ? '0' : '2rem'}>
           <Text
             fz={isLogsPage ? '2.25rem' : '1.25rem'}
             fw="600"
@@ -189,7 +184,7 @@ You should set the 'loop_var' value in the 'loop_control' option for the task to
             </Button>
           )}
         </Flex>
-        <Table.ScrollContainer minWidth={800} mt={isLogsPage ? '2rem' : '0'}>
+        <Table.ScrollContainer minWidth={800} mt="2rem">
           <Table verticalSpacing="0.75rem" horizontalSpacing="1.5rem" className={classes.table}>
             <Table.Thead>
               <Table.Tr>
