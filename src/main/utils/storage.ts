@@ -50,21 +50,15 @@ export const saveDataToStore = (data: Data, mainWindow: BrowserWindow): void => 
   })
 }
 
-export const getDataFromStore = (key: string, mainWindow: BrowserWindow): void => {
+export const getDataFromStore = (mainWindow: BrowserWindow): void => {
+  // load it once
   fs.ensureFileSync(filePath)
-
   fs.readFile(filePath, 'utf8', (err, fileData) => {
     if (err) {
       Notify('Some Error Occurred')
     } else {
-      const existingData = JSON.parse(fileData || '{}')
-      const value = existingData[key]
-      if (value) {
-        console.log({ key, value })
-        mainWindow.webContents.send('load-storage-success', value)
-      } else {
-        mainWindow.webContents.send('load-storage-error', 'Key not found')
-      }
+      const data = JSON.parse(fileData)
+      mainWindow.webContents.send('load-storage-success', data)
     }
   })
 }

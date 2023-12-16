@@ -11,29 +11,38 @@ import { Logs } from './pages/logs'
 import { SystemInfo } from './pages/systemInfo'
 import { useEffect } from 'react'
 import { useGroupStore } from './store/useGroupStore'
-import { loadDataFromStore } from './utils/storage'
+const ipcRenderer = (window as any).ipcRenderer
 import { useScriptStore } from './store/useScriptStore'
+import { useState } from 'react'
 
 function App(): JSX.Element {
   const { setGroupDetails } = useGroupStore()
   const { setMyScripts } = useScriptStore()
+  const [localData, setLocalData] = useState<any>(null)
 
   useEffect(() => {
-    const loadGroupData = async (): Promise<void> => {
-      const groupDetails = await loadDataFromStore('groupDetails')
-      if (groupDetails) {
-        setGroupDetails(groupDetails)
-      }
-    }
-    const loadMyScripts = async (): Promise<void> => {
-      const myScripts = await loadDataFromStore('myScripts')
-      if (myScripts) {
-        setMyScripts(myScripts)
-      }
-    }
-    loadGroupData()
-    loadMyScripts()
+    ipcRenderer.send('load-storage')
+    ipcRenderer.on('load-storage-success', (_event, arg) => {
+      console.log(arg)
+      setLocalData(arg)
+    })
+    ipcRenderer.on('load-storage-error', (_event, arg) => {
+      console.error(arg)
+    })
   }, [])
+
+  useEffect(() => {
+    if (localData && localData.groupDetails) {
+      setGroupDetails(localData.groupDetails)
+    } else {
+      setGroupDetails([])
+    }
+    if (localData && localData.myScripts) {
+      setMyScripts(localData.myScripts)
+    } else {
+      setMyScripts([])
+    }
+  }, [localData])
 
   return (
     <MantineProvider>

@@ -67,7 +67,7 @@ function createWindow(): void {
   })
 
   ipcMain.on('load-storage', (_event: IpcMainEvent, data: any) => {
-    getDataFromStore(data, mainWindow)
+    getDataFromStore(mainWindow)
   })
 
   mainWindow.on('ready-to-show', () => {
