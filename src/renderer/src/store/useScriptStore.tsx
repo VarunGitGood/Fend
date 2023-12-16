@@ -221,6 +221,390 @@ const modules = {
         tag: 'list'
       }
     ]
+  },
+  loginDefs: {
+    script: {
+      module: 'logindefs',
+      label: 'Login Definitions Configuration',
+      description: 'Login Definitions Configuration. Login retries: 5, Login timeout: 60, Password max days: 60, Password min days: 1, Password warn age: 7.',
+      isSelected: false
+    },
+    advancedConfig: [
+      {
+        module: 'logindefs',
+        label: 'Login Retries',
+        var: 'login_defs_login_retries',
+        description: 'Number of login retries.',
+        type: 'number',
+        current: 5,
+        tag: 'number'
+      },
+      {
+        module: 'logindefs',
+        label: 'Login Timeout',
+        var: 'login_defs_login_timeout',
+        description: 'Login timeout in seconds.',
+        type: 'number',
+        current: 60,
+        tag: 'number'
+      },
+      {
+        module: 'logindefs',
+        label: 'Password Max Days',
+        var: 'login_defs_pass_max_days',
+        description: 'Maximum number of days a password may be used.',
+        type: 'number',
+        current: 60,
+        tag: 'number'
+      },
+      {
+        module: 'logindefs',
+        label: 'Password Min Days',
+        var: 'login_defs_pass_min_days',
+        description: 'Minimum number of days allowed between password changes.',
+        type: 'number',
+        current: 1,
+        tag: 'number'
+      },
+      {
+        module: 'logindefs',
+        label: 'Password Warn Age',
+        var: 'login_defs_pass_warn_age',
+        description: 'Number of days warning given before password expiration.',
+        type: 'number',
+        current: 7,
+        tag: 'number'
+      }
+    ]
+  },
+  password: {
+    script: {
+      module: 'password',
+      label: 'Password Configuration',
+      description: 'Password Configuration. Faillock enabled: true. pwquality settings enforced.',
+      isSelected: false
+    },
+    advancedConfig: [
+      {
+        module: 'password',
+        label: 'Faillock Configuration',
+        var: 'faillock_enable',
+        description: 'Enable faillock for account lockout.',
+        type: 'boolean',
+        current: true,
+        tag: 'checkbox'
+      },
+      {
+        module: 'password',
+        label: 'Faillock Admin Group',
+        var: 'faillock_admin_group',
+        description: 'Admin group for faillock (empty array by default).',
+        type: 'array',
+        current: [],
+        tag: 'list'
+      },
+      {
+        module: 'password',
+        label: 'Faillock Audit',
+        var: 'faillock_audit',
+        description: 'Enable faillock audit.',
+        type: 'boolean',
+        current: true,
+        tag: 'checkbox'
+      },
+      {
+        module: 'password',
+        label: 'Faillock Deny',
+        var: 'faillock_deny',
+        description: 'Number of attempts before account is denied.',
+        type: 'number',
+        current: 5,
+        tag: 'number'
+      },
+      {
+        module: 'password',
+        label: 'Faillock Directory',
+        var: 'faillock_dir',
+        description: 'Directory to store faillock files.',
+        type: 'string',
+        current: '/var/run/faillock',
+        tag: 'input'
+      },
+      {
+        module: 'password',
+        label: 'Faillock Even Deny Root',
+        var: 'faillock_even_deny_root',
+        description: 'Even deny root user after failed attempts.',
+        type: 'boolean',
+        current: true,
+        tag: 'checkbox'
+      },
+      {
+        module: 'password',
+        label: 'Faillock Fail Interval',
+        var: 'faillock_fail_interval',
+        description: 'Time window (in seconds) for counting failed login attempts.',
+        type: 'number',
+        current: 900,
+        tag: 'number'
+      },
+      {
+        module: 'password',
+        label: 'Faillock Local Users Only',
+        var: 'faillock_local_users_only',
+        description: 'Count only local users for faillock.',
+        type: 'boolean',
+        current: true,
+        tag: 'checkbox'
+      },
+      {
+        module: 'password',
+        label: 'Faillock No Log Info',
+        var: 'faillock_no_log_info',
+        description: 'Do not log information about user locking/unlocking.',
+        type: 'boolean',
+        current: false,
+        tag: 'checkbox'
+      },
+      {
+        module: 'password',
+        label: 'Faillock No Delay',
+        var: 'faillock_nodelay',
+        description: 'Do not add a delay after a failed login attempt.',
+        type: 'boolean',
+        current: true,
+        tag: 'checkbox'
+      },
+      {
+        module: 'password',
+        label: 'Faillock Root Unlock Time',
+        var: 'faillock_root_unlock_time',
+        description: 'Time (in seconds) to keep root account locked after successful login.',
+        type: 'number',
+        current: 600,
+        tag: 'number'
+      },
+      {
+        module: 'password',
+        label: 'Faillock Silent',
+        var: 'faillock_silent',
+        description: 'Do not display information about failed attempts to the user.',
+        type: 'boolean',
+        current: false,
+        tag: 'checkbox'
+      },
+      {
+        module: 'password',
+        label: 'Faillock Unlock Time',
+        var: 'faillock_unlock_time',
+        description: 'Time (in seconds) to keep non-root account locked after successful login.',
+        type: 'number',
+        current: 600,
+        tag: 'number'
+      },
+      {
+        module: 'password',
+        label: 'Password Remember',
+        var: 'password_remember',
+        description: 'Number of passwords to remember.',
+        type: 'number',
+        current: 5,
+        tag: 'number'
+      },
+      {
+        module: 'password',
+        label: 'pwquality Dcredit',
+        var: 'pwquality_dcredit',
+        description: 'Value for pwquality dcredit.',
+        type: 'number',
+        current: -1,
+        tag: 'number'
+      },
+      {
+        module: 'password',
+        label: 'pwquality Dictcheck',
+        var: 'pwquality_dictcheck',
+        description: 'Enable or disable pwquality dictcheck.',
+        type: 'number',
+        current: 1,
+        tag: 'number'
+      },
+      {
+        module: 'password',
+        label: 'pwquality Dictpath',
+        var: 'pwquality_dictpath',
+        description: 'Path to the cracklib dictionaries.',
+        type: 'string',
+        current: '',
+        tag: 'input'
+      },
+      {
+        module: 'password',
+        label: 'pwquality Difok',
+        var: 'pwquality_difok',
+        description: 'Number of characters in the new password that must not be present in the old password.',
+        type: 'number',
+        current: 8,
+        tag: 'number'
+      },
+      {
+        module: 'password',
+        label: 'pwquality Enforce for Root',
+        var: 'pwquality_enforce_for_root',
+        description: 'Enforce pwquality settings for the root user.',
+        type: 'boolean',
+        current: true,
+        tag: 'checkbox'
+      },
+      {
+        module: 'password',
+        label: 'pwquality Enforcing',
+        var: 'pwquality_enforcing',
+        description: 'Enable or disable pwquality enforcing.',
+        type: 'number',
+        current: 1,
+        tag: 'number'
+      },
+      {
+        module: 'password',
+        label: 'pwquality Gecoscheck',
+        var: 'pwquality_gecoscheck',
+        description: 'Enable or disable pwquality gecoscheck.',
+        type: 'number',
+        current: 1,
+        tag: 'number'
+      },
+      {
+        module: 'password',
+        label: 'pwquality Lcredit',
+        var: 'pwquality_lcredit',
+        description: 'Value for pwquality lcredit.',
+        type: 'number',
+        current: -1,
+        tag: 'number'
+      },
+      {
+        module: 'password',
+        label: 'pwquality Local Users Only',
+        var: 'pwquality_local_users_only',
+        description: 'Apply pwquality settings only to local users.',
+        type: 'boolean',
+        current: true,
+        tag: 'checkbox'
+      },
+      {
+        module: 'password',
+        label: 'pwquality Maxclassrepeat',
+        var: 'pwquality_maxclassrepeat',
+        description: 'Reject passwords which contain more than N consecutive characters of the same class. The default is 0 which means that this check is disabled.',
+        type: 'number',
+        current: 4,
+        tag: 'number'
+      },
+      {
+        module: 'password',
+        label: 'pwquality Maxrepeat',
+        var: 'pwquality_maxrepeat',
+        description: 'Reject passwords which contain more than N same consecutive characters. The default is 0 which means that this check is disabled',
+        type: 'number',
+        current: 3,
+        tag: 'number'
+      },
+      {
+        module: 'password',
+        label: 'pwquality Minclass',
+        var: 'pwquality_minclass',
+        description: 'Minimum number of classes required in the new password.',
+        type: 'number',
+        current: 4,
+        tag: 'number'
+      },
+      {
+        module: 'password',
+        label: 'pwquality Minlen',
+        var: 'pwquality_minlen',
+        description: 'Minimum acceptable size for the new password.',
+        type: 'number',
+        current: 15,
+        tag: 'number'
+      },
+      {
+        module: 'password',
+        label: 'pwquality Ocredit',
+        var: 'pwquality_ocredit',
+        description: 'Value for pwquality ocredit.',
+        type: 'number',
+        current: -1,
+        tag: 'number'
+      },
+      {
+        module: 'password',
+        label: 'pwquality Retry',
+        var: 'pwquality_retry',
+        description: 'Prompt user at most N times before returning with error. The default is 1',
+        type: 'number',
+        current: 3,
+        tag: 'number'
+      },
+      {
+        module: 'password',
+        label: 'pwquality Ucredit',
+        var: 'pwquality_ucredit',
+        description: 'Value for pwquality ucredit.',
+        type: 'number',
+        current: -1,
+        tag: 'number'
+      },
+    ]
+  },
+  rkhunter: {
+    script: {
+      module: 'rkhunter',
+      label: 'Enable and configure rkhunter',
+      description: 'Enable and configure rkhunter',
+      isSelected: false
+    }
+  },
+  users: {
+    script: {
+      module: 'users',
+      label: 'Users Configuration',
+      description: 'Users Configuration. Delete specified users.',
+      isSelected: false
+    },
+    advancedConfig: [
+      {
+        module: 'users',
+        label: 'Delete Users',
+        var: 'delete_users',
+        description: 'List of users to be deleted.',
+        type: 'array',
+        current: ['games', 'gnats', 'irc', 'list', 'news', 'sync', 'uucp'],
+        tag: 'list'
+      }
+    ]
+  },
+  lockroot: {
+    script: {
+      module: 'lockroot',
+      label: 'Lock Root',
+      description: 'Lock the user account',
+      isSelected: false
+    }
+  },
+  cron: {
+    script: {
+      module: 'cron',
+      label: 'Cron',
+      description: 'Set cron, at and crontab permissoins to allow only root access'
+    }
+  },
+  useradd: {
+    script: {
+      module: 'useradd',
+      label: 'useradd',
+      description: 'Configure adduser and useradd commands'
+    }
   }
 }
 
