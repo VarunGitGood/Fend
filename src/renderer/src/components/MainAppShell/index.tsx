@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import { AppShell, Group, Code } from '@mantine/core'
-import classes from './MainAppShell.module.css'
+import classes from './index.module.css'
 
 import {
   IconDashboard,
@@ -27,7 +27,7 @@ function MainAppShell({ children }: MainAppShellProps): JSX.Element {
 
   const links = data.map((item) => (
     <a
-      className={[classes.link ,location.pathname === item.link ? classes.highlight: ''].join(' ')}
+      className={[classes.link, location.pathname === item.link ? classes.highlight : ''].join(' ')}
       key={item.label}
       onClick={(event) => {
         event.preventDefault()

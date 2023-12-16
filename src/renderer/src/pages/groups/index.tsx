@@ -12,7 +12,7 @@ import {
   Button
 } from '@mantine/core'
 import { useForm } from '@mantine/form'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import notFoundImg from '../../assets/notFound.jpg'
 import { useGroupStore } from '@renderer/store/useGroupStore'
 import classes from './index.module.css'
@@ -145,6 +145,7 @@ function GroupBar({ name, onAddHost }: GroupBarProps): JSX.Element {
 }
 
 function Groups(): JSX.Element {
+  const navigate = useNavigate()
   const [opened, { open, close }] = useDisclosure(false)
   const { groupDetails, setGroupDetails } = useGroupStore()
 
@@ -238,19 +239,19 @@ function Groups(): JSX.Element {
     setGroupDetails(newGroupDetails)
   }
 
-  const testScript = (): void => {
-    const data = {
-      scriptName: 'Custom-Script',
-      groupName: 'test'
-    }
-    ipcRenderer.send('run-script', data)
-    ipcRenderer.on('run-script-success', (_event, arg) => {
-      console.log(arg)
-    })
-    ipcRenderer.on('run-script-error', (_event, arg) => {
-      console.error(arg)
-    })
-  }
+  // const testScript = (): void => {
+  //   const data = {
+  //     scriptName: 'Custom-Script',
+  //     groupName: 'test'
+  //   }
+  //   ipcRenderer.send('run-script', data)
+  //   ipcRenderer.on('run-script-success', (_event, arg) => {
+  //     console.log(arg)
+  //   })
+  //   ipcRenderer.on('run-script-error', (_event, arg) => {
+  //     console.error(arg)
+  //   })
+  // }
 
   const handleRemoveHost = (groupName: string, ipaddress: string): void => {
     const newGroupDetails = groupDetails.map((item) => {
@@ -356,12 +357,14 @@ function Groups(): JSX.Element {
           <Box mt="3rem">{items}</Box>
         )}
         {isCustom && (
-          <Flex justify="flex-end" gap={8} my={24}>
-            <Button size="md">Back</Button>
+          <Flex justify="flex-end" gap={15} my={24}>
+            <Button size="md" variant="subtle" onClick={() => navigate('/custom-script')}>
+              Back
+            </Button>
             <Button size="md" onClick={handleCheckedGroups}>
               Next
             </Button>
-            <button onClick={testScript}>Test</button>
+            {/* <button onClick={testScript}>Test</button> */}
           </Flex>
         )}
       </Box>

@@ -1,6 +1,7 @@
 import { Badge, Box, Button, Chip, Flex, Group, Modal, Table, Text } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { CopyBlock } from 'react-code-blocks'
+import classes from './index.module.css'
 import { useLocation, useNavigate } from 'react-router-dom'
 interface Log {
   limit?: number
@@ -169,7 +170,12 @@ You should set the 'loop_var' value in the 'loop_control' option for the task to
         />
       </Modal>
       <Box p="md">
-        <Flex justify="space-between" align="center" mt={isLogsPage ? '0' : '2rem'}>
+        <Flex
+          justify="space-between"
+          align="center"
+          mt={isLogsPage ? '0' : '2rem'}
+          className={!isLogsPage ? classes.last_edited : ''}
+        >
           <Text
             fz={isLogsPage ? '2.25rem' : '1.25rem'}
             fw="600"
@@ -183,8 +189,8 @@ You should set the 'loop_var' value in the 'loop_control' option for the task to
             </Button>
           )}
         </Flex>
-        <Table.ScrollContainer minWidth={800} mt="2rem">
-          <Table verticalSpacing="xs">
+        <Table.ScrollContainer minWidth={800} mt={isLogsPage ? '2rem' : '0'}>
+          <Table verticalSpacing="0.75rem" horizontalSpacing="1.5rem" className={classes.table}>
             <Table.Thead>
               <Table.Tr>
                 <Table.Th>Status</Table.Th>

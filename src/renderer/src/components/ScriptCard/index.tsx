@@ -8,13 +8,14 @@ import {
   Text,
   Modal,
   TagsInput,
+  NumberInput,
   Button
 } from '@mantine/core'
 import { AdvancedConfigItem } from '@renderer/store/useScriptStore'
 import { useForm } from '@mantine/form'
 import { useDisclosure } from '@mantine/hooks'
 import { useScriptStore } from '@renderer/store/useScriptStore'
-import classes from './checkbox.module.css'
+import classes from './index.module.css'
 
 type ScriptCardProps = {
   module: string
@@ -66,6 +67,7 @@ function ScriptCard({ label, description, module, isSelected }: ScriptCardProps)
       <Modal
         opened={opened}
         onClose={close}
+        size="45%"
         title={`${module.toUpperCase()} Advance Configurations`}
         centered
       >
@@ -97,11 +99,22 @@ function ScriptCard({ label, description, module, isSelected }: ScriptCardProps)
                   </Box>
                 )
               }
-
+              if (config.tag === 'number') {
+                return (
+                  <Box key={config.label}>
+                    <Text>{config.label}</Text>
+                    <NumberInput
+                      defaultValue={config.current}
+                      description={config.description}
+                      {...form.getInputProps(config.var)}
+                    />
+                  </Box>
+                )
+              }
               return null
             })}
             <Flex justify="stretch" gap={15}>
-              <Button onClick={close} variant="subtle" fullWidth>
+              <Button onClick={close} variant="outline" fullWidth>
                 Close
               </Button>
               <Button type="submit" onClick={close} variant="filled" fullWidth>
@@ -132,18 +145,23 @@ function ScriptCard({ label, description, module, isSelected }: ScriptCardProps)
           />
           <UnstyledButton className={classes.control} data-checked={checked || undefined}>
             <Text className={classes.label}>{label}</Text>
-            <Text className={classes.description}>{description}</Text>
+            <Text className={classes.description} lineClamp={4}>
+              {description}
+            </Text>
           </UnstyledButton>
-          <Text
-            c="blue"
-            style={{ cursor: 'pointer' }}
-            onClick={(e) => {
-              e.stopPropagation()
-              open()
-            }}
-          >
-            Show Advance Options
-          </Text>
+          {moduleAdvancedConfig?.length > 0 && (
+            <Text
+              c="blue"
+              miw={200}
+              style={{ cursor: 'pointer' }}
+              onClick={(e) => {
+                e.stopPropagation()
+                open()
+              }}
+            >
+              Show Advance Options
+            </Text>
+          )}
         </Flex>
       </div>
     </>

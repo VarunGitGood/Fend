@@ -21,7 +21,7 @@ function CustomScript(): JSX.Element {
     advancedConfig.forEach((config: AdvancedConfigItem) => {
       customScript[config.var] = config.current
     })
-    // TODO 
+    // TODO
     const data = {
       scriptName: 'Custom-Script',
       script: customScript
@@ -57,16 +57,25 @@ function CustomScript(): JSX.Element {
         <Text fz="2.25rem" fw="600" lh="2.75rem">
           Custom Script
         </Text>
-        <Input placeholder="Name" mt="2rem" />
+        <Input
+          placeholder="Name"
+          mt="2rem"
+          size="md"
+          style={{
+            borderRadius: '4px'
+          }}
+        />
         <Stack gap="1rem" mt="3rem">
           {script.map((s) => (
             <ScriptCard key={s.module} {...s} />
           ))}
         </Stack>
         <Flex justify="flex-end" gap={15} mt="2rem">
-          <Button variant="subtle">Back</Button>
+          <Button variant="subtle" onClick={() => navigate('/')}>
+            Back
+          </Button>
           <Button variant="filled" onClick={handleSaveAndNextClick}>
-            Save & Next
+            Next
           </Button>
         </Flex>
       </Box>

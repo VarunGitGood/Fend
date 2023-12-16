@@ -1,6 +1,5 @@
 active_roles:
-  - ufw
-  - ssh
+  - useradd
 ufw_enabled: true
 ufw_outgoing_traffic:
   - '22'
@@ -16,3 +15,117 @@ sshd_allow_users:
   - ansible_user
 sshd_ports:
   - '22'
+compilers:
+  - as
+  - cargo
+  - cc
+  - cc-[0-9]*
+  - clang-[0-9]*
+  - gcc
+  - gcc-[0-9]*
+  - go
+  - make
+  - rustc
+block_blacklisted: false
+misc_modules_blocklist:
+  - bluetooth
+  - usb-midi
+  - thunderbolt
+  - usb-storage
+disable_ipv6: false
+system_upgrade: true
+packages_blocklist:
+  - apport*
+  - autofs
+  - avahi*
+  - avahi-*
+  - beep
+  - git
+  - pastebinit
+  - popularity-contest
+  - prelink
+  - rpcbind
+  - rsh*
+  - rsync
+  - talk*
+  - telnet*
+  - tftp*
+  - tuned
+  - whoopsie
+  - xinetd
+  - yp-tools
+  - ypbind
+packages_debian:
+  - acct
+  - apparmor-profiles
+  - apparmor-utils
+  - apt-show-versions
+  - audispd-plugins
+  - auditd
+  - cracklib-runtime
+  - debsums
+  - gnupg2
+  - haveged
+  - libpam-apparmor
+  - libpam-cap
+  - libpam-modules
+  - libpam-pwquality
+  - libpam-tmpdir
+  - lsb-release
+  - needrestart
+  - openssh-server
+  - postfix
+  - rkhunter
+  - rsyslog
+  - sysstat
+  - systemd-journal-remote
+  - tcpd
+  - vlock
+  - wamerican
+packages_ubuntu:
+  - fwupd
+  - secureboot-db
+  - snapd
+login_defs_login_retries: 5
+login_defs_login_timeout: 60
+login_defs_pass_max_days: 60
+login_defs_pass_min_days: 1
+login_defs_pass_warn_age: 7
+faillock_enable: true
+faillock_admin_group: []
+faillock_audit: true
+faillock_deny: 5
+faillock_dir: /var/run/faillock
+faillock_even_deny_root: true
+faillock_fail_interval: 900
+faillock_local_users_only: true
+faillock_no_log_info: false
+faillock_nodelay: true
+faillock_root_unlock_time: 600
+faillock_silent: false
+faillock_unlock_time: 600
+password_remember: 5
+pwquality_dcredit: -1
+pwquality_dictcheck: 1
+pwquality_dictpath: ''
+pwquality_difok: 8
+pwquality_enforce_for_root: true
+pwquality_enforcing: 1
+pwquality_gecoscheck: 1
+pwquality_lcredit: -1
+pwquality_local_users_only: true
+pwquality_maxclassrepeat: 4
+pwquality_maxrepeat: 3
+pwquality_minclass: 4
+pwquality_minlen: 15
+pwquality_ocredit: -1
+pwquality_retry: 3
+pwquality_ucredit: -1
+delete_users:
+  - games
+  - gnats
+  - irc
+  - list
+  - news
+  - sync
+  - uucp
