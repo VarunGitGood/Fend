@@ -663,10 +663,10 @@ const modules = {
       description: 'Set cron, at and crontab permissoins to allow only root access'
     }
   },
-  useradd: {
+  adduser: {
     script: {
-      module: 'useradd',
-      label: 'useradd',
+      module: 'adduser',
+      label: 'adduser',
       description: 'Configure adduser and useradd commands'
     }
   }

@@ -201,7 +201,7 @@ function Groups(): JSX.Element {
         selectedGroups.set(group.name, {
           hosts: Object.fromEntries(
             group.details.map((detail) => {
-              return [detail.alias, { ansible_host: detail.ipaddress }]
+              return [detail.alias, { ansible_host: detail.ipaddress, ansible_user: "ubuntu" }]
             })
           )
         })
