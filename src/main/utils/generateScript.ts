@@ -17,6 +17,7 @@ export const generateScript = (data: ScriptData, mainWindow: BrowserWindow): voi
   try {
     const yamlData = yaml.dump(data.script)
     const scriptFolderPath = join(__dirname, '../../ansible-data/scripts')
+    fs.ensureDirSync(scriptFolderPath)
     const filePath = join(scriptFolderPath, `${data.scriptName}.yml`)
     fs.writeFileSync(filePath, yamlData)
     mainWindow.webContents.send('generate-script-success', 'Data written to file successfully.')
@@ -30,6 +31,7 @@ export const addGroup = (data: any, mainWindow: BrowserWindow): void => {
   try {
     const yamlData = yaml.dump(data)
     const scriptFolderPath = join(__dirname, '../../ansible-data/groups')
+    fs.ensureDirSync(scriptFolderPath)
     const filePath = join(scriptFolderPath, `test.yml`)
     fs.writeFileSync(filePath, yamlData)
     mainWindow.webContents.send('add-group-success', 'Data written to file successfully.')
