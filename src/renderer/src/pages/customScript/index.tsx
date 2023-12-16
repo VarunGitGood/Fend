@@ -10,6 +10,7 @@ import {
 } from '@renderer/store/useScriptStore'
 import { useNavigate } from 'react-router-dom'
 import toast, { Toaster } from 'react-hot-toast'
+import { saveDataToStore } from '@renderer/utils/storage'
 
 function CustomScript(): JSX.Element {
   const { script, advancedConfig, setMyScripts, myScripts } = useScriptStore()
@@ -34,6 +35,7 @@ function CustomScript(): JSX.Element {
       ansibleConfig: customScript
     }
     setMyScripts([...myScripts, myScript])
+    saveDataToStore('myScripts', [...myScripts, myScript])
   }
 
   const handleSaveAndNextClick = (): void => {
