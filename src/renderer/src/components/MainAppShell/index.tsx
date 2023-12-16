@@ -1,4 +1,4 @@
-import { ReactNode, useState } from 'react'
+import { ReactNode } from 'react'
 import { AppShell, Group, Code } from '@mantine/core'
 import classes from './MainAppShell.module.css'
 
@@ -10,7 +10,7 @@ import {
   IconHistory,
   IconDeviceLaptop
 } from '@tabler/icons-react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 interface MainAppShellProps {
   children: ReactNode
@@ -22,17 +22,15 @@ const data = [
   { link: '/sysinfo', label: 'System Information', icon: IconDeviceLaptop }
 ]
 function MainAppShell({ children }: MainAppShellProps): JSX.Element {
-  const [active, setActive] = useState('Dashboard')
   const navigate = useNavigate()
+  const location = useLocation()
 
   const links = data.map((item) => (
     <a
-      className={classes.link}
-      data-active={item.label === active || undefined}
+      className={[classes.link ,location.pathname === item.link ? classes.highlight: ''].join(' ')}
       key={item.label}
       onClick={(event) => {
         event.preventDefault()
-        setActive(item.label)
         navigate(item.link)
       }}
     >
