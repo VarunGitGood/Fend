@@ -26,9 +26,10 @@ export default function CustomScriptCard({ script }: CustomScriptCardProps): JSX
             {script.scriptName}
           </Text>
           <Group gap="0.5rem">
-            {script.myConfig.map((config) => (
-              <Chip key={config.module}>{config.module.toUpperCase()}</Chip>
-            ))}
+            {script.myConfig &&
+              script.myConfig.map((config) => (
+                <Chip key={config.module}>{config.module.toUpperCase()}</Chip>
+              ))}
           </Group>
           <Button
             className={classes.btn}

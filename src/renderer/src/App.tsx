@@ -19,18 +19,20 @@ function App(): JSX.Element {
   const { setMyScripts } = useScriptStore()
 
   useEffect(() => {
-    const loadData = async (): Promise<void> => {
+    const loadGroupData = async (): Promise<void> => {
       const groupDetails = await loadDataFromStore('groupDetails')
-      const myScripts = await loadDataFromStore('myScripts')
       if (groupDetails) {
         setGroupDetails(groupDetails)
       }
+    }
+    const loadMyScripts = async (): Promise<void> => {
+      const myScripts = await loadDataFromStore('myScripts')
       if (myScripts) {
         setMyScripts(myScripts)
       }
     }
-
-    loadData()
+    loadGroupData()
+    loadMyScripts()
   }, [])
 
   return (
