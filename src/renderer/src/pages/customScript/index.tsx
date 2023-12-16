@@ -10,7 +10,6 @@ import {
 } from '@renderer/store/useScriptStore'
 import { useNavigate } from 'react-router-dom'
 import toast, { Toaster } from 'react-hot-toast'
-// const ipcRenderer = (window as any).ipcRenderer
 
 function CustomScript(): JSX.Element {
   const { script, advancedConfig, setMyScripts, myScripts } = useScriptStore()
