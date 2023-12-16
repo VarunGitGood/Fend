@@ -243,7 +243,17 @@ function Groups(): JSX.Element {
     ipcRenderer.on('add-group-error', (_event, arg) => {
       console.error(arg)
     })
-    
+    const runsScriptDetails = {
+      scriptName,
+      groupName: 'test'
+    }
+    ipcRenderer.send('run-script', runsScriptDetails)
+    ipcRenderer.on('run-script-success', (_event, arg) => {
+      console.log(arg)
+    })
+    ipcRenderer.on('run-script-error', (_event, arg) => {
+      console.error(arg)
+    })
   }
 
   const handleAddHost = (
