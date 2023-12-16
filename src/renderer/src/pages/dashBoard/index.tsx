@@ -1,7 +1,7 @@
 import { Box, Flex, Grid, Text, Button } from '@mantine/core'
 import { useNavigate } from 'react-router-dom'
 import LogsTable from '@renderer/components/LogsTable'
-import CustomScriptCard from '@renderer/components/CustomScriptCard'
+// import CustomScriptCard from '@renderer/components/CustomScriptCard'
 // import { loadDataFromStore, saveDataToStore } from '@renderer/utils/storage'
 // const ipcRenderer = (window as any).ipcRenderer
 
@@ -58,12 +58,8 @@ function Dashboard(): JSX.Element {
       <button onClick={getData}>get data</button> */}
       <Box mt="3rem">
         <Grid gutter={{ base: 5, xs: 'md', md: 'xl', xl: 50 }}>
-          <Grid.Col span={6}>
-            <CustomScriptCard />
-          </Grid.Col>
-          <Grid.Col span={6}>
-            <CustomScriptCard />
-          </Grid.Col>
+          <Grid.Col span={6}>{/* <CustomScriptCard /> */}</Grid.Col>
+          <Grid.Col span={6}>{/* <CustomScriptCard /> */}</Grid.Col>
         </Grid>
       </Box>
       <LogsTable title="Last Executed Scripts" limit={5} />

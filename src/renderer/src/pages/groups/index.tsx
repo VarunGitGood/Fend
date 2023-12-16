@@ -19,6 +19,7 @@ import classes from './index.module.css'
 // import toast, { Toaster } from 'react-hot-toast'
 
 import { saveDataToStore } from '@renderer/utils/storage'
+import { useScriptStore, MyScriptItem } from '@renderer/store/useScriptStore'
 const ipcRenderer = (window as any).ipcRenderer
 interface GroupBarProps {
   name: string
@@ -152,10 +153,12 @@ function Groups(): JSX.Element {
   const [opened, { open, close }] = useDisclosure(false)
   const [openedModal, { open: openM, close: closeM }] = useDisclosure(false)
   const { groupDetails, setGroupDetails } = useGroupStore()
+  const { myScripts } = useScriptStore()
 
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
   const isCustom = queryParams.get('custom') === 'true'
+  const scriptName = queryParams.get('scriptName') || ''
   const form = useForm({
     initialValues: {
       groupName: ''
@@ -213,6 +216,23 @@ function Groups(): JSX.Element {
         )
       }
     }
+    // TODO: Create ansible script file
+    const script: MyScriptItem = myScripts.find((s) => s.scriptName === scriptName) || {
+      scriptName: '',
+      myConfig: [],
+      ansibleConfig: {}
+    }
+    const data = {
+      scriptName,
+      script: script.ansibleConfig
+    }
+    ipcRenderer.send('generate-script', data)
+    ipcRenderer.on('generate-script-success', (_event, arg) => {
+      console.log(arg)
+    })
+    ipcRenderer.on('generate-script-error', (_event, arg) => {
+      console.error(arg)
+    })
     ipcRenderer.send('add-group', obj)
     ipcRenderer.on('add-group-log', (_event, arg) => {
       console.log(arg)
@@ -223,6 +243,7 @@ function Groups(): JSX.Element {
     ipcRenderer.on('add-group-error', (_event, arg) => {
       console.error(arg)
     })
+    
   }
 
   const handleAddHost = (

@@ -20,8 +20,8 @@ export interface ModuleItem {
 
 export interface MyScriptItem {
   scriptName: string
-  myConfig: AdvancedConfigItem[]
-  ansibleConfig: { [key: string]: any }
+  myConfig: ModuleItem[]
+  ansibleConfig?: { [key: string]: any }
 }
 
 interface ScriptStore {

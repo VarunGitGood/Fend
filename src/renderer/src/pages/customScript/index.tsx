@@ -1,18 +1,25 @@
-import { Box, Flex, Button, Text, Input, Stack } from '@mantine/core'
+import { Box, Flex, Button, Text, Input, Stack, Modal } from '@mantine/core'
+import { useDisclosure } from '@mantine/hooks'
 import ScriptCard from '@renderer/components/ScriptCard'
-import { useScriptStore, AdvancedConfigItem, ModuleItem } from '@renderer/store/useScriptStore'
+import { useState } from 'react'
+import {
+  useScriptStore,
+  AdvancedConfigItem,
+  ModuleItem,
+  MyScriptItem
+} from '@renderer/store/useScriptStore'
 import { useNavigate } from 'react-router-dom'
 import toast, { Toaster } from 'react-hot-toast'
 
-const ipcRenderer = (window as any).ipcRenderer
-
 function CustomScript(): JSX.Element {
-  const { script, advancedConfig } = useScriptStore()
+  const { script, advancedConfig, setMyScripts, myScripts } = useScriptStore()
+  const [scriptName, setScriptName] = useState<string>('')
   const navigate = useNavigate()
+  const [opened, { open, close }] = useDisclosure(false)
 
-  const confirmScript = (): void => {
-    // TODO
+  const handleScript = (): void => {
     const customScript: { [key: string]: any } = { active_roles: [] }
+    const modules = script.filter((s) => s.isSelected)
     script.forEach((module: ModuleItem) => {
       if (module.isSelected) {
         customScript.active_roles.push(module.module)
@@ -21,45 +28,63 @@ function CustomScript(): JSX.Element {
     advancedConfig.forEach((config: AdvancedConfigItem) => {
       customScript[config.var] = config.current
     })
-    // TODO
-    const data = {
-      scriptName: 'Custom-Script',
-      script: customScript
+    const myScript: MyScriptItem = {
+      scriptName,
+      myConfig: modules,
+      ansibleConfig: customScript
     }
-    ipcRenderer.send('generate-script', data)
-    ipcRenderer.on('generate-script-success', (_event, arg) => {
-      console.log(arg)
-    })
-    ipcRenderer.on('generate-script-error', (_event, arg) => {
-      console.error(arg)
-    })
-
-    // navigate(`/groups?custom=true`)
-    navigate(`/myScript`)
+    setMyScripts([...myScripts, myScript])
   }
 
   const handleSaveAndNextClick = (): void => {
     const isModuleSelected = script.some((s) => s.isSelected)
+    const isScriptName = scriptName.trim().length > 0
     if (!isModuleSelected) {
       toast.error('Please select at least one module')
       return
     }
-    confirmScript()
+    if (!isScriptName) {
+      toast.error('Please enter script name')
+      return
+    }
+    open()
   }
 
   return (
     <>
+      <Modal opened={opened} onClose={close} size="md" title="Confirm Script" centered padding="md">
+        <Text fz="1rem" fw={600} mb="1rem">
+          Are you sure you want to save this script?
+        </Text>
+        <Flex justify="flex-end" gap={15}>
+          <Button size="md" variant="outline" onClick={close}>
+            Cancel
+          </Button>
+          <Button
+            size="md"
+            onClick={() => {
+              close()
+              handleScript()
+              navigate(`/myScript`)
+            }}
+          >
+            Confirm
+          </Button>
+        </Flex>
+      </Modal>
       <Box p="md">
         <Text fz="2.25rem" fw="600" lh="2.75rem">
           Custom Script
         </Text>
         <Input
-          placeholder="Name"
+          placeholder="Enter custom script name"
           mt="2rem"
           size="md"
           style={{
             borderRadius: '4px'
           }}
+          value={scriptName}
+          onChange={(event) => setScriptName(event.currentTarget.value)}
         />
         <Stack gap="1rem" mt="3rem">
           {script.map((s) => (
@@ -71,7 +96,7 @@ function CustomScript(): JSX.Element {
             Back
           </Button>
           <Button variant="filled" onClick={handleSaveAndNextClick}>
-            Next
+            Save
           </Button>
         </Flex>
       </Box>
