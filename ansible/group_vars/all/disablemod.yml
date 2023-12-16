@@ -5,3 +5,10 @@ misc_modules_blocklist:
   - usb-midi
   - thunderbolt
   - usb-storage
+
+net_modules_blocklist:
+  - atm
+  - dccp
+  - sctp
+  - rds
+  - tipc
