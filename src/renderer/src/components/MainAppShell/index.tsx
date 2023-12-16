@@ -1,5 +1,6 @@
 import { ReactNode } from 'react'
-import { AppShell, Group, Code } from '@mantine/core'
+import { AppShell, Group, Image } from '@mantine/core'
+import logo from '../../assets/logo.svg'
 import classes from './index.module.css'
 
 import {
@@ -45,8 +46,7 @@ function MainAppShell({ children }: MainAppShellProps): JSX.Element {
         <nav className={classes.navbar}>
           <div className={classes.navbarMain}>
             <Group className={classes.header} justify="space-between">
-              <h1>Logo</h1>
-              <Code fw={700}>v0.0.1</Code>
+              <Image src={logo} width={150} height={150} radius="xl" />
             </Group>
             {links}
           </div>
