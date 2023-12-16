@@ -1,0 +1,65 @@
+---
+- name: Install systemd timesyncd
+  become: true
+  ansible.builtin.package:
+    name: systemd-timesyncd
+    state: present
+  tags:
+    - systemd
+    - timesyncd
+
+- name: Configure systemd timesyncd
+  become: true
+  ansible.builtin.template:
+    src: "{{ timesyncd_conf_template }}"
+    dest: /etc/systemd/timesyncd.conf
+    backup: true
+    mode: "0644"
+    owner: root
+    group: root
+  notify:
+    - Reload systemd
+  tags:
+    - systemd
+    - timesyncd
+
+- name: Start timesyncd
+  become: true
+  ansible.builtin.systemd:
+    name: systemd-timesyncd
+    enabled: true
+    masked: false
+    state: started
+  tags:
+    - systemd
+    - timesyncd
+
+- name: Stat timesyncd status
+  ansible.builtin.command:
+    cmd: systemctl status systemd-timesyncd
+  register: timesyncd_status
+  changed_when: false
+  failed_when: timesyncd_status.rc != 0
+  tags:
+    - systemd
+    - timesyncd
+
+- name: Stat timedatectl show
+  ansible.builtin.command:
+    cmd: timedatectl show
+  register: timedatectl_show
+  changed_when: false
+  failed_when: timedatectl_show.rc != 0
+  tags:
+    - systemd
+    - timesyncd
+
+- name: Run timedatectl set-ntp
+  become: true
+  ansible.builtin.command:
+    cmd: timedatectl set-ntp true
+  changed_when: false
+  when: timedatectl_show.stdout.find('NTP=yes') != -1 and timesyncd_status.rc == 0
+  tags:
+    - systemd
+    - timesyncd
