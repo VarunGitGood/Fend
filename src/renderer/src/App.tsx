@@ -12,15 +12,21 @@ import { SystemInfo } from './pages/systemInfo'
 import { useEffect } from 'react'
 import { useGroupStore } from './store/useGroupStore'
 import { loadDataFromStore } from './utils/storage'
+import { useScriptStore } from './store/useScriptStore'
 
 function App(): JSX.Element {
   const { setGroupDetails } = useGroupStore()
+  const { setMyScripts } = useScriptStore()
 
   useEffect(() => {
     const loadData = async (): Promise<void> => {
       const groupDetails = await loadDataFromStore('groupDetails')
+      const myScripts = await loadDataFromStore('myScripts')
       if (groupDetails) {
         setGroupDetails(groupDetails)
+      }
+      if (myScripts) {
+        setMyScripts(myScripts)
       }
     }
 

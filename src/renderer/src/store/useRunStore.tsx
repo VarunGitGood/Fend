@@ -12,12 +12,12 @@ export interface Group {
 
 interface RunStore {
   scriptName: string
-  groupName: string
+  groupNames: Group[]
   timeStamp: string
   scriptOutput?: string
   scriptError?: string
   setScriptName: (scriptName: string) => void
-  setgroupName: (gd: string) => void
+  setgroupNames: (gd: [Group]) => void
   setTimeStamp: (timeStamp: string) => void
   setScriptOutput: (scriptOutput: string) => void
   setScriptError: (scriptError: string) => void
@@ -26,12 +26,12 @@ interface RunStore {
 export const useRunStore = create<RunStore>(
   (set): RunStore => ({
     scriptName: '',
-    groupName: '',
+    groupNames: [],
     timeStamp: '',
     scriptOutput: '',
     scriptError: '',
     setScriptName: (scriptName: string) => set({ scriptName }),
-    setgroupName: (groupName: string) => set({ groupName }),
+    setgroupNames: (groupNames: Group[]) => set({ groupNames }),
     setTimeStamp: (timeStamp: string) => set({ timeStamp }),
     setScriptOutput: (scriptOutput: string) => set({ scriptOutput }),
     setScriptError: (scriptError: string) => set({ scriptError })

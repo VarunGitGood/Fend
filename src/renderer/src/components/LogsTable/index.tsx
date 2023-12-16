@@ -10,72 +10,70 @@ interface Log {
 let data = [
   {
     status: 'Success',
+    scriptName: 'Custom-Script',
     timeStamp: 'Jan 4, 2022',
     appliedGroup: 'Web Servers',
     module: ['SSH', 'UFW', 'APP Armor']
   },
   {
     status: 'Failed',
+    scriptName: 'Custom-Script',
     timeStamp: 'Jan 4, 2022',
     appliedGroup: 'Web Servers',
     module: ['SSH', 'UFW', 'APP Armor']
   },
   {
     status: 'Success',
+    scriptName: 'Custom-Script',
     timeStamp: 'Jan 4, 2022',
     appliedGroup: 'Web Servers',
     module: ['SSH', 'UFW', 'APP Armor']
   },
   {
     status: 'Failed',
+    scriptName: 'Custom-Script',
     timeStamp: 'Jan 4, 2022',
     appliedGroup: 'Web Servers',
     module: ['SSH', 'UFW', 'APP Armor']
   },
   {
     status: 'Success',
-    timeStamp: 'Jan 4, 2022',
-    appliedGroup: 'Web Servers',
-    module: ['SSH', 'UFW', 'APP Armor']
-  },
-  {
-    status: 'Failed',
-    timeStamp: 'Jan 4, 2022',
-    appliedGroup: 'Web Servers',
-    module: ['SSH', 'UFW', 'APP Armor']
-  },
-  {
-    status: 'Success',
-    timeStamp: 'Jan 4, 2022',
-    appliedGroup: 'Web Servers',
-    module: ['SSH', 'UFW', 'APP Armor']
-  },
-  {
-    status: 'Failed',
+    scriptName: 'Custom-Script',
     timeStamp: 'Jan 4, 2022',
     appliedGroup: 'Web Servers',
     module: ['SSH', 'UFW', 'APP Armor']
   },
   {
     status: 'Success',
+    scriptName: 'Custom-Script',
     timeStamp: 'Jan 4, 2022',
     appliedGroup: 'Web Servers',
     module: ['SSH', 'UFW', 'APP Armor']
   },
   {
     status: 'Failed',
+    scriptName: 'Custom-Script',
     timeStamp: 'Jan 4, 2022',
     appliedGroup: 'Web Servers',
     module: ['SSH', 'UFW', 'APP Armor']
   },
   {
     status: 'Success',
+    scriptName: 'Custom-Script',
     timeStamp: 'Jan 4, 2022',
     appliedGroup: 'Web Servers',
     module: ['SSH', 'UFW', 'APP Armor']
   },
   {
     status: 'Failed',
+    scriptName: 'Custom-Script',
+    timeStamp: 'Jan 4, 2022',
+    appliedGroup: 'Web Servers',
+    module: ['SSH', 'UFW', 'APP Armor']
+  },
+  {
+    status: 'Success',
+    scriptName: 'Custom-Script',
     timeStamp: 'Jan 4, 2022',
     appliedGroup: 'Web Servers',
     module: ['SSH', 'UFW', 'APP Armor']
@@ -100,6 +98,7 @@ export default function LogsTable({ limit, title }: Log): JSX.Element {
           </Badge>
         )}
       </Table.Td>
+      <Table.Td>{row.scriptName}</Table.Td>
       <Table.Td>{row.timeStamp}</Table.Td>
       <Table.Td>{row.appliedGroup}</Table.Td>
       <Table.Td>
@@ -189,10 +188,10 @@ You should set the 'loop_var' value in the 'loop_control' option for the task to
             <Table.Thead>
               <Table.Tr>
                 <Table.Th>Status</Table.Th>
+                <Table.Th>Script Name</Table.Th>
                 <Table.Th>Time Stamp</Table.Th>
                 <Table.Th>Applied Group</Table.Th>
                 <Table.Th>Module</Table.Th>
-                <Table.Th></Table.Th>
               </Table.Tr>
             </Table.Thead>
             <Table.Tbody>{rows}</Table.Tbody>
