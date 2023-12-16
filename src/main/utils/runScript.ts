@@ -15,7 +15,7 @@ export const runScript = (scriptName: string, groupName: string): Promise<string
         return
       }
       if (stderr) {
-        reject(new Error(stderr))
+        resolve(stderr)
       } else {
         resolve(stdout)
       }
