@@ -1,15 +1,20 @@
-import { Box } from '@mantine/core'
+import { Box, Grid } from '@mantine/core'
 import CustomScriptCard from '@renderer/components/CustomScriptCard'
+import { MyScriptItem, useScriptStore } from '@renderer/store/useScriptStore'
 
 export default function MuScript(): JSX.Element {
+  const { myScripts } = useScriptStore()
+  console.log(myScripts)
   return (
-    <Box>
+    <Box p="md">
       <h1>My Script</h1>
-      <Box>
-        {[0, 0, 0, 0, 0, 0].map((item, index) => (
-          <CustomScriptCard key={index} />
+      <Grid gutter={{ xs: 2 }} mt={20}>
+        {myScripts.map((script: MyScriptItem) => (
+          <Grid.Col key={script.scriptName} span={4}>
+            <CustomScriptCard script={script} />
+          </Grid.Col>
         ))}
-      </Box>
+      </Grid>
     </Box>
   )
 }

@@ -66,7 +66,7 @@ function CustomScript(): JSX.Element {
             onClick={() => {
               close()
               handleScript()
-              navigate(`/groups?custom=true`)
+              navigate(`/myScript`)
             }}
           >
             Confirm

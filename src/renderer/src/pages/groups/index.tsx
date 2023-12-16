@@ -213,6 +213,7 @@ function Groups(): JSX.Element {
         )
       }
     }
+    // TODO: Create ansible script file
     ipcRenderer.send('add-group', obj)
     ipcRenderer.on('add-group-log', (_event, arg) => {
       console.log(arg)
