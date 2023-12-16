@@ -16,17 +16,17 @@ GID_MAX 60000
 GID_MIN 1000
 HUSHLOGIN_FILE .hushlogin
 KILLCHAR 025
-LOGIN_RETRIES {{ login_defs.login_retries }}
-LOGIN_TIMEOUT {{ login_defs.login_timeout }}
+LOGIN_RETRIES {{ login_defs_login_retries }}
+LOGIN_TIMEOUT {{ login_defs_login_timeout }}
 LOG_OK_LOGINS yes
 LOG_UNKFAIL_ENAB no
 MAIL_DIR /var/mail
-PASS_MAX_DAYS {{ login_defs.pass_max_days }}
-PASS_MIN_DAYS {{ login_defs.pass_min_days }}
+PASS_MAX_DAYS {{ login_defs_pass_max_days }}
+PASS_MIN_DAYS {{ login_defs_pass_min_days }}
 {% if ansible_distribution == "CentOS" %}
 PASS_MIN_LEN {{ pwquality.minlen }}
 {% endif %}
-PASS_WARN_AGE {{ login_defs.pass_warn_age }}
+PASS_WARN_AGE {{ login_defs_pass_warn_age }}
 SHA_CRYPT_MAX_ROUNDS 65536
 SHA_CRYPT_MIN_ROUNDS 10000
 SU_NAME su

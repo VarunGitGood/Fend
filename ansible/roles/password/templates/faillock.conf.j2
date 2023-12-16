@@ -5,31 +5,31 @@
 # pam_faillock configuration file
 # See faillock.conf(5) for more information
 
-dir = {{ faillock.dir }}
-{% if (faillock.audit | bool) %}
+dir = {{ faillock_dir }}
+{% if (faillock_audit | bool) %}
 audit
 {% endif%}
-{% if (faillock.silent | bool) %}
+{% if (faillock_silent | bool) %}
 silent
 {% endif %}
-{% if (faillock.no_log_info | bool) %}
+{% if (faillock_no_log_info | bool) %}
 no_log_info
 {% endif %}
-{% if (faillock.local_users_only | bool) %}
+{% if (faillock_local_users_only | bool) %}
 local_users_only
 {% endif %}
 {% if (pam_version is version('1.5.1', '>=')) %}
-{% if (faillock.nodelay | bool) %}
+{% if (faillock_nodelay | bool) %}
 nodelay
 {% endif %}
 {% endif %}
-deny = {{ faillock.deny }}
-fail_interval = {{ faillock.fail_interval }}
-unlock_time = {{ faillock.unlock_time }}
-{% if (faillock.even_deny_root | bool) %}
+deny = {{ faillock_deny }}
+fail_interval = {{ faillock_fail_interval }}
+unlock_time = {{ faillock_unlock_time }}
+{% if (faillock_even_deny_root | bool) %}
 even_deny_root
 {% endif %}
-root_unlock_time = {{ faillock.root_unlock_time }}
-{% for group in faillock.admin_group %}
+root_unlock_time = {{ faillock_root_unlock_time }}
+{% for group in faillock_admin_group %}
 admin_group = {{ group }}
 {% endfor %}

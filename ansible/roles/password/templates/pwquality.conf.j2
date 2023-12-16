@@ -5,27 +5,27 @@
 # Configuration for the libpwquality library
 # See pwquality.conf(5) for more information
 
-dcredit = {{ pwquality.dcredit }}
-dictcheck = {{ pwquality.dictcheck }}
-{% if pwquality.dictpath != "" %}
-dictpath = {{ pwquality.dictpath }}
+dcredit = {{ pwquality_dcredit }}
+dictcheck = {{ pwquality_dictcheck }}
+{% if pwquality_dictpath != "" %}
+dictpath = {{ pwquality_dictpath }}
 {% endif %}
-difok = {{ pwquality.difok }}
-{% if (pwquality.enforce_for_root | bool) %}
+difok = {{ pwquality_difok }}
+{% if (pwquality_enforce_for_root | bool) %}
 enforce_for_root
 {% endif %}
-enforcing = {{ pwquality.enforcing }}
-gecoscheck = {{ pwquality.gecoscheck }}
-lcredit = {{ pwquality.lcredit }}
-{% if (pwquality.local_users_only | bool) %}
+enforcing = {{ pwquality_enforcing }}
+gecoscheck = {{ pwquality_gecoscheck }}
+lcredit = {{ pwquality_lcredit }}
+{% if (pwquality_local_users_only | bool) %}
 local_users_only
 {% endif %}
-maxclassrepeat = {{ pwquality.maxclassrepeat }}
-maxrepeat = {{ pwquality.maxrepeat }}
-minclass = {{ pwquality.minclass }}
-minlen = {{ pwquality.minlen }}
-ocredit = {{ pwquality.ocredit }}
-retry = {{ pwquality.retry }}
-ucredit = {{ pwquality.ucredit }}
-usercheck = {{ pwquality.usercheck }}
-usersubstr = {{ pwquality.usersubstr }}
+maxclassrepeat = {{ pwquality_maxclassrepeat }}
+maxrepeat = {{ pwquality_maxrepeat }}
+minclass = {{ pwquality_minclass }}
+minlen = {{ pwquality_minlen }}
+ocredit = {{ pwquality_ocredit }}
+retry = {{ pwquality_retry }}
+ucredit = {{ pwquality_ucredit }}
+usercheck = {{ pwquality_usercheck }}
+usersubstr = {{ pwquality_usersubstr }}
