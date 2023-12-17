@@ -14,10 +14,12 @@ import { useGroupStore } from './store/useGroupStore'
 const ipcRenderer = (window as any).ipcRenderer
 import { useScriptStore } from './store/useScriptStore'
 import { useState } from 'react'
+import { useRunsStore, Run } from './store/useRunsStore'
 
 function App(): JSX.Element {
   const { setGroupDetails } = useGroupStore()
   const { setMyScripts } = useScriptStore()
+  const { setRuns, runs } = useRunsStore()
   const [localData, setLocalData] = useState<any>(null)
 
   useEffect(() => {
@@ -43,6 +45,22 @@ function App(): JSX.Element {
       setMyScripts([])
     }
   }, [localData])
+
+  useEffect(() => {
+    ipcRenderer.on('run-script-update', (_event, arg) => {
+      const updatedRuns: Run[] = runs.map((run: Run) => {
+        if (run.scriptName === arg.scriptName) {
+          return {
+            ...run,
+            status: arg.status,
+            scriptOutput: arg.stdout
+          }
+        }
+        return run
+      })
+      setRuns(updatedRuns)
+    })
+  }, [ipcRenderer, runs])
 
   return (
     <MantineProvider>

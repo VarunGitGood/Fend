@@ -20,7 +20,7 @@ import classes from './index.module.css'
 
 import { saveDataToStore } from '@renderer/utils/storage'
 import { useScriptStore, MyScriptItem } from '@renderer/store/useScriptStore'
-import { Run, useRunsStore } from '@renderer/store/useRunsStore'
+import { useRunsStore } from '@renderer/store/useRunsStore'
 const ipcRenderer = (window as any).ipcRenderer
 interface GroupBarProps {
   name: string
@@ -157,7 +157,6 @@ function Groups(): JSX.Element {
   const { myScripts } = useScriptStore()
   const { runs, setRuns } = useRunsStore()
   console.log(runs, 'runs')
-
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
   const isCustom = queryParams.get('custom') === 'true'
@@ -219,7 +218,6 @@ function Groups(): JSX.Element {
         )
       }
     }
-    // TODO: Create ansible script file
     const script: MyScriptItem = myScripts.find((s) => s.scriptName === scriptName) || {
       scriptName: '',
       myConfig: [],
@@ -230,15 +228,6 @@ function Groups(): JSX.Element {
       scriptName,
       script: script.ansibleConfig
     }
-    setRuns([
-      ...runs,
-      {
-        status: 'running',
-        scriptName: scriptName,
-        groupNames: [...selectedGroups.keys()],
-        timeStamp: formatLastModified(new Date().toISOString())
-      }
-    ])
     ipcRenderer.send('generate-script', data)
     ipcRenderer.on('generate-script-success', (_event, arg) => {
       console.log(arg)
@@ -261,36 +250,45 @@ function Groups(): JSX.Element {
       groupName: 'test'
     }
     ipcRenderer.send('run-script', runsScriptDetails)
-    ipcRenderer.on('run-script-error', (_event, arg) => {
-      console.error(arg)
-      // find by scriptName and update status to error
-      const updatedRuns: Run[] = runs.map((run: Run) => {
-        if (run.scriptName === scriptName) {
-          return {
-            ...run,
-            status: 'error',
-            scriptError: arg
-          }
-        }
-        return run
-      })
-      console.log(updatedRuns, 'updatedRuns')
-      // setRuns(updatedRuns)
-    })
-    ipcRenderer.on('run-script-success', (_event, arg) => {
-      // find by scriptName and update status to success
-      const updatedRuns: Run[] = runs.map((run: Run) => {
-        if (run.scriptName === scriptName) {
-          return {
-            ...run,
-            status: 'success',
-            scriptOutput: arg
-          }
-        }
-        return run
-      })
-      setRuns(updatedRuns)
-    })
+    setRuns([
+      ...runs,
+      {
+        status: 'running',
+        scriptName: scriptName,
+        groupNames: [...selectedGroups.keys()],
+        timeStamp: formatLastModified(new Date().toISOString())
+      }
+    ])
+    // after we have sent the script to the main process, we need to update the status of the run to running and close the modal
+    // ipcRenderer.on('run-script-error', (_event, arg) => {
+    //   console.error(arg)
+    //   // find by scriptName and update status to error
+    //   const updatedRuns: Run[] = runs.map((run: Run) => {
+    //     if (run.scriptName === scriptName) {
+    //       return {
+    //         ...run,
+    //         status: 'error',
+    //         scriptError: arg
+    //       }
+    //     }
+    //     return run
+    //   })
+    //   console.log(updatedRuns, 'updatedRuns')
+    // })
+    // ipcRenderer.on('run-script-success', (_event, arg) => {
+    //   // find by scriptName and update status to success
+    //   const updatedRuns: Run[] = runs.map((run: Run) => {
+    //     if (run.scriptName === scriptName) {
+    //       return {
+    //         ...run,
+    //         status: 'success',
+    //         scriptOutput: arg
+    //       }
+    //     }
+    //     return run
+    //   })
+    //   setRuns(updatedRuns)
+    // })
   }
 
   const handleAddHost = (
@@ -312,20 +310,6 @@ function Groups(): JSX.Element {
     saveDataToStore('groupDetails', newGroupDetails)
   }
 
-  // const testScript = (): void => {
-  //   const data = {
-  //     scriptName: 'Custom-Script',
-  //     groupName: 'test'
-  //   }
-  //   ipcRenderer.send('run-script', data)
-  //   ipcRenderer.on('run-script-success', (_event, arg) => {
-  //     console.log(arg)
-  //   })
-  //   ipcRenderer.on('run-script-error', (_event, arg) => {
-  //     console.error(arg)
-  //   })
-  // }
-
   const handleRemoveHost = (groupName: string, ipaddress: string): void => {
     const newGroupDetails = groupDetails.map((item) => {
       if (item.name === groupName) {
@@ -341,49 +325,6 @@ function Groups(): JSX.Element {
     setGroupDetails(newGroupDetails)
     saveDataToStore('groupDetails', newGroupDetails)
   }
-
-  // const handleRunScript = (): void => {
-  //   if (groupDetails.every((group) => !group.isSelected)) {
-  //     toast.error('Please select at least one group')
-  //     return
-  //   }
-
-  //   openM()
-  // }
-
-  // const handleCheckedGroups = (): void => {
-  //   const selectedGroups = new Map<string, any>()
-  //   groupDetails.forEach((group) => {
-  //     if (group.isSelected) {
-  //       selectedGroups.set(group.name, {
-  //         hosts: Object.fromEntries(
-  //           group.details.map((detail) => {
-  //             return [detail.alias, { ansible_host: detail.ipaddress }]
-  //           })
-  //         )
-  //       })
-  //     }
-  //   })
-  //   const obj = {
-  //     all: {
-  //       children: Object.fromEntries(
-  //         [...selectedGroups.entries()].map(([groupName, groupData]) => {
-  //           return [groupName, groupData]
-  //         })
-  //       )
-  //     }
-  //   }
-  //   ipcRenderer.send('add-group', obj)
-  //   ipcRenderer.on('add-group-log', (_event, arg) => {
-  //     console.log(arg)
-  //   })
-  //   ipcRenderer.on('add-group-success', (_event, arg) => {
-  //     console.log(arg)
-  //   })
-  //   ipcRenderer.on('add-group-error', (_event, arg) => {
-  //     console.error(arg)
-  //   })
-  // }
 
   const items = groupDetails.map((group) => {
     const { name, details } = group
@@ -465,7 +406,14 @@ function Groups(): JSX.Element {
           <Button size="md" variant="outline" onClick={closeM}>
             Cancel
           </Button>
-          <Button size="md" onClick={handleCheckedGroups}>
+          <Button
+            size="md"
+            onClick={() => {
+              handleCheckedGroups()
+              closeM()
+              navigate('/')
+            }}
+          >
             Confirm
           </Button>
         </Flex>

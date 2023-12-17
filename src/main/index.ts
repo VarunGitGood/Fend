@@ -40,7 +40,8 @@ function createWindow(): void {
   ipcMain.on('run-script', async (_event: IpcMainEvent, data: any) => {
     await runScript(data.scriptName, data.groupName)
       .then((result) => {
-        mainWindow.webContents.send('run-script-success', result)
+        console.log(result)
+        mainWindow.webContents.send('run-script-update', result)
         // success notification
         new Notification({
           title: 'Success',
@@ -49,11 +50,12 @@ function createWindow(): void {
       })
       .catch((error) => {
         // error notification
+        console.log(error)
         new Notification({
           title: 'Error',
           body: 'Script run failed.'
         }).show()
-        mainWindow.webContents.send('run-script-error', error)
+        mainWindow.webContents.send('run-script-update', error)
       })
   })
 

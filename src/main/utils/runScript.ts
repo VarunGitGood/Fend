@@ -2,7 +2,14 @@ import { ExecException, exec } from 'child_process'
 import { join } from 'path'
 const cwd = process.cwd()
 
-export const runScript = (scriptName: string, groupName: string): Promise<string> => {
+export interface RunOutput {
+  status: string
+  stdout: string
+  stderr: string
+  scriptName: string
+}
+
+export const runScript = (scriptName: string, groupName: string): Promise<RunOutput> => {
   console.log('runScript', scriptName, groupName)
   return new Promise((resolve, reject) => {
     const ansibleCommand = `ansible-playbook ${join(cwd, 'ansible/')}main.yml -i ${join(
@@ -11,13 +18,28 @@ export const runScript = (scriptName: string, groupName: string): Promise<string
     )}test.yml --extra-vars "@${join(cwd, 'ansible-data/scripts/')}${scriptName}.yml"`
     exec(ansibleCommand, (error: ExecException | null, stdout: string, stderr: string) => {
       if (error) {
-        reject(error)
+        reject({
+          status: 'error',
+          stdout,
+          stderr,
+          scriptName
+        })
         return
       }
       if (stderr) {
-        resolve(stderr)
+        resolve({
+          status: 'error',
+          stdout,
+          stderr,
+          scriptName
+        })
       } else {
-        resolve(stdout)
+        resolve({
+          status: 'success',
+          stdout,
+          stderr,
+          scriptName
+        })
       }
     })
   })
