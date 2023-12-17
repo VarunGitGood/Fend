@@ -20,6 +20,7 @@ import classes from './index.module.css'
 
 import { saveDataToStore } from '@renderer/utils/storage'
 import { useScriptStore, MyScriptItem } from '@renderer/store/useScriptStore'
+import { Run, useRunsStore } from '@renderer/store/useRunsStore'
 const ipcRenderer = (window as any).ipcRenderer
 interface GroupBarProps {
   name: string
@@ -154,6 +155,8 @@ function Groups(): JSX.Element {
   const [openedModal, { open: openM, close: closeM }] = useDisclosure(false)
   const { groupDetails, setGroupDetails } = useGroupStore()
   const { myScripts } = useScriptStore()
+  const { runs, setRuns } = useRunsStore()
+  console.log(runs, 'runs')
 
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
@@ -201,7 +204,7 @@ function Groups(): JSX.Element {
         selectedGroups.set(group.name, {
           hosts: Object.fromEntries(
             group.details.map((detail) => {
-              return [detail.alias, { ansible_host: detail.ipaddress, ansible_user: "ubuntu" }]
+              return [detail.alias, { ansible_host: detail.ipaddress, ansible_user: 'ubuntu' }]
             })
           )
         })
@@ -222,10 +225,20 @@ function Groups(): JSX.Element {
       myConfig: [],
       ansibleConfig: {}
     }
+
     const data = {
       scriptName,
       script: script.ansibleConfig
     }
+    setRuns([
+      ...runs,
+      {
+        status: 'running',
+        scriptName: scriptName,
+        groupNames: [...selectedGroups.keys()],
+        timeStamp: formatLastModified(new Date().toISOString())
+      }
+    ])
     ipcRenderer.send('generate-script', data)
     ipcRenderer.on('generate-script-success', (_event, arg) => {
       console.log(arg)
@@ -248,11 +261,35 @@ function Groups(): JSX.Element {
       groupName: 'test'
     }
     ipcRenderer.send('run-script', runsScriptDetails)
-    ipcRenderer.on('run-script-success', (_event, arg) => {
-      console.log(arg)
-    })
     ipcRenderer.on('run-script-error', (_event, arg) => {
       console.error(arg)
+      // find by scriptName and update status to error
+      const updatedRuns: Run[] = runs.map((run: Run) => {
+        if (run.scriptName === scriptName) {
+          return {
+            ...run,
+            status: 'error',
+            scriptError: arg
+          }
+        }
+        return run
+      })
+      console.log(updatedRuns, 'updatedRuns')
+      // setRuns(updatedRuns)
+    })
+    ipcRenderer.on('run-script-success', (_event, arg) => {
+      // find by scriptName and update status to success
+      const updatedRuns: Run[] = runs.map((run: Run) => {
+        if (run.scriptName === scriptName) {
+          return {
+            ...run,
+            status: 'success',
+            scriptOutput: arg
+          }
+        }
+        return run
+      })
+      setRuns(updatedRuns)
     })
   }
 
@@ -420,6 +457,7 @@ function Groups(): JSX.Element {
         </form>
       </Modal>
       <Modal opened={openedModal} onClose={closeM} title="Run Script" centered>
+        {JSON.stringify(runs)}
         <Text fz="1rem" fw={600} mb="1rem">
           Are you sure you want to run the script?
         </Text>
