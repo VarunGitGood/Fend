@@ -30,8 +30,7 @@ export default function LogsTable({ limit, title }: Log): JSX.Element {
         <CopyBlock
           text={
             runs.find((run) => run.scriptName === row.scriptName)?.scriptOutput ||
-            runs.find((run) => run.scriptName === row.scriptName)?.scriptError ||
-            ''
+            'No output available'
           }
           language="powershell"
           showLineNumbers={false}

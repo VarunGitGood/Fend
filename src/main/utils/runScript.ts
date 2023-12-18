@@ -6,7 +6,6 @@ const cwd = process.cwd()
 export interface RunOutput {
   status: string
   stdout: string
-  stderr: string
   scriptName: string
 }
 
@@ -18,30 +17,20 @@ export const runScript = (scriptName: string, groupName: string): Promise<RunOut
       'ansible-data/groups/'
     )}test.yml --extra-vars "@${join(cwd, 'ansible-data/scripts/')}${scriptName}.yml"`
     exec(ansibleCommand, (error: ExecException | null, stdout: string, stderr: string) => {
+      const output = stdout + stderr
       if (error) {
         fs.unlinkSync(join(cwd, 'ansible-data/groups/test.yml'))
         reject({
           status: 'error',
-          stdout,
-          stderr,
+          stdout: output,
           scriptName
         })
         return
-      }
-      if (stderr) {
-        fs.unlinkSync(join(cwd, 'ansible-data/groups/test.yml'))
-        resolve({
-          status: 'error',
-          stdout,
-          stderr,
-          scriptName
-        })
       } else {
         fs.unlinkSync(join(cwd, 'ansible-data/groups/test.yml'))
         resolve({
           status: 'success',
-          stdout,
-          stderr,
+          stdout: output,
           scriptName
         })
       }
