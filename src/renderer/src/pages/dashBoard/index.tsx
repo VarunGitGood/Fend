@@ -1,11 +1,13 @@
-import { Box, Flex, Grid, Text, Button } from '@mantine/core'
+import { Box, Flex, Grid, Text, Button, Loader } from '@mantine/core'
 import { useNavigate } from 'react-router-dom'
 import LogsTable from '@renderer/components/LogsTable'
+import { useRunsStore } from '@renderer/store/useRunsStore'
 // import CustomScriptCard from '@renderer/components/CustomScriptCard'
 // import { loadDataFromStore, saveDataToStore } from '@renderer/utils/storage'
 // const ipcRenderer = (window as any).ipcRenderer
 
 function Dashboard(): JSX.Element {
+  const { runs } = useRunsStore()
   const navigate = useNavigate()
   // const runsScript = (): void => {
   //   const data = {
@@ -62,6 +64,12 @@ function Dashboard(): JSX.Element {
           <Grid.Col span={6}>{/* <CustomScriptCard /> */}</Grid.Col>
         </Grid>
       </Box>
+      {runs[0]?.status === 'running' && (
+        <Flex align="center" gap="md">
+          <Loader />
+          <Text>Your script is executing</Text>
+        </Flex>
+      )}
       <LogsTable title="Last Executed Scripts" limit={5} />
     </Box>
   )

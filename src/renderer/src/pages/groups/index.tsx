@@ -20,7 +20,7 @@ import classes from './index.module.css'
 
 import { saveDataToStore } from '@renderer/utils/storage'
 import { useScriptStore, MyScriptItem } from '@renderer/store/useScriptStore'
-import { useRunsStore } from '@renderer/store/useRunsStore'
+import { Run, useRunsStore } from '@renderer/store/useRunsStore'
 const ipcRenderer = (window as any).ipcRenderer
 interface GroupBarProps {
   name: string
@@ -34,7 +34,9 @@ function formatLastModified(dateString: string): string {
   const options: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: 'short',
-    day: 'numeric'
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
   }
 
   return new Intl.DateTimeFormat('en-US', options).format(date)
@@ -250,15 +252,20 @@ function Groups(): JSX.Element {
       groupName: 'test'
     }
     ipcRenderer.send('run-script', runsScriptDetails)
-    setRuns([
+    const newRuns: Run[] = [
       ...runs,
       {
         status: 'running',
         scriptName: scriptName,
         groupNames: [...selectedGroups.keys()],
+        modules:
+          myScripts.find((s) => s.scriptName === scriptName)?.myConfig.map((item) => item.module) ||
+          [],
         timeStamp: formatLastModified(new Date().toISOString())
       }
-    ])
+    ]
+    setRuns(newRuns)
+    saveDataToStore('runs', newRuns)
     // after we have sent the script to the main process, we need to update the status of the run to running and close the modal
     // ipcRenderer.on('run-script-error', (_event, arg) => {
     //   console.error(arg)
@@ -398,7 +405,6 @@ function Groups(): JSX.Element {
         </form>
       </Modal>
       <Modal opened={openedModal} onClose={closeM} title="Run Script" centered>
-        {JSON.stringify(runs)}
         <Text fz="1rem" fw={600} mb="1rem">
           Are you sure you want to run the script?
         </Text>

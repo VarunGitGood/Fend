@@ -5,6 +5,7 @@ import { MyScriptItem } from '@renderer/store/useScriptStore'
 
 interface CustomScriptCardProps {
   script: MyScriptItem
+  description?: string
 }
 
 function Chip({ children }: { children: string }): JSX.Element {
@@ -16,7 +17,10 @@ function Chip({ children }: { children: string }): JSX.Element {
     </Box>
   )
 }
-export default function CustomScriptCard({ script }: CustomScriptCardProps): JSX.Element {
+export default function CustomScriptCard({
+  script,
+  description
+}: CustomScriptCardProps): JSX.Element {
   const navigate = useNavigate()
   return (
     <>
@@ -24,6 +28,9 @@ export default function CustomScriptCard({ script }: CustomScriptCardProps): JSX
         <Stack justify="flex-start" gap="0.75rem">
           <Text c="#101828" fz="1.125rem" fw={600} lh="1.50rem">
             {script.scriptName}
+          </Text>
+          <Text c="#475467" fz="0.875rem" fw={400} lh="1.50rem">
+            {description}
           </Text>
           <Group gap="0.5rem">
             {script.myConfig &&

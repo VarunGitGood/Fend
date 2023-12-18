@@ -4,6 +4,7 @@ export interface Run {
   status: 'success' | 'running' | 'error' | ''
   scriptName: string
   groupNames: string[]
+  modules: string[]
   timeStamp: string
   scriptOutput?: string
   scriptError?: string

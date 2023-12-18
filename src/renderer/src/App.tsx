@@ -15,6 +15,7 @@ const ipcRenderer = (window as any).ipcRenderer
 import { useScriptStore } from './store/useScriptStore'
 import { useState } from 'react'
 import { useRunsStore, Run } from './store/useRunsStore'
+import { saveDataToStore } from './utils/storage'
 
 function App(): JSX.Element {
   const { setGroupDetails } = useGroupStore()
@@ -44,6 +45,11 @@ function App(): JSX.Element {
     } else {
       setMyScripts([])
     }
+    if (localData && localData.runs) {
+      setRuns(localData.runs)
+    } else {
+      setRuns([])
+    }
   }, [localData])
 
   useEffect(() => {
@@ -59,6 +65,7 @@ function App(): JSX.Element {
         return run
       })
       setRuns(updatedRuns)
+      saveDataToStore('runs', updatedRuns)
     })
   }, [ipcRenderer, runs])
 

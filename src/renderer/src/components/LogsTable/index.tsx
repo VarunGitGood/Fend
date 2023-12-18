@@ -1,173 +1,87 @@
-import { Badge, Box, Button, Chip, Flex, Group, Modal, Table, Text } from '@mantine/core'
+import { Badge, Box, Button, Flex, Group, Modal, Table, Text } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { CopyBlock } from 'react-code-blocks'
 import classes from './index.module.css'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { useRunsStore } from '@renderer/store/useRunsStore'
 interface Log {
   limit?: number
   title: string
 }
-let data = [
-  {
-    status: 'Success',
-    scriptName: 'Custom-Script',
-    timeStamp: 'Jan 4, 2022',
-    appliedGroup: 'Web Servers',
-    module: ['SSH', 'UFW', 'APP Armor']
-  },
-  {
-    status: 'Failed',
-    scriptName: 'Custom-Script',
-    timeStamp: 'Jan 4, 2022',
-    appliedGroup: 'Web Servers',
-    module: ['SSH', 'UFW', 'APP Armor']
-  },
-  {
-    status: 'Success',
-    scriptName: 'Custom-Script',
-    timeStamp: 'Jan 4, 2022',
-    appliedGroup: 'Web Servers',
-    module: ['SSH', 'UFW', 'APP Armor']
-  },
-  {
-    status: 'Failed',
-    scriptName: 'Custom-Script',
-    timeStamp: 'Jan 4, 2022',
-    appliedGroup: 'Web Servers',
-    module: ['SSH', 'UFW', 'APP Armor']
-  },
-  {
-    status: 'Success',
-    scriptName: 'Custom-Script',
-    timeStamp: 'Jan 4, 2022',
-    appliedGroup: 'Web Servers',
-    module: ['SSH', 'UFW', 'APP Armor']
-  },
-  {
-    status: 'Success',
-    scriptName: 'Custom-Script',
-    timeStamp: 'Jan 4, 2022',
-    appliedGroup: 'Web Servers',
-    module: ['SSH', 'UFW', 'APP Armor']
-  },
-  {
-    status: 'Failed',
-    scriptName: 'Custom-Script',
-    timeStamp: 'Jan 4, 2022',
-    appliedGroup: 'Web Servers',
-    module: ['SSH', 'UFW', 'APP Armor']
-  },
-  {
-    status: 'Success',
-    scriptName: 'Custom-Script',
-    timeStamp: 'Jan 4, 2022',
-    appliedGroup: 'Web Servers',
-    module: ['SSH', 'UFW', 'APP Armor']
-  },
-  {
-    status: 'Failed',
-    scriptName: 'Custom-Script',
-    timeStamp: 'Jan 4, 2022',
-    appliedGroup: 'Web Servers',
-    module: ['SSH', 'UFW', 'APP Armor']
-  },
-  {
-    status: 'Success',
-    scriptName: 'Custom-Script',
-    timeStamp: 'Jan 4, 2022',
-    appliedGroup: 'Web Servers',
-    module: ['SSH', 'UFW', 'APP Armor']
-  }
-]
-
+function Chip({ children }: { children: string }): JSX.Element {
+  return (
+    <Box bg="#F6F6F6" p="0.125rem 0.5rem" style={{ display: 'inline-block', borderRadius: '1rem' }}>
+      <Text fz="0.75rem" fw={500} c="#475467">
+        {children}
+      </Text>
+    </Box>
+  )
+}
 export default function LogsTable({ limit, title }: Log): JSX.Element {
   const [opened, { open, close }] = useDisclosure(false)
   const navigate = useNavigate()
   const location = useLocation()
+  const { runs } = useRunsStore()
   const isLogsPage = location.pathname === '/logs'
-  data = limit ? data.slice(0, limit) : data
 
-  const rows = data.map((row, index) => (
-    <Table.Tr key={index}>
-      <Table.Td>
-        {row.status === 'Success' ? (
-          <Badge variant="light">Success</Badge>
-        ) : (
-          <Badge color="red" variant="light">
-            Failed
-          </Badge>
-        )}
-      </Table.Td>
-      <Table.Td>{row.scriptName}</Table.Td>
-      <Table.Td>{row.timeStamp}</Table.Td>
-      <Table.Td>{row.appliedGroup}</Table.Td>
-      <Table.Td>
-        <Group gap="0.5rem">
-          {row.module.map((module, idx) => (
-            <Chip key={idx}>{module}</Chip>
-          ))}
-        </Group>
-      </Table.Td>
-      <Table.Td>
-        <Button variant="outline" color="blue" size="xs" onClick={open}>
-          View Log
-        </Button>
-      </Table.Td>
-    </Table.Tr>
-  ))
-  const logdata = String.raw`2023-12-13 02:03:49,124 p=63874 u=arminpatel n=ansible | [WARNING]: TASK: ufw : Allow sshd port from administrator networks: The loop variable 'item' is
-already in use. You should set the 'loop_var' value in the 'loop_control' option for the task to
-something else to avoid variable collisions and unexpected behavior.
-
-2023-12-13 02:03:58,240 p=63874 u=arminpatel n=ansible | [WARNING]: TASK: ufw : Allow outgoing specified ports: The loop variable 'item' is already in use.
-You should set the 'loop_var' value in the 'loop_control' option for the task to something else to
-
-2023-12-13 02:03:49,124 p=63874 u=arminpatel n=ansible | [WARNING]: TASK: ufw : Allow sshd port from administrator networks: The loop variable 'item' is
-already in use. You should set the 'loop_var' value in the 'loop_control' option for the task to
-something else to avoid variable collisions and unexpected behavior.
-
-2023-12-13 02:03:58,240 p=63874 u=arminpatel n=ansible | [WARNING]: TASK: ufw : Allow outgoing specified ports: The loop variable 'item' is already in use.
-You should set the 'loop_var' value in the 'loop_control' option for the task to something else to
-
-2023-12-13 02:03:49,124 p=63874 u=arminpatel n=ansible | [WARNING]: TASK: ufw : Allow sshd port from administrator networks: The loop variable 'item' is
-already in use. You should set the 'loop_var' value in the 'loop_control' option for the task to
-something else to avoid variable collisions and unexpected behavior.
-
-2023-12-13 02:03:58,240 p=63874 u=arminpatel n=ansible | [WARNING]: TASK: ufw : Allow outgoing specified ports: The loop variable 'item' is already in use.
-You should set the 'loop_var' value in the 'loop_control' option for the task to something else to
-
-2023-12-13 02:03:49,124 p=63874 u=arminpatel n=ansible | [WARNING]: TASK: ufw : Allow sshd port from administrator networks: The loop variable 'item' is
-already in use. You should set the 'loop_var' value in the 'loop_control' option for the task to
-something else to avoid variable collisions and unexpected behavior.
-
-2023-12-13 02:03:58,240 p=63874 u=arminpatel n=ansible | [WARNING]: TASK: ufw : Allow outgoing specified ports: The loop variable 'item' is already in use.
-You should set the 'loop_var' value in the 'loop_control' option for the task to something else to
-
-2023-12-13 02:03:49,124 p=63874 u=arminpatel n=ansible | [WARNING]: TASK: ufw : Allow sshd port from administrator networks: The loop variable 'item' is
-already in use. You should set the 'loop_var' value in the 'loop_control' option for the task to
-something else to avoid variable collisions and unexpected behavior.
-
-2023-12-13 02:03:58,240 p=63874 u=arminpatel n=ansible | [WARNING]: TASK: ufw : Allow outgoing specified ports: The loop variable 'item' is already in use.
-You should set the 'loop_var' value in the 'loop_control' option for the task to something else to
-
-2023-12-13 02:03:49,124 p=63874 u=arminpatel n=ansible | [WARNING]: TASK: ufw : Allow sshd port from administrator networks: The loop variable 'item' is
-already in use. You should set the 'loop_var' value in the 'loop_control' option for the task to
-something else to avoid variable collisions and unexpected behavior.
-
-2023-12-13 02:03:58,240 p=63874 u=arminpatel n=ansible | [WARNING]: TASK: ufw : Allow outgoing specified ports: The loop variable 'item' is already in use.
-You should set the 'loop_var' value in the 'loop_control' option for the task to something else to
-
-`
-  return (
-    <Box>
+  const rows = (limit ? runs.slice(0, limit) : runs).map((row, index) => (
+    <>
       <Modal opened={opened} onClose={close} title="Log" size="calc(100vw - 3rem)" centered>
         <CopyBlock
-          text={logdata}
+          text={
+            runs.find((run) => run.scriptName === row.scriptName)?.scriptOutput ||
+            runs.find((run) => run.scriptName === row.scriptName)?.scriptError ||
+            ''
+          }
           language="powershell"
           showLineNumbers={false}
           wrapLongLines={true}
         />
       </Modal>
+      <Table.Tr key={index}>
+        <Table.Td>
+          {row.status === 'success' && (
+            <Badge color="green" variant="light">
+              Success
+            </Badge>
+          )}
+          {row.status === 'running' && (
+            <Badge color="blue" variant="light">
+              Running
+            </Badge>
+          )}
+          {row.status === 'error' && (
+            <Badge color="red" variant="light">
+              Failed
+            </Badge>
+          )}
+        </Table.Td>
+        <Table.Td>{row.scriptName}</Table.Td>
+        <Table.Td>{row.timeStamp}</Table.Td>
+        <Table.Td>
+          <Group gap="0.5rem">
+            {row.groupNames.map((group, idx) => (
+              <Chip key={idx}>{group}</Chip>
+            ))}
+          </Group>
+        </Table.Td>
+        <Table.Td>
+          <Group gap="0.5rem" maw="25rem">
+            {row.modules.map((module, idx) => (
+              <Chip key={idx}>{module}</Chip>
+            ))}
+          </Group>
+        </Table.Td>
+        <Table.Td>
+          <Button variant="outline" color="blue" size="xs" onClick={open}>
+            View Log
+          </Button>
+        </Table.Td>
+      </Table.Tr>
+    </>
+  ))
+  return (
+    <Box>
       <Box p="md">
         <Flex justify="space-between" align="center" mt={isLogsPage ? '0' : '2rem'}>
           <Text
@@ -189,12 +103,20 @@ You should set the 'loop_var' value in the 'loop_control' option for the task to
               <Table.Tr>
                 <Table.Th>Status</Table.Th>
                 <Table.Th>Script Name</Table.Th>
-                <Table.Th>Time Stamp</Table.Th>
+                <Table.Th>Time</Table.Th>
                 <Table.Th>Applied Group</Table.Th>
                 <Table.Th>Module</Table.Th>
               </Table.Tr>
             </Table.Thead>
-            <Table.Tbody>{rows}</Table.Tbody>
+            <Table.Tbody>
+              {rows.length == 0 ? (
+                <Text ta="center" my="lg">
+                  No Runs Available
+                </Text>
+              ) : (
+                rows
+              )}
+            </Table.Tbody>
           </Table>
         </Table.ScrollContainer>
       </Box>
