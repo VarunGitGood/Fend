@@ -49,7 +49,21 @@ function CustomScript(): JSX.Element {
       toast.error('Please enter script name')
       return
     }
+    if (checkScriptName(scriptName)) {
+      toast.error('Script name already exists change it before saving')
+      return
+    }
     open()
+  }
+
+  const checkScriptName = (name: string): boolean => {
+    let flag = false
+    myScripts.forEach((script: MyScriptItem) => {
+      if (script.scriptName === name) {
+        flag = true
+      }
+    })
+    return flag
   }
 
   return (
@@ -86,7 +100,13 @@ function CustomScript(): JSX.Element {
             borderRadius: '4px'
           }}
           value={scriptName}
-          onChange={(event) => setScriptName(event.currentTarget.value)}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>): void => {
+            if (checkScriptName(event.target.value)) {
+              toast.error('Script name already exists')
+            }
+            setScriptName(event.target.value)
+          }}
+          error={checkScriptName(scriptName)}
         />
         <Stack gap="1rem" mt="3rem">
           {script.map((s) => (
