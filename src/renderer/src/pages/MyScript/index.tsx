@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Group, Image } from '@mantine/core'
+import { Box, Button, Grid, Group, Image, Text, Flex } from '@mantine/core'
 import CustomScriptCard from '@renderer/components/CustomScriptCard'
 import { MyScriptItem, useScriptStore } from '@renderer/store/useScriptStore'
 import notFoundImg from '../../assets/notFound.jpg'
@@ -10,7 +10,14 @@ export default function MuScript(): JSX.Element {
   console.log(myScripts, 'myScripts')
   return (
     <Box p="md">
-      <h1>My Script</h1>
+      <Flex justify="space-between" align="center">
+        <Text fz="2.25rem" fw="600" lh="2.75rem">
+          My Scripts
+        </Text>
+        <Button bg="#005FB8" size="md" onClick={() => navigate('/custom-script')}>
+          Build Custom Script
+        </Button>
+      </Flex>
       {myScripts.length > 0 ? (
         <Grid gutter={{ xs: 2 }} mt={20}>
           {myScripts.map((script: MyScriptItem) => (
@@ -22,9 +29,6 @@ export default function MuScript(): JSX.Element {
       ) : (
         <Group justify="center" align="center" mt="3rem">
           <Image src={notFoundImg} alt="No Groups Found" width={600} height={600} />
-          <Button bg="#005FB8" size="md" onClick={() => navigate('/custom-script')}>
-            Build Custom Script
-          </Button>
         </Group>
       )}
     </Box>
