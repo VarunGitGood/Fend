@@ -32,7 +32,7 @@ function App(): JSX.Element {
     ipcRenderer.on('load-storage-error', (_event, arg) => {
       console.error(arg)
     })
-  }, [])
+  }, [ipcRenderer])
 
   useEffect(() => {
     if (localData && localData.groupDetails) {

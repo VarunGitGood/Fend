@@ -57,6 +57,10 @@ export const getDataFromStore = (mainWindow: BrowserWindow): void => {
     if (err) {
       Notify('Some Error Occurred')
     } else {
+      if (!fileData) {
+        mainWindow.webContents.send('load-storage-success', {})
+        return
+      }
       const data = JSON.parse(fileData)
       mainWindow.webContents.send('load-storage-success', data)
     }
