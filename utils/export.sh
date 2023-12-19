@@ -36,4 +36,6 @@ chmod +x "$new_script"
 # Step 4: Zip the to_zip folder
 zip -r "export.zip" "$destination"
 
+rm -rf to_zip
+
 echo "Script executed successfully!"
