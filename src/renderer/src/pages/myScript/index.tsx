@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'
 export default function MuScript(): JSX.Element {
   const { myScripts } = useScriptStore()
   const navigate = useNavigate()
-  console.log(myScripts, 'myScripts')
+
   return (
     <Box p="md">
       <Flex justify="space-between" align="center">
@@ -19,9 +19,9 @@ export default function MuScript(): JSX.Element {
         </Button>
       </Flex>
       {myScripts.length > 0 ? (
-        <Grid gutter={{ xs: 2 }} mt={20}>
+        <Grid gutter={{ xs: 20 }} mt="3rem">
           {myScripts.map((script: MyScriptItem) => (
-            <Grid.Col key={script.scriptName} span={4}>
+            <Grid.Col key={script.scriptName} span={{ base: 12, md: 6, lg: 4 }}>
               <CustomScriptCard script={script} />
             </Grid.Col>
           ))}

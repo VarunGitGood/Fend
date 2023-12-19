@@ -2,49 +2,18 @@ import { Box, Flex, Grid, Text, Button, Loader } from '@mantine/core'
 import { useNavigate } from 'react-router-dom'
 import LogsTable from '@renderer/components/LogsTable'
 import { useRunsStore } from '@renderer/store/useRunsStore'
-// import CustomScriptCard from '@renderer/components/CustomScriptCard'
-// import { loadDataFromStore, saveDataToStore } from '@renderer/utils/storage'
-// const ipcRenderer = (window as any).ipcRenderer
+import CustomScriptCard from '@renderer/components/CustomScriptCard'
+import { MyScriptItem } from '@renderer/store/useScriptStore'
 
 function Dashboard(): JSX.Element {
   const { runs } = useRunsStore()
   const navigate = useNavigate()
-  // const runsScript = (): void => {
-  //   const data = {
-  //     scriptName: 'Custom-Script',
-  //     groupName: 'test'
-  //   }
-  //   ipcRenderer.send('run-script', data)
-  //   ipcRenderer.on('run-script-success', (_event, arg) => {
-  //     console.log(arg)
-  //   })
-  //   ipcRenderer.on('run-script-error', (_event, arg) => {
-  //     console.error(arg)
-  //   })
-  // }
 
-  // const getData = (): void => {
-  //   ipcRenderer.send('load-data', '../../data/scripts')
-  //   ipcRenderer.on('load-data-success', (_event, arg) => {
-  //     console.log(arg)
-  //   })
-  //   ipcRenderer.on('load-data-error', (_event, arg) => {
-  //     console.error(arg)
-  //   })
-  // }
+  const script: MyScriptItem = {
+    scriptName: 'Script Name',
+    myConfig: []
+  }
 
-  // const setData = (): void => {
-  //   const data = {
-  //     place: 'Varanasi',
-  //     college: 'IIT BHU'
-  //   }
-  //   saveDataToStore('address2', data)
-  // }
-
-  // const getData = async (): Promise<void> => {
-  //   const value = await loadDataFromStore('address')
-  //   console.log(value)
-  // }
   return (
     <Box p="md">
       <Flex justify="space-between" align="center">
@@ -55,13 +24,20 @@ function Dashboard(): JSX.Element {
           Build Custom Script
         </Button>
       </Flex>
-      {/* <button onClick={runsScript}>testing</button> */}
-      {/* <button onClick={setData}>set data</button>
-      <button onClick={getData}>get data</button> */}
       <Box mt="3rem">
         <Grid gutter={{ base: 5, xs: 'md', md: 'xl', xl: 50 }}>
-          <Grid.Col span={6}>{/* <CustomScriptCard /> */}</Grid.Col>
-          <Grid.Col span={6}>{/* <CustomScriptCard /> */}</Grid.Col>
+          <Grid.Col span={6}>
+            <CustomScriptCard
+              script={script}
+              description="Short description - where we can use this (Recommended target)"
+            />
+          </Grid.Col>
+          <Grid.Col span={6}>
+            <CustomScriptCard
+              script={script}
+              description="Short description - where we can use this (Recommended target)"
+            />
+          </Grid.Col>
         </Grid>
       </Box>
       {runs[0]?.status === 'running' && (

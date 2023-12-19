@@ -13,8 +13,10 @@ export const SystemInfo = (): React.ReactElement => {
 
   return (
     <Box p="md">
-      <h1>System Info</h1>
-      <Box mb={10}>
+      <Text fz="2.25rem" fw="600" lh="2.75rem">
+        System Information
+      </Text>
+      <Box mb={10} mt="2rem">
         <Text fz="xs" tt="uppercase" fw={700} c="dimmed" mb={2}>
           OS Type
         </Text>
