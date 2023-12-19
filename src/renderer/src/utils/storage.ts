@@ -1,11 +1,7 @@
 const ipcRenderer = (window as any).ipcRenderer
 
-export const saveDataToStore = (
-  key: string,
-  value: any,
-  fileName: 'runs.json' | 'scripts.json' | 'groups.json'
-): void => {
-  const data = { key, value, fileName }
+export const saveDataToStore = (key: string, value: any): void => {
+  const data = { key, value }
   ipcRenderer.send('save-storage', data)
   ipcRenderer.on('save-storage-success', (_event, arg) => {
     console.log(arg)
@@ -15,12 +11,9 @@ export const saveDataToStore = (
   })
 }
 
-export const loadDataFromStore = (
-  key: string,
-  fileName: 'runs.json' | 'scripts.json' | 'groups.json'
-): Promise<any> => {
+export const loadDataFromStore = (key: string): Promise<any> => {
   return new Promise((resolve, reject) => {
-    ipcRenderer.send('load-storage', { key, fileName })
+    ipcRenderer.send('load-storage', key)
     ipcRenderer.on('load-storage-success', (_event, arg) => {
       resolve(arg)
     })

@@ -3,11 +3,11 @@ import { join } from 'path'
 import { BrowserWindow, Notification } from 'electron'
 
 const location = join(__dirname, '../../storage')
+const filePath = join(location, 'fendStorage.json')
 
 interface Data {
   key: string
   value: any
-  fileName: string
 }
 const Notify = (message: string): void => {
   new Notification({
@@ -27,8 +27,6 @@ const handleSaveSuccess = (mainWindow: BrowserWindow, message: string): void => 
 export const saveDataToStore = (data: Data, mainWindow: BrowserWindow): void => {
   const key = data.key
   const value = data.value
-  const fileName = data.fileName
-  const filePath = join(location, fileName)
   fs.ensureFileSync(filePath)
 
   fs.readFile(filePath, 'utf8', (err, fileData) => {
@@ -52,10 +50,8 @@ export const saveDataToStore = (data: Data, mainWindow: BrowserWindow): void => 
   })
 }
 
-export const getDataFromStore = (data: any, mainWindow: BrowserWindow): void => {
+export const getDataFromStore = (mainWindow: BrowserWindow): void => {
   // load it once
-  const fileName = data.fileName
-  const filePath = join(location, fileName)
   fs.ensureFileSync(filePath)
   fs.readFile(filePath, 'utf8', (err, fileData) => {
     if (err) {

@@ -16,7 +16,6 @@ import { useScriptStore } from './store/useScriptStore'
 import { useState } from 'react'
 import { useRunsStore, Run } from './store/useRunsStore'
 import { saveDataToStore } from './utils/storage'
-import { cleanRunsOutput } from './utils/cleanRunsOutput'
 
 function App(): JSX.Element {
   const { setGroupDetails } = useGroupStore()
@@ -60,13 +59,13 @@ function App(): JSX.Element {
           return {
             ...run,
             status: arg.status,
-            scriptOutput: cleanRunsOutput(arg.stdout)
+            scriptOutput: arg.stdout
           }
         }
         return run
       })
       setRuns(updatedRuns)
-      saveDataToStore('runs', updatedRuns, 'runs.json')
+      saveDataToStore('runs', updatedRuns)
     })
   }, [ipcRenderer, runs])
 

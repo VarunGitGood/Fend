@@ -35,7 +35,7 @@ function CustomScript(): JSX.Element {
       ansibleConfig: customScript
     }
     setMyScripts([...myScripts, myScript])
-    saveDataToStore('myScripts', [...myScripts, myScript], 'scripts.json')
+    saveDataToStore('myScripts', [...myScripts, myScript])
   }
 
   const handleSaveAndNextClick = (): void => {
