@@ -9,7 +9,8 @@ import {
   Modal,
   TagsInput,
   NumberInput,
-  Button
+  Button,
+  TextInput,
 } from '@mantine/core'
 import { AdvancedConfigItem } from '@renderer/store/useScriptStore'
 import { useForm } from '@mantine/form'
@@ -104,6 +105,18 @@ function ScriptCard({ label, description, module, isSelected }: ScriptCardProps)
                   <Box key={config.label}>
                     <Text>{config.label}</Text>
                     <NumberInput
+                      defaultValue={config.current}
+                      description={config.description}
+                      {...form.getInputProps(config.var)}
+                    />
+                  </Box>
+                )
+              }
+              if (config.tag == 'text') {
+                return (
+                  <Box key={config.label}>
+                    <Text>{config.label}</Text>
+                    <TextInput
                       defaultValue={config.current}
                       description={config.description}
                       {...form.getInputProps(config.var)}
