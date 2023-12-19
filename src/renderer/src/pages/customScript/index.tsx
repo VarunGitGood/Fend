@@ -11,6 +11,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 import toast, { Toaster } from 'react-hot-toast'
 import { saveDataToStore } from '@renderer/utils/storage'
+const ipcRenderer = (window as any).ipcRenderer
 
 function CustomScript(): JSX.Element {
   const { script, advancedConfig, setMyScripts, myScripts } = useScriptStore()
@@ -30,12 +31,25 @@ function CustomScript(): JSX.Element {
     advancedConfig.forEach((config: AdvancedConfigItem) => {
       customScript[config.var] = config.current
     })
+    console.log(customScript)
     const myScript: MyScriptItem = {
       scriptName,
       scriptDescription,
       myConfig: modules,
       ansibleConfig: customScript
     }
+    console.log(customScript)
+
+    ipcRenderer.send('generate-script', {
+      scriptName,
+      script: customScript
+    })
+    ipcRenderer.on('generate-script-success', (_event, arg) => {
+      console.log(arg)
+    })
+    ipcRenderer.on('generate-script-error', (_event, arg) => {
+      console.error(arg)
+    })
     setMyScripts([...myScripts, myScript])
     saveDataToStore('myScripts', [...myScripts, myScript])
   }

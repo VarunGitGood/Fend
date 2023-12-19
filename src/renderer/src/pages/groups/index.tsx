@@ -17,7 +17,7 @@ import notFoundImg from '../../assets/notFound.jpg'
 import { useGroupStore } from '@renderer/store/useGroupStore'
 import classes from './index.module.css'
 import { saveDataToStore } from '@renderer/utils/storage'
-import { useScriptStore, MyScriptItem } from '@renderer/store/useScriptStore'
+import { useScriptStore } from '@renderer/store/useScriptStore'
 import { Run, useRunsStore } from '@renderer/store/useRunsStore'
 const ipcRenderer = (window as any).ipcRenderer
 interface GroupBarProps {
@@ -220,25 +220,6 @@ function Groups(): JSX.Element {
         )
       }
     }
-    const script: MyScriptItem = myScripts.find((s) => s.scriptName === scriptName) || {
-      scriptName: '',
-      scriptDescription: '',
-      myConfig: [],
-      ansibleConfig: {}
-    }
-
-    const data = {
-      scriptName,
-      scriptDescription,
-      script: script.ansibleConfig
-    }
-    ipcRenderer.send('generate-script', data)
-    ipcRenderer.on('generate-script-success', (_event, arg) => {
-      console.log(arg)
-    })
-    ipcRenderer.on('generate-script-error', (_event, arg) => {
-      console.error(arg)
-    })
     ipcRenderer.send('add-group', obj)
     ipcRenderer.on('add-group-log', (_event, arg) => {
       console.log(arg)
