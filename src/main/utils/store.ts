@@ -12,22 +12,10 @@ const getItem = (key: 'myScripts' | 'groupDetails' | 'runs', mainWindow: Browser
   // make seperate ipc success calls for each key
   const data = electronStore.get(key)
   if (!data) {
-    mainWindow.webContents.send('load-storage-empty', {})
+    mainWindow.webContents.send(`load-storage-${key}`, false)
     return
   }
-  switch (key) {
-    case 'myScripts':
-      mainWindow.webContents.send('load-storage-myScripts', data)
-      break
-    case 'groupDetails':
-      mainWindow.webContents.send('load-storage-groupDetails', data)
-      break
-    case 'runs':
-      mainWindow.webContents.send('load-storage-runs', data)
-      break
-    default:
-      mainWindow.webContents.send('load-storage-empty', false)
-  }
+  mainWindow.webContents.send(`load-storage-${key}`, data)
 }
 
 export { setItem, getItem, electronStore }
