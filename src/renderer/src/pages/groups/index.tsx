@@ -29,6 +29,7 @@ interface GroupBarProps {
     details: { ipaddress: string; alias: string; lastModified: string }
   ) => void
 }
+
 function formatLastModified(dateString: string): string {
   const date = new Date(dateString)
   const options: Intl.DateTimeFormatOptions = {
