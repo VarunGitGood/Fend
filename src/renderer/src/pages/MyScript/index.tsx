@@ -22,7 +22,7 @@ export default function MuScript(): JSX.Element {
         <Grid gutter={{ xs: 2 }} mt={20}>
           {myScripts.map((script: MyScriptItem) => (
             <Grid.Col key={script.scriptName} span={4}>
-              <CustomScriptCard script={script} />
+              <CustomScriptCard script={script} description={script.description}/>
             </Grid.Col>
           ))}
         </Grid>

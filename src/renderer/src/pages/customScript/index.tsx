@@ -15,6 +15,7 @@ import { saveDataToStore } from '@renderer/utils/storage'
 function CustomScript(): JSX.Element {
   const { script, advancedConfig, setMyScripts, myScripts } = useScriptStore()
   const [scriptName, setScriptName] = useState<string>('')
+  const [description, setDescription] = useState<string>('')
   const navigate = useNavigate()
   const [opened, { open, close }] = useDisclosure(false)
 
@@ -31,6 +32,7 @@ function CustomScript(): JSX.Element {
     })
     const myScript: MyScriptItem = {
       scriptName,
+      description,
       myConfig: modules,
       ansibleConfig: customScript
     }
@@ -107,6 +109,16 @@ function CustomScript(): JSX.Element {
             setScriptName(event.target.value)
           }}
           error={checkScriptName(scriptName)}
+        />
+        <Input
+          placeholder="Enter custom script description"
+          mt="1rem"
+          size="md"
+          style={{ borderRadius: '4px' }}
+          value={description}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>): void => {
+            setDescription(event.target.value)
+          }}
         />
         <Stack gap="1rem" mt="3rem">
           {script.map((s) => (
