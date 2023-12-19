@@ -1,6 +1,0 @@
----
-- name: Run rkhunter propupd
-  become: true
-  ansible.builtin.command: rkhunter --propupd
-  register: rkhunter_propupd
-  changed_when: rkhunter_propupd.rc == 0

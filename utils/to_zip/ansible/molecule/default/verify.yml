@@ -1,8 +1,0 @@
----
-- name: Verify
-  hosts: all
-
-  tasks:
-    - name: Final test
-      ansible.builtin.debug:
-        msg: "Hello, World!"

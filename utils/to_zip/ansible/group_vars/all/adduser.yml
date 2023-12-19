@@ -1,3 +1,0 @@
----
-adduser_conf_template: templates/adduser.conf.j2
-useradd_template: templates/useradd.j2

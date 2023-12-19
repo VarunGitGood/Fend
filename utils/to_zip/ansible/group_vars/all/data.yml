@@ -1,9 +1,0 @@
----
-required_roles:
-  - facts
-  - logindefs
-active_roles:
-  - apache
-
-active_groups:
-  - all
