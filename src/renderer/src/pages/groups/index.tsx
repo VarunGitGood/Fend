@@ -266,7 +266,8 @@ function Groups(): JSX.Element {
       }
     ]
     setRuns(newRuns)
-    saveDataToStore('runs', newRuns)
+    console.log(newRuns, 'newRuns')
+    // saveDataToStore('runs', newRuns)
     // after we have sent the script to the main process, we need to update the status of the run to running and close the modal
     // ipcRenderer.on('run-script-error', (_event, arg) => {
     //   console.error(arg)
