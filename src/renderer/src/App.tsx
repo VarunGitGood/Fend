@@ -13,39 +13,34 @@ import { useEffect } from 'react'
 import { useGroupStore } from './store/useGroupStore'
 const ipcRenderer = (window as any).ipcRenderer
 import { useScriptStore } from './store/useScriptStore'
-import { useState } from 'react'
 import { useRunsStore, Run } from './store/useRunsStore'
 import { saveDataToStore } from './utils/storage'
 
 function App(): JSX.Element {
-  const { setGroupDetails, groupDetails } = useGroupStore()
+  const { setGroupDetails } = useGroupStore()
   const { setMyScripts } = useScriptStore()
   const { setRuns, runs } = useRunsStore()
 
   useEffect(() => {
     ipcRenderer.send('load-storage', 'groupDetails')
+    ipcRenderer.send('load-storage', 'myScripts')
+    ipcRenderer.send('load-storage', 'runs')
     ipcRenderer.on('load-storage-groupDetails', (_event, arg) => {
+      console.log('myScripts', arg)
       if (!arg) {
         setGroupDetails([])
       }
-      console.log('groupDetails', arg)
       setGroupDetails(arg)
     })
-  }, [])
-
-  useEffect(() => {
-    ipcRenderer.send('load-storage', 'myScripts')
     ipcRenderer.on('load-storage-myScripts', (_event, arg) => {
+      console.log('myScripts', arg)
       if (!arg) {
         setMyScripts([])
       }
       setMyScripts(arg)
     })
-  }, [])
-
-  useEffect(() => {
-    ipcRenderer.send('load-storage', 'runs')
     ipcRenderer.on('load-storage-runs', (_event, arg) => {
+      console.log('myScripts', arg)
       if (!arg) {
         setRuns([])
       }

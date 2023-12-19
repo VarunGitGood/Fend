@@ -24,7 +24,7 @@ export default function LogsTable({ limit, title }: Log): JSX.Element {
   const { runs } = useRunsStore()
   const isLogsPage = location.pathname === '/logs'
 
-  const rows = (limit ? runs.slice(0, limit) : runs).map((row, index) => (
+  const rows = (limit ? runs && runs.reverse().slice(0, limit) : runs).map((row, index) => (
     <>
       <Modal opened={opened} onClose={close} title="Log" size="calc(100vw - 3rem)" centered>
         <CopyBlock

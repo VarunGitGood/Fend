@@ -1,7 +1,16 @@
 import { BrowserWindow } from 'electron'
 import Store from 'electron-store'
 
-const electronStore = new Store()
+const electronStore = new Store({
+  name: 'electron-store',
+  cwd: 'electron-store',
+
+  defaults: {
+    myScripts: [],
+    groupDetails: [],
+    runs: []
+  }
+})
 
 const setItem = (key: string, data: any, mainWindow: BrowserWindow): void => {
   electronStore.set(key, data)
@@ -9,25 +18,11 @@ const setItem = (key: string, data: any, mainWindow: BrowserWindow): void => {
 }
 
 const getItem = (key: 'myScripts' | 'groupDetails' | 'runs', mainWindow: BrowserWindow): any => {
-  // make seperate ipc success calls for each key
   const data = electronStore.get(key)
   if (!data) {
-    mainWindow.webContents.send('load-storage-empty', {})
-    return
+    mainWindow.webContents.send('load-storage-success', {})
   }
-  switch (key) {
-    case 'myScripts':
-      mainWindow.webContents.send('load-storage-myScripts', data)
-      break
-    case 'groupDetails':
-      mainWindow.webContents.send('load-storage-groupDetails', data)
-      break
-    case 'runs':
-      mainWindow.webContents.send('load-storage-runs', data)
-      break
-    default:
-      mainWindow.webContents.send('load-storage-empty', false)
-  }
+  mainWindow.webContents.send(`load-storage-${key}`, data)
 }
 
 export { setItem, getItem, electronStore }

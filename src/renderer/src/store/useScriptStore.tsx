@@ -20,6 +20,7 @@ export interface ModuleItem {
 
 export interface MyScriptItem {
   scriptName: string
+  description: string
   myConfig: ModuleItem[]
   ansibleConfig?: { [key: string]: any }
 }
