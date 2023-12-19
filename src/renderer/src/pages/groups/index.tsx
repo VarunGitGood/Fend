@@ -29,6 +29,7 @@ interface GroupBarProps {
     details: { ipaddress: string; alias: string; lastModified: string }
   ) => void
 }
+
 function formatLastModified(dateString: string): string {
   const date = new Date(dateString)
   const options: Intl.DateTimeFormatOptions = {
@@ -334,6 +335,7 @@ function Groups(): JSX.Element {
   }
 
   const items = groupDetails.map((group) => {
+    console.log(group, 'group')
     const { name, details } = group
     const rows =
       details.length > 0 ? (

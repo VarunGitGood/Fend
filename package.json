@@ -14,7 +14,7 @@
     "start": "electron-vite preview",
     "dev": "electron-vite dev",
     "build": "npm run typecheck && electron-vite build",
-    "postinstall": "electron-builder install-app-deps",
+    "postinstall": "electron-builder install-app-deps && bash ./scripts/postinstall.sh",
     "build:win": "npm run build && electron-builder --win --config",
     "build:mac": "electron-vite build && electron-builder --mac --config",
     "build:linux": "electron-vite build && electron-builder --linux --config"
@@ -26,6 +26,7 @@
     "@mantine/form": "^7.3.1",
     "@mantine/hooks": "^7.3.1",
     "@tabler/icons-react": "^2.43.0",
+    "electron-store": "^8.1.0",
     "electron-updater": "^6.1.1",
     "fs-extra": "^11.2.0",
     "js-yaml": "^4.1.0",

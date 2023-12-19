@@ -1,0 +1,95 @@
+---
+- name: Update apt cache
+  become: true
+  apt: update_cache=yes cache_valid_time=3600
+
+- name: Ensure apache is installed
+  become: true
+  apt: "name={{ apache_packages }} state={{ apache_packages_state }}"
+
+- name: Get installed version of Apache.
+  command: "{{ apache_daemon_path }}{{ apache_daemon }} -v"
+  changed_when: false
+  check_mode: false
+  register: _apache_version
+
+- name: Create apache_version variable.
+  set_fact:
+    apache_version: "{{ _apache_version.stdout.split()[2].split('/')[1] }}"
+
+- name: Include Apache 2.2 variables.
+  include_vars: apache-22.yml
+  when: "apache_version.split('.')[1] == '2'"
+
+- name: Include Apache 2.4 variables.
+  include_vars: apache-24.yml
+  when: "apache_version.split('.')[1] == '4'"
+
+- name: Configure Apache.
+  lineinfile:
+    dest: "{{ apache_server_root }}/ports.conf"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    mode: 0644
+  with_items: "{{ apache_ports_configuration_items }}"
+  notify: restart apache
+
+- name: Enable Apache mods.
+  become: true
+  file:
+    src: "{{ apache_server_root }}/mods-available/{{ item }}.load"
+    dest: "{{ apache_server_root }}/mods-enabled/{{ item }}.load"
+    state: link
+    mode: 0644
+  with_items: "{{ apache_mods_enabled }}"
+  notify: restart apache
+
+- name: Disable Apache mods.
+  become: true
+  file:
+    path: "{{ apache_server_root }}/mods-enabled/{{ item }}.load"
+    state: absent
+  with_items: "{{ apache_mods_disabled }}"
+  notify: restart apache
+
+- name: Check whether certificates defined in vhosts exist.
+  become: true
+  stat: "path={{ item.certificate_file }}"
+  register: apache_ssl_certificates
+  with_items: "{{ apache_vhosts_ssl }}"
+
+- name: Add apache vhosts configuration.
+  become: true
+  template:
+    src: "{{ apache_vhosts_template }}"
+    dest: "{{ apache_conf_path }}/sites-available/{{ apache_vhosts_filename }}"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart apache
+  when: apache_create_vhosts | bool
+
+- name: Add vhost symlink in sites-enabled.
+  become: true
+  file:
+    src: "{{ apache_conf_path }}/sites-available/{{ apache_vhosts_filename }}"
+    dest: "{{ apache_conf_path }}/sites-enabled/{{ apache_vhosts_filename }}"
+    state: link
+    mode: 0644
+  notify: restart apache
+  when: apache_create_vhosts | bool
+
+- name: Remove default vhost in sites-enabled.
+  become: true
+  file:
+    path: "{{ apache_conf_path }}/sites-enabled/{{ apache_default_vhost_filename }}"
+    state: absent
+  notify: restart apache
+  when: apache_remove_default_vhost
+
+- name: Ensure Apache has selected state and enabled on boot.
+  service:
+    name: "{{ apache_service }}"
+    state: "{{ apache_state }}"
+    enabled: "{{ apache_enabled }}"
