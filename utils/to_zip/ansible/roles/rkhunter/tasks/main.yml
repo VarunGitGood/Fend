@@ -1,0 +1,57 @@
+---
+- name: Ensure that rkhunter is installed
+  become: true
+  ansible.builtin.apt:
+    name: rkhunter
+    state: present
+    install_recommends: false
+  tags:
+    - rkhunter
+    - packages
+
+- name: Configure rkhunter
+  become: true
+  ansible.builtin.template:
+    src: "{{ rkhunter_template }}"
+    dest: /etc/default/rkhunter
+    backup: true
+    mode: "0644"
+    owner: root
+    group: root
+  notify:
+    - Run rkhunter propupd
+  tags:
+    - packages
+    - rkhunter
+
+- name: SSH root access should be disabled
+  become: true
+  ansible.builtin.lineinfile:
+    regexp: ALLOW_SSH_ROOT_USER
+    line: ALLOW_SSH_ROOT_USER=no
+    dest: /etc/rkhunter.conf
+    mode: "0640"
+    state: present
+    create: false
+    backrefs: true
+  notify:
+    - Run rkhunter propupd
+  tags:
+    - packages
+    - rkhunter
+
+- name: SSH v1 should not be used
+  become: true
+  ansible.builtin.lineinfile:
+    regexp: ALLOW_SSH_PROT_V1
+    line: ALLOW_SSH_PROT_V1=0
+    dest: /etc/rkhunter.conf
+    mode: "0640"
+    state: present
+    create: false
+    backrefs: true
+  notify:
+    - Run rkhunter propupd
+  tags:
+    - packages
+    - rkhunter

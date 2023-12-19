@@ -1,0 +1,11 @@
+---
+- name: Run apt-get autoremove
+  become: true
+  ansible.builtin.apt:
+    autoremove: true
+
+- name: Run apt-get clean
+  become: true
+  ansible.builtin.apt:
+    autoclean: true
+    clean: true

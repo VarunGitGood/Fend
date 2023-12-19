@@ -1,0 +1,30 @@
+---
+dependency:
+  name: galaxy
+  options:
+    requirements-file: requirements.yml
+  platforms:
+    - name: molecule-ubuntu
+      image: ubuntu:18.04
+  driver:
+    options:
+      managed: false
+      login_cmd_template: "podman exec -ti {instance} bash"
+      ansible_connection_options:
+        ansible_connection: podman
+
+
+  tasks:
+    - name: Include required roles
+      ansible.builtin.include_role:
+        name: "{{item}}"
+      loop: "{{required_roles}}"
+
+    - name: Include active roles
+      ansible.builtin.include_role:
+        name: "{{item}}"
+      loop: "{{active_roles}}"
+
+    - name: Say hello
+      ansible.builtin.debug:
+        msg: "{{ compilers }}"

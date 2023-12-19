@@ -1,0 +1,107 @@
+---
+- name: Stat init.d/rc
+  become: true
+  ansible.builtin.stat:
+    path: /etc/init.d/rc
+  register: initdrc
+  tags:
+    - umask
+
+- name: Set default rc umask
+  become: true
+  ansible.builtin.replace:
+    regexp: umask(\s+.*)
+    replace: umask {{ umask_value }}
+    dest: /etc/init.d/rc
+    mode: "0755"
+  when: initdrc.stat.exists
+  tags:
+    - umask
+
+- name: Stat bashrc
+  become: true
+  ansible.builtin.stat:
+    path: /etc/bashrc
+  register: bashrc
+  tags:
+    - bash
+    - umask
+
+- name: Set default bashrc umask
+  become: true
+  ansible.builtin.replace:
+    regexp: umask(\s+.*)
+    replace: umask {{ umask_value }}
+    dest: /etc/bashrc
+    mode: "0644"
+  when: bashrc.stat.exists
+  tags:
+    - bash
+    - umask
+
+- name: Stat csh.cshrc
+  become: true
+  ansible.builtin.stat:
+    path: /etc/csh.cshrc
+  register: cshrc
+  tags:
+    - csh
+    - umask
+
+- name: Set default csh.cshrc umask
+  become: true
+  ansible.builtin.replace:
+    regexp: umask(\s+.*)
+    replace: umask {{ umask_value }}
+    dest: /etc/csh.cshrc
+    mode: "0644"
+  when: cshrc.stat.exists
+  tags:
+    - csh
+    - umask
+
+- name: Set default profile umask
+  become: true
+  ansible.builtin.replace:
+    regexp: umask(\s+.*)
+    replace: umask {{ umask_value }}
+    dest: /etc/profile
+    mode: "0644"
+  tags:
+    - umask
+
+- name: Configure readonly TMOUT
+  become: true
+  ansible.builtin.lineinfile:
+    line: readonly TMOUT
+    dest: /etc/profile
+    mode: "0644"
+    state: present
+    create: false
+    insertbefore: ^export
+  tags:
+    - tmout
+
+- name: Set TMOUT
+  become: true
+  ansible.builtin.lineinfile:
+    line: TMOUT=600
+    dest: /etc/profile
+    mode: "0644"
+    state: present
+    create: false
+    insertbefore: ^readonly TMOUT
+  tags:
+    - tmout
+
+- name: Export TMOUT
+  become: true
+  ansible.builtin.lineinfile:
+    line: export TMOUT
+    dest: /etc/profile
+    mode: "0644"
+    state: present
+    create: false
+    insertafter: ^readonly TMOUT
+  tags:
+    - tmout

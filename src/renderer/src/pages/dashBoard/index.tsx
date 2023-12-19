@@ -1,4 +1,4 @@
-import { Box, Flex, Grid, Text, Button, Loader } from '@mantine/core'
+import { Box, Flex, Grid, Text, Button, Loader, Stack } from '@mantine/core'
 import { useNavigate } from 'react-router-dom'
 import LogsTable from '@renderer/components/LogsTable'
 import { useRunsStore } from '@renderer/store/useRunsStore'
@@ -11,6 +11,7 @@ function Dashboard(): JSX.Element {
 
   const script: MyScriptItem = {
     scriptName: 'Script Name',
+    scriptDescription: 'Short description - where we can use this (Recommended target)',
     myConfig: []
   }
 
@@ -27,24 +28,17 @@ function Dashboard(): JSX.Element {
       <Box mt="3rem">
         <Grid gutter={{ base: 5, xs: 'md', md: 'xl', xl: 50 }}>
           <Grid.Col span={6}>
-            <CustomScriptCard
-              script={script}
-              description="Short description - where we can use this (Recommended target)"
-            />
+            <CustomScriptCard script={script} />
           </Grid.Col>
           <Grid.Col span={6}>
-            <CustomScriptCard
-              script={script}
-              description="Short description - where we can use this (Recommended target)"
-            />
+            <CustomScriptCard script={script} />
           </Grid.Col>
         </Grid>
       </Box>
       {runs[0]?.status === 'running' && (
-        <Flex align="center" gap="md">
+        <Stack justify="center" align="center" gap="md" mt="2rem">
           <Loader />
-          <Text>Your script is executing</Text>
-        </Flex>
+        </Stack>
       )}
       <LogsTable title="Last Executed Scripts" limit={5} />
     </Box>

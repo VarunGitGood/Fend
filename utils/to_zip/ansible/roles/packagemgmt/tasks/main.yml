@@ -1,0 +1,46 @@
+---
+- name: Configure apt
+  become: true
+  ansible.builtin.lineinfile:
+    dest: /etc/apt/apt.conf.d/98-hardening-ubuntu
+    mode: "0644"
+    state: present
+    create: true
+    line: "{{ item }}"
+  loop:
+    - Acquire::AllowDowngradeToInsecureRepositories "false";
+    - Acquire::AllowInsecureRepositories "false";
+    - Acquire::http::AllowRedirect "false";
+    - APT::Get::AllowUnauthenticated "false";
+    - APT::Get::AutomaticRemove "true";
+    - APT::Install-Recommends "false";
+    - APT::Install-Suggests "false";
+    - APT::Periodic::AutocleanInterval "7";
+    - APT::Sandbox::Seccomp "1";
+    - Unattended-Upgrade::Remove-Unused-Dependencies "true";
+    - Unattended-Upgrade::Remove-Unused-Kernel-Packages "true";
+  when: ansible_os_family == "Debian"
+  tags:
+    - apt
+
+- name: Run apt update
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 1800
+  notify:
+    - Run apt-get clean
+    - Run apt-get autoremove
+  when: ansible_os_family == "Debian"
+  tags:
+    - apt
+
+- name: Run apt upgrade
+  become: true
+  ansible.builtin.apt:
+    upgrade: safe
+  register: apt_upgrade_response
+  changed_when: apt_upgrade_response.stdout.find('0 upgraded') == -1
+  when: ansible_os_family == "Debian" and system_upgrade | bool
+  tags:
+    - apt

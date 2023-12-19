@@ -1,0 +1,172 @@
+---
+- name: Configure faillock.conf
+  become: true
+  ansible.builtin.template:
+    src: "{{ faillock_conf_template }}"
+    dest: /etc/security/faillock.conf
+    backup: true
+    mode: "0644"
+    owner: root
+    group: root
+  when: faillock_enable | bool
+  tags:
+    - common-account
+    - common-auth
+    - pam
+
+- name: Debian OS family PAM configuration
+  become: true
+  when: ansible_os_family == "Debian"
+  block:
+    - name: Configure common-password
+      ansible.builtin.template:
+        src: "{{ common_password_template }}"
+        dest: /etc/pam.d/common-password
+        backup: true
+        mode: "0644"
+        owner: root
+        group: root
+      tags:
+        - common-password
+        - pam
+
+    - name: Configure common-auth
+      ansible.builtin.template:
+        src: "{{ common_auth_template }}"
+        dest: /etc/pam.d/common-auth
+        backup: true
+        mode: "0644"
+        owner: root
+        group: root
+      tags:
+        - common-auth
+        - pam
+
+    - name: Configure common-account
+      ansible.builtin.template:
+        src: "{{ common_account_template }}"
+        dest: /etc/pam.d/common-account
+        backup: true
+        mode: "0644"
+        owner: root
+        group: root
+      tags:
+        - common-account
+        - pam
+
+    - name: Configure login
+      ansible.builtin.template:
+        src: "{{ login_template }}"
+        dest: /etc/pam.d/login
+        backup: true
+        mode: "0644"
+        owner: root
+        group: root
+      tags:
+        - login
+        - pam
+
+- name: Configure pwquality
+  become: true
+  ansible.builtin.template:
+    src: "{{ pwquality_conf_template }}"
+    dest: /etc/security/pwquality.conf
+    backup: true
+    mode: "0644"
+    owner: root
+    group: root
+  tags:
+    - pwquality
+    - pam
+
+- name: Stat libuser configuration
+  become: true
+  ansible.builtin.stat:
+    path: /etc/libuser.conf
+  register: libuser
+  tags:
+    - libuser
+
+- name: Set libuser crypt_style
+  become: true
+  ansible.builtin.replace:
+    regexp: crypt_style(\s+.*)
+    replace: crypt_style = {{ password_algorithm }}
+    dest: /etc/libuser.conf
+    mode: "0644"
+    owner: root
+    group: root
+  when: libuser.stat.exists
+  tags:
+    - libuser
+
+- name: Set crypto policy
+  when: set_crypto_policy
+  block:
+    - name: Get crypto-policies value
+      environment:
+        PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      ansible.builtin.command:
+        cmd: grep -iqo "^{{ crypto_policy }}$" /etc/crypto-policies/config
+      register: crypto_policy_set
+      when: crypto_policies_config
+      changed_when: false
+      failed_when: crypto_policy_set.rc > 1
+      tags:
+        - crypto-policy
+
+    - name: Update crypto-policies
+      become: true
+      ansible.builtin.command:
+        cmd: update-crypto-policies --set "{{ crypto_policy | upper }}"
+      register: update_crypto_policies
+      changed_when: update_crypto_policies.rc != 0
+      failed_when: update_crypto_policies.rc != 0
+      when: crypto_policies_config and crypto_policy_set.rc != 0 and crypto_policy.split(':')[0] | upper != "FIPS"
+      tags:
+        - crypto-policy
+
+    - name: Set FIPS mode
+      become: true
+      ansible.builtin.command:
+        cmd: fips-mode-setup --enable
+      register: set_fips_mode
+      changed_when: set_fips_mode.rc != 0
+      failed_when: set_fips_mode.rc != 0
+      when: crypto_policies_config and crypto_policy_set.rc != 0 and crypto_policy.split(':')[0] | upper == "FIPS"
+      tags:
+        - crypto-policy
+
+- name: Add cracklib password list
+  become: true
+  ansible.builtin.copy:
+    src: passwords.list
+    dest: /usr/share/dict/passwords
+    backup: true
+    mode: "0644"
+    owner: root
+    group: root
+  notify:
+    - Update Debian cracklib
+  tags:
+    - cracklib
+    - pam
+
+- name: Add local information to password list
+  become: true
+  ansible.builtin.lineinfile:
+    dest: /usr/share/dict/passwords.local
+    mode: "0644"
+    owner: root
+    group: root
+    state: present
+    create: true
+    line: "{{ item }}"
+  notify:
+    - Update Debian cracklib
+  loop:
+    - "{{ ansible_hostname | lower }}"
+    - "{{ ansible_os_family | lower }}"
+  tags:
+    - cracklib
+    - pam

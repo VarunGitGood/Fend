@@ -1,7 +1,7 @@
-import { Box, Flex, Button, Text, Input, Stack, Modal } from '@mantine/core'
+import { useState } from 'react'
+import { Box, Flex, Button, Text, TextInput, Textarea, Stack, Modal } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import ScriptCard from '@renderer/components/ScriptCard'
-import { useState } from 'react'
 import {
   useScriptStore,
   AdvancedConfigItem,
@@ -15,7 +15,7 @@ import { saveDataToStore } from '@renderer/utils/storage'
 function CustomScript(): JSX.Element {
   const { script, advancedConfig, setMyScripts, myScripts } = useScriptStore()
   const [scriptName, setScriptName] = useState<string>('')
-  const [description, setDescription] = useState<string>('')
+  const [scriptDescription, setScriptDescription] = useState<string>('')
   const navigate = useNavigate()
   const [opened, { open, close }] = useDisclosure(false)
 
@@ -32,7 +32,7 @@ function CustomScript(): JSX.Element {
     })
     const myScript: MyScriptItem = {
       scriptName,
-      description,
+      scriptDescription,
       myConfig: modules,
       ansibleConfig: customScript
     }
@@ -49,6 +49,10 @@ function CustomScript(): JSX.Element {
     }
     if (!isScriptName) {
       toast.error('Please enter script name')
+      return
+    }
+    if (!scriptDescription) {
+      toast.error('Please enter script description')
       return
     }
     if (checkScriptName(scriptName)) {
@@ -94,13 +98,12 @@ function CustomScript(): JSX.Element {
         <Text fz="2.25rem" fw="600" lh="2.75rem">
           Custom Script
         </Text>
-        <Input
+        <TextInput
+          label="Enter your script name"
           placeholder="Enter custom script name"
           mt="2rem"
           size="md"
-          style={{
-            borderRadius: '4px'
-          }}
+          style={{ borderRadius: '4px' }}
           value={scriptName}
           onChange={(event: React.ChangeEvent<HTMLInputElement>): void => {
             if (checkScriptName(event.target.value)) {
@@ -110,14 +113,15 @@ function CustomScript(): JSX.Element {
           }}
           error={checkScriptName(scriptName)}
         />
-        <Input
+        <Textarea
+          label="Enter your script description"
           placeholder="Enter custom script description"
           mt="1rem"
           size="md"
           style={{ borderRadius: '4px' }}
-          value={description}
-          onChange={(event: React.ChangeEvent<HTMLInputElement>): void => {
-            setDescription(event.target.value)
+          value={scriptDescription}
+          onChange={(event: React.ChangeEvent<HTMLTextAreaElement>): void => {
+            setScriptDescription(event.target.value)
           }}
         />
         <Stack gap="1rem" mt="3rem">

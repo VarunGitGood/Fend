@@ -20,7 +20,7 @@ export interface ModuleItem {
 
 export interface MyScriptItem {
   scriptName: string
-  description: string
+  scriptDescription: string
   myConfig: ModuleItem[]
   ansibleConfig?: { [key: string]: any }
 }
@@ -673,10 +673,10 @@ const modules = {
   },
   apache: {
     script: {
-        module: 'apache',
-        label: 'Apache Configuration',
-        description: 'Apache Configuration. Customize Apache settings.',
-        isSelected: false
+      module: 'apache',
+      label: 'Apache Configuration',
+      description: 'Apache Configuration. Customize Apache settings.',
+      isSelected: false
     },
     advancedConfig: [
       {
@@ -809,7 +809,8 @@ const modules = {
         module: 'apache',
         label: 'Restart State',
         var: 'apache_restart_state',
-        description: 'Apache state when configuration changes are made. Recommended values: `restarted` or `reloaded`.',
+        description:
+          'Apache state when configuration changes are made. Recommended values: `restarted` or `reloaded`.',
         type: 'string',
         current: 'restarted',
         tag: 'text'

@@ -1,0 +1,125 @@
+---
+- name: Create custom facts directory
+  become: true
+  ansible.builtin.file:
+    path: /etc/ansible/facts.d
+    recurse: true
+    state: directory
+    mode: "0755"
+    owner: root
+    group: root
+  tags:
+    - fact
+
+- name: Add systemd version fact
+  become: true
+  ansible.builtin.template:
+    src: systemd.fact
+    dest: /etc/ansible/facts.d/systemd.fact
+    mode: "0755"
+    owner: root
+    group: root
+  tags:
+    - fact
+    - systemd
+
+- name: Add cpuinfo rdrand fact
+  become: true
+  ansible.builtin.template:
+    src: cpuinfo.fact
+    dest: /etc/ansible/facts.d/cpuinfo.fact
+    mode: "0755"
+    owner: root
+    group: root
+  tags:
+    - cpuinfo
+    - fact
+    - rdrand
+
+
+- name: Set crypto-policies config as fact
+  tags:
+    - fact
+    - crypto-policy
+  block:
+    - name: Stat crypto-policies config
+      ansible.builtin.stat:
+        path: /etc/crypto-policies/config
+      register: stat_crypto_policies_config
+
+    - name: Set config fact
+      ansible.builtin.set_fact:
+        crypto_policies_config: "{{ stat_crypto_policies_config.stat.exists }}"
+
+- name: Set sysctl configuration directory as fact
+  tags:
+    - fact
+    - sysctl
+  block:
+    - name: Stat /usr/lib/sysctl.d/ exists
+      ansible.builtin.stat:
+        path: /usr/lib/sysctl.d/
+      register: usr_lib_sysctl_d
+
+    - name: Set sysctl fact
+      ansible.builtin.set_fact:
+        sysctl_conf_dir: "{{ '/usr/lib/sysctl.d' if usr_lib_sysctl_d.stat.exists else '/etc/sysctl.d' }}"
+
+- name: Stat IPv6 status
+  become: true
+  ansible.builtin.stat:
+    path: /proc/sys/net/ipv6
+  register: stat_ipv6
+  tags:
+    - fact
+    - ipv6
+
+- name: Set IPv6 fact
+  ansible.builtin.set_fact:
+    system_has_ipv6: "{{ stat_ipv6.stat.exists }}"
+  tags:
+    - fact
+    - ipv6
+
+- name: Get PAM version
+  tags:
+    - fact
+    - common-account
+    - common-auth
+    - pam
+  block:
+    - name: Gather package facts
+      ansible.builtin.package_facts:
+
+    - name: Get libpam version in Debian family
+      ansible.builtin.set_fact:
+        pam_version: "{{ ansible_facts.packages['libpam-modules'][0].version }}"
+      when:
+        - ansible_os_family == "Debian"
+        - "'libpam-modules' in ansible_facts.packages"
+
+
+- name: Set hashing algorithm for password (yescrypt|sha512)
+  ansible.builtin.set_fact:
+    password_algorithm: "{{ 'yescrypt' if (pam_version is version('1.4.0', '>=')) else 'sha512' }}"
+  tags:
+    - fact
+    - pam
+
+- name: Add cpuinfo rdrand fact
+  become: true
+  ansible.builtin.template:
+    src: cpuinfo.fact
+    dest: /etc/ansible/facts.d/cpuinfo.fact
+    mode: "0755"
+    owner: root
+    group: root
+  tags:
+    - cpuinfo
+    - fact
+    - rdrand
+
+- name: Update current facts
+  ansible.builtin.setup:
+  tags:
+    - fact
