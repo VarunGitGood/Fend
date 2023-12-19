@@ -335,6 +335,7 @@ function Groups(): JSX.Element {
   }
 
   const items = groupDetails.map((group) => {
+    console.log(group, 'group')
     const { name, details } = group
     const rows =
       details.length > 0 ? (
