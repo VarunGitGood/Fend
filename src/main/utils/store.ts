@@ -4,6 +4,7 @@ import Store from 'electron-store'
 const electronStore = new Store({
   name: 'electron-store',
   cwd: 'electron-store',
+
   defaults: {
     myScripts: [],
     groupDetails: [],
@@ -19,7 +20,7 @@ const setItem = (key: string, data: any, mainWindow: BrowserWindow): void => {
 const getItem = (key: 'myScripts' | 'groupDetails' | 'runs', mainWindow: BrowserWindow): any => {
   const data = electronStore.get(key)
   if (!data) {
-    mainWindow.webContents.send('load-storage-success', false)
+    mainWindow.webContents.send('load-storage-success', {})
   }
   mainWindow.webContents.send(`load-storage-${key}`, data)
 }
