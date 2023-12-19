@@ -26,19 +26,21 @@ function App(): JSX.Element {
     ipcRenderer.send('load-storage', 'myScripts')
     ipcRenderer.send('load-storage', 'runs')
     ipcRenderer.on('load-storage-groupDetails', (_event, arg) => {
+      console.log('myScripts', arg)
       if (!arg) {
         setGroupDetails([])
       }
-      console.log('groupDetails', arg)
       setGroupDetails(arg)
     })
     ipcRenderer.on('load-storage-myScripts', (_event, arg) => {
+      console.log('myScripts', arg)
       if (!arg) {
         setMyScripts([])
       }
       setMyScripts(arg)
     })
     ipcRenderer.on('load-storage-runs', (_event, arg) => {
+      console.log('myScripts', arg)
       if (!arg) {
         setRuns([])
       }
