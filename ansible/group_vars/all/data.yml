@@ -3,15 +3,7 @@ required_roles:
   - facts
   - logindefs
 active_roles:
-  - adduser
-  - rootaccess
-  - compilers
-  - disablemod
-  - ssh
-  - password
-  - lockroot
-  - cron
-  - ipv6
+  - apache
 
 active_groups:
   - all

@@ -389,7 +389,7 @@ const modules = {
         description: 'Directory to store faillock files.',
         type: 'string',
         current: '/var/run/faillock',
-        tag: 'input'
+        tag: 'text'
       },
       {
         module: 'password',
@@ -497,7 +497,7 @@ const modules = {
         description: 'Path to the cracklib dictionaries.',
         type: 'string',
         current: '',
-        tag: 'input'
+        tag: 'text'
       },
       {
         module: 'password',
@@ -669,6 +669,160 @@ const modules = {
       label: 'adduser',
       description: 'Configure adduser and useradd commands'
     }
+  },
+  apache: {
+    script: {
+        module: 'apache',
+        label: 'Apache Configuration',
+        description: 'Apache Configuration. Customize Apache settings.',
+        isSelected: false
+    },
+    advancedConfig: [
+      {
+        module: 'apache',
+        label: 'Listen IP',
+        var: 'apache_listen_ip',
+        description: 'IP address Apache should listen on.',
+        type: 'string',
+        current: '*',
+        tag: 'text'
+      },
+      {
+        module: 'apache',
+        label: 'Listen Port',
+        var: 'apache_listen_port',
+        description: 'Port Apache should listen on.',
+        type: 'number',
+        current: 80,
+        tag: 'number'
+      },
+      {
+        module: 'apache',
+        label: 'Listen Port SSL',
+        var: 'apache_listen_port_ssl',
+        description: 'Port Apache should listen on for SSL connections.',
+        type: 'number',
+        current: 443,
+        tag: 'number'
+      },
+      {
+        module: 'apache',
+        label: 'Create Virtual Hosts',
+        var: 'apache_create_vhosts',
+        description: 'Create virtual hosts for Apache.',
+        type: 'boolean',
+        current: true,
+        tag: 'checkbox'
+      },
+      {
+        module: 'apache',
+        label: 'Virtual Hosts Template',
+        var: 'apache_vhosts_template',
+        description: 'Template for Apache virtual hosts configuration.',
+        type: 'string',
+        current: 'vhosts.conf.j2',
+        tag: 'text'
+      },
+      {
+        module: 'apache',
+        label: 'Remove Default Virtual Host',
+        var: 'apache_remove_default_vhost',
+        description: 'Remove default virtual host on Debian/Ubuntu.',
+        type: 'boolean',
+        current: false,
+        tag: 'checkbox'
+      },
+      {
+        module: 'apache',
+        label: 'Allow Override',
+        var: 'apache_allow_override',
+        description: 'Apache AllowOverride directive.',
+        type: 'string',
+        current: 'All',
+        tag: 'text'
+      },
+      {
+        module: 'apache',
+        label: 'Apache Options',
+        var: 'apache_options',
+        description: 'Options for Apache.',
+        type: 'string',
+        current: '-Indexes +FollowSymLinks',
+        tag: 'text'
+      },
+      {
+        module: 'apache',
+        label: 'SSL Protocol',
+        var: 'apache_ssl_protocol',
+        description: 'SSL/TLS protocol for Apache.',
+        type: 'string',
+        current: 'All -SSLv2 -SSLv3',
+        tag: 'text'
+      },
+      {
+        module: 'apache',
+        label: 'SSL Cipher Suite',
+        var: 'apache_ssl_cipher_suite',
+        description: 'Cipher suite for Apache SSL/TLS.',
+        type: 'string',
+        current: 'AES256+EECDH:AES256+EDH',
+        tag: 'text'
+      },
+      {
+        module: 'apache',
+        label: 'Enabled Apache Modules',
+        var: 'apache_mods_enabled',
+        description: 'List of enabled Apache modules.',
+        type: 'array',
+        current: ['rewrite', 'ssl'],
+        tag: 'list'
+      },
+      {
+        module: 'apache',
+        label: 'Disabled Apache Modules',
+        var: 'apache_mods_disabled',
+        description: 'List of disabled Apache modules.',
+        type: 'array',
+        current: [],
+        tag: 'list'
+      },
+      {
+        module: 'apache',
+        label: 'Apache State',
+        var: 'apache_state',
+        description: 'Initial state of Apache. Recommended values: `started` or `stopped`.',
+        type: 'string',
+        current: 'started',
+        tag: 'text'
+      },
+      {
+        module: 'apache',
+        label: 'Enable Apache',
+        var: 'apache_enabled',
+        description: 'Initial Apache service status. Recommended values: `yes` or `no`.',
+        type: 'string',
+        current: 'yes',
+        tag: 'text'
+      },
+      {
+        module: 'apache',
+        label: 'Restart State',
+        var: 'apache_restart_state',
+        description: 'Apache state when configuration changes are made. Recommended values: `restarted` or `reloaded`.',
+        type: 'string',
+        current: 'restarted',
+        tag: 'text'
+      },
+      {
+        module: 'apache',
+        label: 'Apache Package State',
+        var: 'apache_packages_state',
+        description: 'Apache package state. Recommended values: `present` or `latest`.',
+        type: 'string',
+        current: 'present',
+        tag: 'text'
+      }
+    ]
   }
 }
 
