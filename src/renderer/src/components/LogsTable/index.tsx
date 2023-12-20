@@ -28,10 +28,7 @@ export default function LogsTable({ limit, title }: Log): JSX.Element {
     <>
       <Modal opened={opened} onClose={close} title="Log" size="calc(100vw - 3rem)" centered>
         <CopyBlock
-          text={
-            runs.find((run) => run.scriptName === row.scriptName)?.scriptOutput ||
-            'No output available'
-          }
+          text={runs.find((run) => run.id === row.id)?.scriptOutput || 'No output available'}
           language="powershell"
           showLineNumbers={false}
           wrapLongLines={true}
