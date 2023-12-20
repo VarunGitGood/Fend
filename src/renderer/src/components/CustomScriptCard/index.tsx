@@ -2,7 +2,6 @@ import { Box, Flex, Button, Group, Paper, Stack, Text } from '@mantine/core'
 import classes from './styles.module.css'
 import { useNavigate } from 'react-router-dom'
 import { MyScriptItem } from '@renderer/store/useScriptStore'
-const ipcRenderer = (window as any).ipcRenderer
 
 interface CustomScriptCardProps {
   script: MyScriptItem
@@ -19,14 +18,6 @@ function Chip({ children }: { children: string }): JSX.Element {
 }
 export default function CustomScriptCard({ script }: CustomScriptCardProps): JSX.Element {
   const navigate = useNavigate()
-
-  const handleExport = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
-    e.stopPropagation()
-    ipcRenderer.send('export-script', {
-      scriptName: script.scriptName,
-      scriptOSVersion: script.scriptOSVersion
-    })
-  }
 
   return (
     <>
@@ -57,14 +48,12 @@ export default function CustomScriptCard({ script }: CustomScriptCardProps): JSX
               Run Script
             </Button>
             <Button
-              // leftSection={<IconFileExport size={28} strokeWidth={2} />}
               className={classes.btn}
               c="rgba(0, 0, 0, 0.90)"
               variant="outline"
               size="md"
               fullWidth
               onClick={() => {
-                // handleExport()
                 navigate(`/myScript/${script.scriptName}`)
               }}
             >

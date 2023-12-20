@@ -1,6 +1,8 @@
-import { Box, Checkbox, Flex, Text } from '@mantine/core'
+import { Box, Checkbox, Button, Flex, Text } from '@mantine/core'
 import { useScriptStore } from '@renderer/store/useScriptStore'
 import { useParams } from 'react-router-dom'
+import { IconFileExport } from '@tabler/icons-react'
+const ipcRenderer = (window as any).ipcRenderer
 
 function Chip({ children }: { children: string }): JSX.Element {
   return (
@@ -17,19 +19,34 @@ export default function SingleScript(): JSX.Element {
   const { myScripts } = useScriptStore()
   const script = myScripts.find((s) => s.scriptName === scriptName)
 
-  //groupby module for adv
   const modules = script?.advancedConfig.reduce((r, a) => {
     r[a.module] = [...(r[a.module] || []), a]
     return r
   }, {})
 
-  console.log(modules, 'group by modules')
+  const handleExport = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
+    e.stopPropagation()
+    ipcRenderer.send('export-script', {
+      scriptName: script?.scriptName,
+      scriptOSVersion: script?.scriptOSVersion
+    })
+  }
 
   return (
     <Box p="md">
-      <Text fz="2.25rem" fw="600" lh="2.75rem" mb="lg">
-        {scriptName}
-      </Text>
+      <Flex justify="space-between" align="center" mb="3rem">
+        <Text fz="2.25rem" fw="600" lh="2.75rem">
+          {scriptName}
+        </Text>
+        <Button
+          leftSection={<IconFileExport size={20} strokeWidth={2} />}
+          bg="#005FB8"
+          size="md"
+          onClick={handleExport}
+        >
+          Export Script
+        </Button>
+      </Flex>
       <Text fz="1.125rem" fw="600" lh="1.75rem">
         Description
       </Text>
