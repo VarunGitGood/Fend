@@ -38,6 +38,7 @@ function CustomScript(): JSX.Element {
       scriptDescription,
       scriptOSVersion,
       myConfig: modules,
+      advancedConfig,
       ansibleConfig: customScript
     }
 
@@ -161,6 +162,7 @@ function CustomScript(): JSX.Element {
             }
           }}
         />
+
         <Stack gap="1rem" mt="3rem">
           {script.map((s) => (
             <ScriptCard key={s.module} {...s} />

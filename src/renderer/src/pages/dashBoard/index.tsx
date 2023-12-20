@@ -12,6 +12,8 @@ function Dashboard(): JSX.Element {
   const script: MyScriptItem[] = [
     {
       scriptName: 'Web Server Hardening',
+      scriptOSVersion: 'Ubuntu 20.04',
+      advancedConfig: [],
       scriptDescription:
         'This script will harden the web server with recommended settings and configurations',
       myConfig: [
@@ -51,6 +53,8 @@ function Dashboard(): JSX.Element {
       scriptName: 'Workstation Hardening',
       scriptDescription:
         'Workstation hardening script will harden the workstation with recommended settings and configurations. ',
+      scriptOSVersion: 'Ubuntu 20.04',
+      advancedConfig: [],
       myConfig: [
         {
           module: 'USB',

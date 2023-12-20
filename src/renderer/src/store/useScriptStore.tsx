@@ -23,6 +23,7 @@ export interface MyScriptItem {
   scriptDescription: string
   scriptOSVersion: string
   myConfig: ModuleItem[]
+  advancedConfig: AdvancedConfigItem[]
   ansibleConfig?: { [key: string]: any }
 }
 
