@@ -10,13 +10,14 @@ import {
   TagsInput,
   NumberInput,
   Button,
-  TextInput,
+  TextInput
 } from '@mantine/core'
 import { AdvancedConfigItem } from '@renderer/store/useScriptStore'
 import { useForm } from '@mantine/form'
 import { useDisclosure } from '@mantine/hooks'
 import { useScriptStore } from '@renderer/store/useScriptStore'
 import classes from './index.module.css'
+import { IconInfoCircle } from '@tabler/icons-react'
 
 type ScriptCardProps = {
   module: string
@@ -26,6 +27,7 @@ type ScriptCardProps = {
 }
 
 function ScriptCard({ label, description, module, isSelected }: ScriptCardProps): JSX.Element {
+  const [isHovered, setIsHovered] = useState(false)
   const [checked, setChecked] = useState(isSelected)
   const [opened, { open, close }] = useDisclosure(false)
   const { advancedConfig, setAdvancedConfig } = useScriptStore()
@@ -157,8 +159,23 @@ function ScriptCard({ label, description, module, isSelected }: ScriptCardProps)
             readOnly
           />
           <UnstyledButton className={classes.control} data-checked={checked || undefined}>
-            <Text className={classes.label}>{label}</Text>
-            <Text className={classes.description} lineClamp={4}>
+            <Flex
+              mih={30}
+              gap="md"
+              justify="flex-start"
+              align="flex-start"
+              direction="row"
+              wrap="wrap"
+            >
+              <Text className={classes.label}>{label}</Text>
+              <IconInfoCircle
+                size={18}
+                strokeWidth={1}
+                onMouseOver={() => setIsHovered(true)}
+                onMouseOut={() => setIsHovered(false)}
+              />
+            </Flex>
+            <Text className={classes.description} lineClamp={isHovered ? undefined : 1}>
               {description}
             </Text>
           </UnstyledButton>
