@@ -26,7 +26,7 @@ export default function CustomScriptCard({ script }: CustomScriptCardProps): JSX
           <Text c="#101828" fz="1.125rem" fw={600} lh="1.50rem">
             {script.scriptName}
           </Text>
-          <Text c="#475467" fz="0.875rem" fw={400} lh="1.50rem">
+          <Text c="#475467" fz="0.875rem" fw={400} lh="1.50rem" lineClamp={2}>
             {script.scriptDescription}
           </Text>
           <Group gap="0.5rem">
