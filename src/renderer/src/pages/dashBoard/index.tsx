@@ -12,6 +12,7 @@ function Dashboard(): JSX.Element {
   const script: MyScriptItem = {
     scriptName: 'Script Name',
     scriptDescription: 'Short description - where we can use this (Recommended target)',
+    scriptOSVersion: '22.04',
     myConfig: []
   }
 

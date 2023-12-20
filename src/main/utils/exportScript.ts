@@ -8,12 +8,17 @@ export interface ExportOutput {
   scriptName: string
 }
 
-export const executeExportScript = async (scriptName: string): Promise<ExportOutput> => {
+export const executeExportScript = async (
+  scriptName: string,
+  scriptOSVersion: string
+): Promise<ExportOutput> => {
   console.log('Executing export script for:', scriptName)
   return new Promise((resolve, reject) => {
     const exportScriptPath = join(__dirname, '../../utils/export.sh')
     const exportFolderPath = join(__dirname, '../../utils/')
     const command = `${exportScriptPath} '${scriptName}'`
+
+    console.log(scriptOSVersion)
 
     exec(
       command,

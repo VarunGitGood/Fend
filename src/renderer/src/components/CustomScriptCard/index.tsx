@@ -23,7 +23,10 @@ export default function CustomScriptCard({ script }: CustomScriptCardProps): JSX
 
   const handleExport = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation()
-    ipcRenderer.send('export-script', script.scriptName)
+    ipcRenderer.send('export-script', {
+      scriptName: script.scriptName,
+      scriptOSVersion: script.scriptOSVersion
+    })
   }
 
   return (

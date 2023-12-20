@@ -21,6 +21,7 @@ export interface ModuleItem {
 export interface MyScriptItem {
   scriptName: string
   scriptDescription: string
+  scriptOSVersion: string
   myConfig: ModuleItem[]
   ansibleConfig?: { [key: string]: any }
 }
@@ -833,7 +834,6 @@ const getScriptsFromModules = (): any => {
   for (const mod in modules) {
     result.push(modules[mod]['script'])
   }
-  console.log(result)
   return result
 }
 
@@ -844,9 +844,9 @@ const getACFromModules = (): any => {
       result.push(modules[mod]['advancedConfig'][i])
     }
   }
-  console.log(result)
   return result
 }
+
 export const useScriptStore = create<ScriptStore>((set) => ({
   script: getScriptsFromModules(),
   myScripts: [],
