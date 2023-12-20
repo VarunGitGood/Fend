@@ -106,6 +106,51 @@ const modules = {
         type: 'array',
         current: ['22'],
         tag: 'list'
+      },
+      {
+        module: 'ssh',
+        label: 'Password Authentication',
+        var: 'sshd_password_authentication',
+        description: 'Enable or disable password authentication for SSH.',
+        type: 'boolean',
+        current: false,
+        tag: 'checkbox'
+      },
+      {
+        module: 'ssh',
+        label: 'Permit Empty Passwords',
+        var: 'sshd_permit_empty_passwords',
+        description: 'Allow or deny empty passwords for SSH.',
+        type: 'boolean',
+        current: false,
+        tag: 'checkbox'
+      },
+      {
+        module: 'ssh',
+        label: 'Permit Root Login',
+        var: 'sshd_permit_root_login',
+        description: 'Allow or deny root login for SSH.',
+        type: 'boolean',
+        current: false,
+        tag: 'checkbox'
+      },
+      {
+        module: 'ssh',
+        label: 'Permit Tunnel',
+        var: 'sshd_permit_tunnel',
+        description: 'Allow or deny tunneling for SSH.',
+        type: 'boolean',
+        current: false,
+        tag: 'checkbox'
+      },
+      {
+        module: 'ssh',
+        label: 'Permit User Environment',
+        var: 'sshd_permit_user_environment',
+        description: 'Allow or deny user environment modifications for SSH.',
+        type: 'boolean',
+        current: false,
+        tag: 'checkbox'
       }
     ]
   },
@@ -673,10 +718,10 @@ const modules = {
   },
   apache: {
     script: {
-        module: 'apache',
-        label: 'Apache Configuration',
-        description: 'Apache Configuration. Customize Apache settings.',
-        isSelected: false
+      module: 'apache',
+      label: 'Apache Configuration',
+      description: 'Apache Configuration. Customize Apache settings.',
+      isSelected: false
     },
     advancedConfig: [
       {
@@ -824,6 +869,14 @@ const modules = {
         tag: 'text'
       }
     ]
+  },
+  disableWireless: {
+    script: {
+      module: 'disablewireless',
+      label: 'Disable Wireless Configuration',
+      description: 'Disable Wireless Configuration. Prevent the use of wireless interfaces.',
+      isSelected: false
+    }
   }
 }
 
