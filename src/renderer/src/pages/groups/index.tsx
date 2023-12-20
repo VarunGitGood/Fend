@@ -20,6 +20,7 @@ import { saveDataToStore } from '@renderer/utils/storage'
 import { useScriptStore } from '@renderer/store/useScriptStore'
 import { Run, useRunsStore } from '@renderer/store/useRunsStore'
 const ipcRenderer = (window as any).ipcRenderer
+import { nanoid } from 'nanoid'
 interface GroupBarProps {
   name: string
   onAddHost: (
@@ -241,6 +242,7 @@ function Groups(): JSX.Element {
         scriptName: scriptName,
         scriptDescription: scriptDescription,
         groupNames: [...selectedGroups.keys()],
+        id: nanoid(),
         modules:
           myScripts.find((s) => s.scriptName === scriptName)?.myConfig.map((item) => item.module) ||
           [],

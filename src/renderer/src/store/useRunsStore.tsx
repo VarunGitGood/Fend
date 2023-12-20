@@ -6,6 +6,7 @@ export interface Run {
   scriptDescription: string
   groupNames: string[]
   modules: string[]
+  id: string
   timeStamp: string
   scriptOutput?: string
   scriptError?: string
