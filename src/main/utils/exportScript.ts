@@ -8,15 +8,11 @@ export interface ExportOutput {
 }
 
 export const executeExportScript = async (
-  scriptName: string,
-  scriptOSVersion: string
+  data: any
 ): Promise<ExportOutput> => {
-  console.log('Executing export script for:', scriptName)
   return new Promise((resolve, reject) => {
     const exportScriptPath = join(__dirname, '../../utils')
-    const command = `${exportScriptPath}/export.sh '${scriptName}'`
-
-    console.log(scriptOSVersion)
+    const command = `${exportScriptPath}/export.sh '${data.scriptName}' ${data.scriptOSVersion}`
 
     exec(
       command,
@@ -28,7 +24,7 @@ export const executeExportScript = async (
           reject({
             status: 'error',
             stdout,
-            scriptName
+            scriptName: data.scriptName
           })
           return
         }
@@ -38,7 +34,7 @@ export const executeExportScript = async (
         resolve({
           status: 'success',
           stdout: output + `\nZip file generated successfully at: downloads}`,
-          scriptName
+          scriptName:data.scriptName
         })
       }
     )

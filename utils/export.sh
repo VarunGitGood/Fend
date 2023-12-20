@@ -27,15 +27,8 @@ echo "127.0.0.1" >> "$destination/hosts"
 
 chmod +x "$new_script"
 
-zip -r "$source_folder/$2-script.zip" "$destination"
-
-rm -rf to_zip
-
-if ! command -v ansible &> /dev/null; then
-    echo "Ansible is not installed. Installing..."
-    sudo apt update
-    sudo apt install -y ansible
-fi
+echo "$1 $2"
+zip -r "$HOME/Downloads/$1-script.zip" "to_zip"
 
 rm -rf to_zip
 
