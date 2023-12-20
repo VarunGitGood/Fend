@@ -4,11 +4,9 @@
 
   tasks:
     - name: Update apt cache (on Debian).
+      become: true
       apt:
-        upgrade: true
         update_cache: true
-        cache_valid_time: 3600
-      when: ansible_os_family == 'Debian'
 
     - name: Install ssh
       apt:

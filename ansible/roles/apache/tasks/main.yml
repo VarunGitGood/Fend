@@ -1,8 +1,4 @@
 ---
-- name: Update apt cache
-  become: true
-  apt: update_cache=yes cache_valid_time=3600
-
 - name: Ensure apache is installed
   become: true
   apt: "name={{ apache_packages }} state={{ apache_packages_state }}"

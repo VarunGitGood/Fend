@@ -4,6 +4,8 @@ required_roles:
   - logindefs
 active_roles:
   - apache
+  - lockroot
+  - adduser
 
 active_groups:
   - all
