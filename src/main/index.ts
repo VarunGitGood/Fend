@@ -81,6 +81,10 @@ function createWindow(): void {
     await executeExportScript(data)
       .then((result) => {
         console.log(result)
+        new Notification({
+          title: 'Success',
+          body: 'Exported successfully to downloads'
+        }).show()
       })
       .catch((error) => {
         // error notification
