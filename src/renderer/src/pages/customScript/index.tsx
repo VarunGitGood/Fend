@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Box, Flex, Button, Text, TextInput, Textarea, Stack, Modal } from '@mantine/core'
+import { Box, Flex, Stack, Text, TextInput, Textarea, Select, Button, Modal } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import ScriptCard from '@renderer/components/ScriptCard'
 import {
@@ -17,6 +17,7 @@ function CustomScript(): JSX.Element {
   const { script, advancedConfig, setMyScripts, myScripts } = useScriptStore()
   const [scriptName, setScriptName] = useState<string>('')
   const [scriptDescription, setScriptDescription] = useState<string>('')
+  const [scriptOSVersion, setScriptOSVersion] = useState<string>('')
   const navigate = useNavigate()
   const [opened, { open, close }] = useDisclosure(false)
 
@@ -31,14 +32,15 @@ function CustomScript(): JSX.Element {
     advancedConfig.forEach((config: AdvancedConfigItem) => {
       customScript[config.var] = config.current
     })
-    console.log(customScript)
+
     const myScript: MyScriptItem = {
       scriptName,
       scriptDescription,
+      scriptOSVersion,
       myConfig: modules,
+      advancedConfig,
       ansibleConfig: customScript
     }
-    console.log(customScript)
 
     ipcRenderer.send('generate-script', {
       scriptName,
@@ -57,6 +59,7 @@ function CustomScript(): JSX.Element {
   const handleSaveAndNextClick = (): void => {
     const isModuleSelected = script.some((s) => s.isSelected)
     const isScriptName = scriptName.trim().length > 0
+
     if (!isModuleSelected) {
       toast.error('Please select at least one module')
       return
@@ -67,6 +70,10 @@ function CustomScript(): JSX.Element {
     }
     if (!scriptDescription) {
       toast.error('Please enter script description')
+      return
+    }
+    if (!scriptOSVersion) {
+      toast.error('Please enter your OS Version')
       return
     }
     if (checkScriptName(scriptName)) {
@@ -138,6 +145,24 @@ function CustomScript(): JSX.Element {
             setScriptDescription(event.target.value)
           }}
         />
+        <Select
+          label="Select the version of your system"
+          placeholder="Select OS version"
+          mt="1rem"
+          size="md"
+          data={[
+            { label: 'Ubuntu 22.04', value: '22.04' },
+            { label: 'Ubuntu 20.04', value: '20.04' },
+            { label: 'Ubuntu 18.04', value: '18.04' }
+          ]}
+          value={scriptOSVersion}
+          onChange={(value: string | null): void => {
+            if (value !== null) {
+              setScriptOSVersion(value)
+            }
+          }}
+        />
+
         <Stack gap="1rem" mt="3rem">
           {script.map((s) => (
             <ScriptCard key={s.module} {...s} />

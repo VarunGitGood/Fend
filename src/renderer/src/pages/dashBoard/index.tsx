@@ -9,11 +9,86 @@ function Dashboard(): JSX.Element {
   const { runs } = useRunsStore()
   const navigate = useNavigate()
 
-  const script: MyScriptItem = {
-    scriptName: 'Script Name',
-    scriptDescription: 'Short description - where we can use this (Recommended target)',
-    myConfig: []
-  }
+  const script: MyScriptItem[] = [
+    {
+      scriptName: 'Web Server Hardening',
+      scriptOSVersion: 'Ubuntu 20.04',
+      advancedConfig: [],
+      scriptDescription:
+        'This script will harden the web server with recommended settings and configurations',
+      myConfig: [
+        {
+          module: 'Apache',
+          description: 'Apache web server',
+          isSelected: true,
+          label: 'Apache'
+        },
+        {
+          module: 'ufw',
+          description: 'Uncomplicated Firewall',
+          isSelected: true,
+          label: 'UFW'
+        },
+        {
+          module: 'Lock Root',
+          description: 'Lock root account',
+          isSelected: true,
+          label: 'Lock Root'
+        },
+        {
+          module: 'SSH',
+          description: 'SSH',
+          isSelected: true,
+          label: 'SSH'
+        },
+        {
+          module: 'Updates',
+          description: 'Updates',
+          isSelected: true,
+          label: 'Updates'
+        }
+      ]
+    },
+    {
+      scriptName: 'Workstation Hardening',
+      scriptDescription:
+        'Workstation hardening script will harden the workstation with recommended settings and configurations. ',
+      scriptOSVersion: 'Ubuntu 20.04',
+      advancedConfig: [],
+      myConfig: [
+        {
+          module: 'USB',
+          description: 'Apache web server',
+          isSelected: true,
+          label: 'Apache'
+        },
+        {
+          module: 'ufw',
+          description: 'Uncomplicated Firewall',
+          isSelected: true,
+          label: 'UFW'
+        },
+        {
+          module: 'Password',
+          description: 'Password',
+          isSelected: true,
+          label: 'Password'
+        },
+        {
+          module: 'SSH',
+          description: 'SSH',
+          isSelected: true,
+          label: 'SSH'
+        },
+        {
+          module: 'Updates',
+          description: 'Updates',
+          isSelected: true,
+          label: 'Updates'
+        }
+      ]
+    }
+  ]
 
   return (
     <Box p="md">
@@ -26,12 +101,15 @@ function Dashboard(): JSX.Element {
         </Button>
       </Flex>
       <Box mt="3rem">
+        <Text fz={'1.25rem'} fw="600" lh={'1.75rem'} mb="lg">
+          Recommended Combined Scripts
+        </Text>
         <Grid gutter={{ base: 5, xs: 'md', md: 'xl', xl: 50 }}>
           <Grid.Col span={6}>
-            <CustomScriptCard script={script} />
+            <CustomScriptCard script={script[0]} />
           </Grid.Col>
           <Grid.Col span={6}>
-            <CustomScriptCard script={script} />
+            <CustomScriptCard script={script[1]} />
           </Grid.Col>
         </Grid>
       </Box>

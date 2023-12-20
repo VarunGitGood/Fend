@@ -1,6 +1,5 @@
 import { ExecException, exec } from 'child_process'
 import { join } from 'path'
-import * as fs from 'fs-extra'
 
 export interface ExportOutput {
   status: string
@@ -8,44 +7,34 @@ export interface ExportOutput {
   scriptName: string
 }
 
-export const executeExportScript = async (scriptName: string): Promise<ExportOutput> => {
-  console.log('Executing export script for:', scriptName)
+export const executeExportScript = async (
+  data: any
+): Promise<ExportOutput> => {
   return new Promise((resolve, reject) => {
-    const exportScriptPath = join(__dirname, '../../utils/export.sh')
-    const exportFolderPath = join(__dirname, '../../utils/')
-    const command = `${exportScriptPath} '${scriptName}'`
+    const exportScriptPath = join(__dirname, '../../utils')
+    const command = `${exportScriptPath}/export.sh '${data.scriptName}' ${data.scriptOSVersion}`
 
     exec(
       command,
-      { cwd: exportFolderPath },
+      {
+        cwd: exportScriptPath
+      },
       (error: ExecException | null, stdout: string, stderr: string) => {
         if (error) {
           reject({
             status: 'error',
             stdout,
-            scriptName
+            scriptName: data.scriptName
           })
           return
         }
 
         const output = stdout + stderr
-        const zipFilePath = join(exportFolderPath, 'export.zip')
 
-        // Check if the zip file exists after script execution
-        fs.access(zipFilePath, fs.constants.F_OK, (err) => {
-          if (err) {
-            reject({
-              status: 'error',
-              stdout: 'Export script completed but failed to generate the zip file.',
-              scriptName
-            })
-          } else {
-            resolve({
-              status: 'success',
-              stdout: output + `\nZip file generated successfully at: ${zipFilePath}`,
-              scriptName
-            })
-          }
+        resolve({
+          status: 'success',
+          stdout: output + `\nZip file generated successfully at: downloads}`,
+          scriptName:data.scriptName
         })
       }
     )

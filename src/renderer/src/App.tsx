@@ -15,6 +15,7 @@ const ipcRenderer = (window as any).ipcRenderer
 import { useScriptStore } from './store/useScriptStore'
 import { useRunsStore, Run } from './store/useRunsStore'
 import { saveDataToStore } from './utils/storage'
+import SingleScript from './pages/myScript/SingleScript'
 
 function App(): JSX.Element {
   const { setGroupDetails } = useGroupStore()
@@ -26,21 +27,18 @@ function App(): JSX.Element {
     ipcRenderer.send('load-storage', 'myScripts')
     ipcRenderer.send('load-storage', 'runs')
     ipcRenderer.on('load-storage-groupDetails', (_event, arg) => {
-      console.log('myScripts', arg)
       if (!arg) {
         setGroupDetails([])
       }
       setGroupDetails(arg)
     })
     ipcRenderer.on('load-storage-myScripts', (_event, arg) => {
-      console.log('myScripts', arg)
       if (!arg) {
         setMyScripts([])
       }
       setMyScripts(arg)
     })
     ipcRenderer.on('load-storage-runs', (_event, arg) => {
-      console.log('myScripts', arg)
       if (!arg) {
         setRuns([])
       }
@@ -75,6 +73,7 @@ function App(): JSX.Element {
           <Route path="/logs" element={<Logs />} />
           <Route path="/sysInfo" element={<SystemInfo />} />
           <Route path="/myScript" element={<MyScript />} />
+          <Route path="/myScript/:scriptName" element={<SingleScript />} />
         </Routes>
       </MainAppShell>
     </MantineProvider>

@@ -21,7 +21,9 @@ export interface ModuleItem {
 export interface MyScriptItem {
   scriptName: string
   scriptDescription: string
+  scriptOSVersion: string
   myConfig: ModuleItem[]
+  advancedConfig: AdvancedConfigItem[]
   ansibleConfig?: { [key: string]: any }
 }
 
@@ -106,6 +108,51 @@ const modules = {
         type: 'array',
         current: ['22'],
         tag: 'list'
+      },
+      {
+        module: 'ssh',
+        label: 'Password Authentication',
+        var: 'sshd_password_authentication',
+        description: 'Enable or disable password authentication for SSH.',
+        type: 'boolean',
+        current: false,
+        tag: 'checkbox'
+      },
+      {
+        module: 'ssh',
+        label: 'Permit Empty Passwords',
+        var: 'sshd_permit_empty_passwords',
+        description: 'Allow or deny empty passwords for SSH.',
+        type: 'boolean',
+        current: false,
+        tag: 'checkbox'
+      },
+      {
+        module: 'ssh',
+        label: 'Permit Root Login',
+        var: 'sshd_permit_root_login',
+        description: 'Allow or deny root login for SSH.',
+        type: 'boolean',
+        current: false,
+        tag: 'checkbox'
+      },
+      {
+        module: 'ssh',
+        label: 'Permit Tunnel',
+        var: 'sshd_permit_tunnel',
+        description: 'Allow or deny tunneling for SSH.',
+        type: 'boolean',
+        current: false,
+        tag: 'checkbox'
+      },
+      {
+        module: 'ssh',
+        label: 'Permit User Environment',
+        var: 'sshd_permit_user_environment',
+        description: 'Allow or deny user environment modifications for SSH.',
+        type: 'boolean',
+        current: false,
+        tag: 'checkbox'
       }
     ]
   },
@@ -825,6 +872,14 @@ const modules = {
         tag: 'text'
       }
     ]
+  },
+  disableWireless: {
+    script: {
+      module: 'disablewireless',
+      label: 'Disable Wireless Configuration',
+      description: 'Disable Wireless Configuration. Prevent the use of wireless interfaces.',
+      isSelected: false
+    }
   }
 }
 
@@ -833,7 +888,6 @@ const getScriptsFromModules = (): any => {
   for (const mod in modules) {
     result.push(modules[mod]['script'])
   }
-  console.log(result)
   return result
 }
 
@@ -844,9 +898,9 @@ const getACFromModules = (): any => {
       result.push(modules[mod]['advancedConfig'][i])
     }
   }
-  console.log(result)
   return result
 }
+
 export const useScriptStore = create<ScriptStore>((set) => ({
   script: getScriptsFromModules(),
   myScripts: [],

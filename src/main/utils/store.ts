@@ -4,7 +4,7 @@ import Store from 'electron-store'
 const electronStore = new Store({
   name: 'electron-store',
   cwd: 'electron-store',
-  
+
   defaults: {
     myScripts: [],
     groupDetails: [],
