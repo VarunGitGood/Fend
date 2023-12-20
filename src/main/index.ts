@@ -6,6 +6,7 @@ import { generateScript, ScriptData, addGroup } from './utils/generateScript'
 import { getItem, setItem, electronStore } from './utils/store'
 import { getSystemInfo } from './utils/getSystemInfo'
 import { runScript } from './utils/runScript'
+import { executeExportScript } from './utils/exportScript'
 import { loadAnsibleFile, filePath } from './utils/loadFile'
 
 function createWindow(): void {
@@ -74,6 +75,21 @@ function createWindow(): void {
     console.log(data)
     getItem(data, mainWindow)
     console.log(electronStore.store, 'load')
+  })
+
+  ipcMain.on('export-script', async (_event: IpcMainEvent, data: any) => {
+    await executeExportScript(data)
+      .then((result) => {
+        console.log(result)
+        new Notification({
+          title: 'Success',
+          body: 'Exported successfully to downloads'
+        }).show()
+      })
+      .catch((error) => {
+        // error notification
+        console.log(error)
+      })
   })
 
   mainWindow.on('ready-to-show', () => {

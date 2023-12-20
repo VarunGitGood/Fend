@@ -37,4 +37,6 @@ if ! command -v ansible &> /dev/null; then
     sudo apt install -y ansible
 fi
 
+rm -rf to_zip
+
 echo "Script executed successfully!"

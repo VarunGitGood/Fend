@@ -3,7 +3,7 @@ import { create } from 'zustand'
 export interface Run {
   status: 'success' | 'running' | 'error' | ''
   scriptName: string
-  description: string
+  scriptDescription: string
   groupNames: string[]
   modules: string[]
   timeStamp: string

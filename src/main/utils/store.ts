@@ -1,7 +1,16 @@
 import { BrowserWindow } from 'electron'
 import Store from 'electron-store'
 
-const electronStore = new Store()
+const electronStore = new Store({
+  name: 'electron-store',
+  cwd: 'electron-store',
+
+  defaults: {
+    myScripts: [],
+    groupDetails: [],
+    runs: []
+  }
+})
 
 const setItem = (key: string, data: any, mainWindow: BrowserWindow): void => {
   electronStore.set(key, data)

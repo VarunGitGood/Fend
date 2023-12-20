@@ -1,7 +1,7 @@
-import { Box, Flex, Button, Text, Input, Stack, Modal } from '@mantine/core'
+import { useState } from 'react'
+import { Box, Flex, Stack, Text, TextInput, Textarea, Select, Button, Modal } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import ScriptCard from '@renderer/components/ScriptCard'
-import { useState } from 'react'
 import {
   useScriptStore,
   AdvancedConfigItem,
@@ -11,11 +11,13 @@ import {
 import { useNavigate } from 'react-router-dom'
 import toast, { Toaster } from 'react-hot-toast'
 import { saveDataToStore } from '@renderer/utils/storage'
+const ipcRenderer = (window as any).ipcRenderer
 
 function CustomScript(): JSX.Element {
   const { script, advancedConfig, setMyScripts, myScripts } = useScriptStore()
   const [scriptName, setScriptName] = useState<string>('')
-  const [description, setDescription] = useState<string>('')
+  const [scriptDescription, setScriptDescription] = useState<string>('')
+  const [scriptOSVersion, setScriptOSVersion] = useState<string>('')
   const navigate = useNavigate()
   const [opened, { open, close }] = useDisclosure(false)
 
@@ -30,12 +32,25 @@ function CustomScript(): JSX.Element {
     advancedConfig.forEach((config: AdvancedConfigItem) => {
       customScript[config.var] = config.current
     })
+
     const myScript: MyScriptItem = {
       scriptName,
-      description,
+      scriptDescription,
+      scriptOSVersion,
       myConfig: modules,
       ansibleConfig: customScript
     }
+
+    ipcRenderer.send('generate-script', {
+      scriptName,
+      script: customScript
+    })
+    ipcRenderer.on('generate-script-success', (_event, arg) => {
+      console.log(arg)
+    })
+    ipcRenderer.on('generate-script-error', (_event, arg) => {
+      console.error(arg)
+    })
     setMyScripts([...myScripts, myScript])
     saveDataToStore('myScripts', [...myScripts, myScript])
   }
@@ -43,12 +58,21 @@ function CustomScript(): JSX.Element {
   const handleSaveAndNextClick = (): void => {
     const isModuleSelected = script.some((s) => s.isSelected)
     const isScriptName = scriptName.trim().length > 0
+
     if (!isModuleSelected) {
       toast.error('Please select at least one module')
       return
     }
     if (!isScriptName) {
       toast.error('Please enter script name')
+      return
+    }
+    if (!scriptDescription) {
+      toast.error('Please enter script description')
+      return
+    }
+    if (!scriptOSVersion) {
+      toast.error('Please enter your OS Version')
       return
     }
     if (checkScriptName(scriptName)) {
@@ -94,13 +118,12 @@ function CustomScript(): JSX.Element {
         <Text fz="2.25rem" fw="600" lh="2.75rem">
           Custom Script
         </Text>
-        <Input
+        <TextInput
+          label="Enter your script name"
           placeholder="Enter custom script name"
           mt="2rem"
           size="md"
-          style={{
-            borderRadius: '4px'
-          }}
+          style={{ borderRadius: '4px' }}
           value={scriptName}
           onChange={(event: React.ChangeEvent<HTMLInputElement>): void => {
             if (checkScriptName(event.target.value)) {
@@ -110,14 +133,32 @@ function CustomScript(): JSX.Element {
           }}
           error={checkScriptName(scriptName)}
         />
-        <Input
+        <Textarea
+          label="Enter your script description"
           placeholder="Enter custom script description"
           mt="1rem"
           size="md"
           style={{ borderRadius: '4px' }}
-          value={description}
-          onChange={(event: React.ChangeEvent<HTMLInputElement>): void => {
-            setDescription(event.target.value)
+          value={scriptDescription}
+          onChange={(event: React.ChangeEvent<HTMLTextAreaElement>): void => {
+            setScriptDescription(event.target.value)
+          }}
+        />
+        <Select
+          label="Select the version of your system"
+          placeholder="Select OS version"
+          mt="1rem"
+          size="md"
+          data={[
+            { label: 'Ubuntu 22.04', value: '22.04' },
+            { label: 'Ubuntu 20.04', value: '20.04' },
+            { label: 'Ubuntu 18.04', value: '18.04' }
+          ]}
+          value={scriptOSVersion}
+          onChange={(value: string | null): void => {
+            if (value !== null) {
+              setScriptOSVersion(value)
+            }
           }}
         />
         <Stack gap="1rem" mt="3rem">

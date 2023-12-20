@@ -16,10 +16,8 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import notFoundImg from '../../assets/notFound.jpg'
 import { useGroupStore } from '@renderer/store/useGroupStore'
 import classes from './index.module.css'
-// import toast, { Toaster } from 'react-hot-toast'
-
 import { saveDataToStore } from '@renderer/utils/storage'
-import { useScriptStore, MyScriptItem } from '@renderer/store/useScriptStore'
+import { useScriptStore } from '@renderer/store/useScriptStore'
 import { Run, useRunsStore } from '@renderer/store/useRunsStore'
 const ipcRenderer = (window as any).ipcRenderer
 interface GroupBarProps {
@@ -159,11 +157,12 @@ function Groups(): JSX.Element {
   const { groupDetails, setGroupDetails } = useGroupStore()
   const { myScripts } = useScriptStore()
   const { runs, setRuns } = useRunsStore()
-  console.log(runs, 'runs')
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
   const isCustom = queryParams.get('custom') === 'true'
   const scriptName = queryParams.get('scriptName') || ''
+  const scriptDescription = queryParams.get('scriptDescription') || ''
+
   const form = useForm({
     initialValues: {
       groupName: ''
@@ -221,23 +220,6 @@ function Groups(): JSX.Element {
         )
       }
     }
-    const script: MyScriptItem = myScripts.find((s) => s.scriptName === scriptName) || {
-      scriptName: '',
-      myConfig: [],
-      ansibleConfig: {}
-    }
-
-    const data = {
-      scriptName,
-      script: script.ansibleConfig
-    }
-    ipcRenderer.send('generate-script', data)
-    ipcRenderer.on('generate-script-success', (_event, arg) => {
-      console.log(arg)
-    })
-    ipcRenderer.on('generate-script-error', (_event, arg) => {
-      console.error(arg)
-    })
     ipcRenderer.send('add-group', obj)
     ipcRenderer.on('add-group-log', (_event, arg) => {
       console.log(arg)
@@ -254,49 +236,20 @@ function Groups(): JSX.Element {
     }
     ipcRenderer.send('run-script', runsScriptDetails)
     const newRuns: Run[] = [
-      ...runs,
       {
         status: 'running',
         scriptName: scriptName,
+        scriptDescription: scriptDescription,
         groupNames: [...selectedGroups.keys()],
         modules:
           myScripts.find((s) => s.scriptName === scriptName)?.myConfig.map((item) => item.module) ||
           [],
         timeStamp: formatLastModified(new Date().toISOString())
-      }
+      },
+      ...runs
     ]
     setRuns(newRuns)
     saveDataToStore('runs', newRuns)
-    // after we have sent the script to the main process, we need to update the status of the run to running and close the modal
-    // ipcRenderer.on('run-script-error', (_event, arg) => {
-    //   console.error(arg)
-    //   // find by scriptName and update status to error
-    //   const updatedRuns: Run[] = runs.map((run: Run) => {
-    //     if (run.scriptName === scriptName) {
-    //       return {
-    //         ...run,
-    //         status: 'error',
-    //         scriptError: arg
-    //       }
-    //     }
-    //     return run
-    //   })
-    //   console.log(updatedRuns, 'updatedRuns')
-    // })
-    // ipcRenderer.on('run-script-success', (_event, arg) => {
-    //   // find by scriptName and update status to success
-    //   const updatedRuns: Run[] = runs.map((run: Run) => {
-    //     if (run.scriptName === scriptName) {
-    //       return {
-    //         ...run,
-    //         status: 'success',
-    //         scriptOutput: arg
-    //       }
-    //     }
-    //     return run
-    //   })
-    //   setRuns(updatedRuns)
-    // })
   }
 
   const handleAddHost = (
@@ -451,7 +404,6 @@ function Groups(): JSX.Element {
             <Button size="md" onClick={openM}>
               Run Script
             </Button>
-            {/* <button onClick={testScript}>Test</button> */}
           </Flex>
         )}
       </Box>

@@ -2,7 +2,6 @@ import { ReactNode } from 'react'
 import { AppShell, Group, Image } from '@mantine/core'
 import logo from '../../assets/logo.svg'
 import classes from './index.module.css'
-
 import {
   IconDashboard,
   IconUsersGroup,
@@ -15,6 +14,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 interface MainAppShellProps {
   children: ReactNode
 }
+
 const data = [
   { link: '/', label: 'Dashboard', icon: IconDashboard },
   { link: '/groups', label: 'Groups', icon: IconUsersGroup },
@@ -22,6 +22,7 @@ const data = [
   { link: '/logs', label: 'Logs', icon: IconHistory },
   { link: '/sysinfo', label: 'System Information', icon: IconDeviceLaptop }
 ]
+
 function MainAppShell({ children }: MainAppShellProps): JSX.Element {
   const navigate = useNavigate()
   const location = useLocation()
@@ -46,7 +47,7 @@ function MainAppShell({ children }: MainAppShellProps): JSX.Element {
         <nav className={classes.navbar}>
           <div className={classes.navbarMain}>
             <Group className={classes.header} justify="space-between">
-              <Image src={logo} width={150} height={150} radius="xl" />
+              <Image src={logo} width={150} height={150} />
             </Group>
             {links}
           </div>
