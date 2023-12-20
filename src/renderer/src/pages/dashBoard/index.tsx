@@ -106,10 +106,10 @@ function Dashboard(): JSX.Element {
         </Text>
         <Grid gutter={{ base: 5, xs: 'md', md: 'xl', xl: 50 }}>
           <Grid.Col span={6}>
-            <CustomScriptCard script={script[0]} />
+            <CustomScriptCard script={script[0]} disable="true" />
           </Grid.Col>
           <Grid.Col span={6}>
-            <CustomScriptCard script={script[1]} />
+            <CustomScriptCard script={script[1]} disable="true" />
           </Grid.Col>
         </Grid>
       </Box>

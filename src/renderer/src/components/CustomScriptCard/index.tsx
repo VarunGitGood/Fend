@@ -5,6 +5,7 @@ import { MyScriptItem } from '@renderer/store/useScriptStore'
 
 interface CustomScriptCardProps {
   script: MyScriptItem
+  disable?: boolean
 }
 
 function Chip({ children }: { children: string }): JSX.Element {
@@ -16,7 +17,7 @@ function Chip({ children }: { children: string }): JSX.Element {
     </Box>
   )
 }
-export default function CustomScriptCard({ script }: CustomScriptCardProps): JSX.Element {
+export default function CustomScriptCard({ script, disable }: CustomScriptCardProps): JSX.Element {
   const navigate = useNavigate()
 
   return (
@@ -53,6 +54,7 @@ export default function CustomScriptCard({ script }: CustomScriptCardProps): JSX
               variant="outline"
               size="md"
               fullWidth
+              disabled={disable}
               onClick={() => {
                 navigate(`/myScript/${script.scriptName}`)
               }}
